@@ -1,0 +1,40 @@
+{
+    "map": {
+        "name": "Let's get ready to rumble!",
+        "version": 1,
+        "width": 500,
+        "height": 500,
+        "number_of_players": 2,
+        "time_limit_per_turn": 1000
+    },
+
+    "types": [
+        {"name": "city", "image": "/images/city.jpg", "soldiers_per_turn": 1},
+        {"name": "node", "image": "/images/node.gif", "soldiers_per_turn": 0}
+    ],
+    
+    "nodes": [
+        {"id": 1, "type": "node", "x": 10, "y": 20},
+        {"id": 2, "type": "city", "x": 300, "y": 100},
+        {"id": 3, "type": "node", "x": 200, "y": 200},
+        {"id": 4, "type": "node", "x": 150, "y": 400},
+        {"id": 5, "type": "node", "x": 450, "y": 100}
+    ],
+
+    "paths": [
+        {"from": 1, "to": 2},
+        {"from": 2, "to": 3},
+        {"from": 1, "to": 3},
+        {"from": 4, "to": 3}
+    ],
+
+    "players": [
+        {"color": "00ff00", "starting_nodes": [
+            {"node": 1, "soldiers": 15}
+        ]},
+        {"color": "ff00ff", "starting_nodes": [
+            {"node": 3, "soldiers": 10},
+            {"node": 2, "soldiers": 8}
+        ]}
+    ]
+}
