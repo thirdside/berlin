@@ -5,7 +5,8 @@
         "width": 500,
         "height": 500,
         "number_of_players": 2,
-        "time_limit_per_turn": 1000
+        "time_limit_per_turn": 1000,
+        "directed": false
     },
 
     "types": [

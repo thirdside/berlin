@@ -52,6 +52,7 @@ TS.NodeGraph = Class.create({
 			this.nodes[node.id] = new TS.Node(node.id, node.type, node.x, node.y);
 		}, this);
 		
+		// Add paths between the nodes
 		this.map.paths.each(function(path){
 			this.nodes[path.from].linkTo(this.nodes[path.to]);
 			if (!this.directed)
@@ -108,6 +109,7 @@ TS.Map = Class.create({
 		new Ajax.Request( config_url, {method: 'get', onComplete: this.onConfigLoaded.bindAsEventListener(this)});
 	},
 	
+	// Callback after the Map's config are loaded
 	onConfigLoaded: function (request)
 	{
 		this.config = request.responseJSON;
@@ -116,10 +118,12 @@ TS.Map = Class.create({
 		
 		this.nodeGraph = new TS.NodeGraph(this.config);
 		
+		// Create a canvas element for each display layer
 		$A(['background', 'paths', 'nodes', 'players', 'moves', 'info']).each(function(layer) {
 			this.layers[layer] = new Element('canvas', {id: layer, width: this.config.map.width,  height: this.config.map.height});
 		}, this);
 		
+		// Preload all the images
 		this.config.types.each(function(type){
 			var img = new Image();
 			img.onload = this.onNodeImageLoad.bindAsEventListener(this, type.name);
@@ -127,55 +131,68 @@ TS.Map = Class.create({
 		}, this);
 	},
 	
+	// Callback after each image is loaded
 	onNodeImageLoad: function (event, type)
 	{
 		this.graphics.nodes = this.graphics.nodes || {};
 		this.graphics.nodes[type] = event.findElement();
 		
 		if (Object.keys(this.graphics.nodes).length == this.config.types.size())
-			this.draw();
+			this.draw(Object.keys(this.layers));
 	},
 
-	
+	// Returns a context associated with a layer's canvas
 	getContext: function (layer)
 	{
 		return this.layers[layer] ? this.layers[layer].getContext('2d') : null;	
 	},
 	
+	// Called every time a new turn happens
 	onTurn: function ()
 	{
 		
 	}, 
 	
-	draw: function ()
+	// Draws the layers to the screen
+	draw: function (drawableLayers)
 	{
-		Object.keys(this.graphics);
-		
+		drawableLayers = $A(drawableLayers);
 		
 		Object.keys(this.nodeGraph.nodes).each(function(nodeId){
-			var node = this.nodeGraph.nodes[nodeId];
-			var img = this.graphics.nodes[node.type];
-			// Draw Nodes
-			this.getContext('nodes').drawImage(
-					img,
-					node.position.x - img.width / 2,
-					node.position.y - img.height / 2
-			);
 			
-			node.links.each(function(otherNodeId) {
-				var to = this.nodeGraph.nodes[otherNodeId];
-					
-				// Draw Paths
-				var ctx = this.getContext('paths');
-				ctx.beginPath();
-				ctx.moveTo(node.position.x, node.position.y);
-				ctx.lineTo(to.position.x, to.position.y);
-				ctx.lineWidth = 2;
-				ctx.stroke();
-			}, this);
+			var node = this.nodeGraph.nodes[nodeId];
+			
+			// Draw nodes only if necessary (1st time)		
+			if (drawableLayers.include('nodes'))
+			{
+				var img = this.graphics.nodes[node.type];
+				// Draw Nodes
+				this.getContext('nodes').drawImage(
+						img,
+						node.position.x - img.width / 2,
+						node.position.y - img.height / 2
+				);
+			}
+			
+			// Draw paths only if necessary (1st time)
+			if (drawableLayers.include('paths'))
+			{
+				node.links.each(function(otherNodeId) {
+					var to = this.nodeGraph.nodes[otherNodeId];
+						
+					// Draw Paths
+					var ctx = this.getContext('paths');
+					ctx.beginPath();
+					ctx.moveTo(node.position.x, node.position.y);
+					ctx.lineTo(to.position.x, to.position.y);
+					ctx.lineWidth = 2;
+					ctx.stroke();
+				}, this);
+			}
 		}, this);
 		
-		$A(['background', 'paths', 'nodes', 'players', 'moves', 'info']).each(function(layer) {
+		// Add all the layers to the display area
+		drawableLayers.each(function(layer) {
 			this.container.insert(this.layers[layer]);
 		}, this);
 		/*
