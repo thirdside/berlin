@@ -112,7 +112,7 @@ TS.Map = Class.create({
 	// Callback after the Map's config are loaded
 	onConfigLoaded: function (request)
 	{
-		this.config = request.responseJSON;
+		this.config = request.responseText.evalJSON();
 		
 		if (!this.config) {alert("Map Error"); return};
 		
