@@ -2,13 +2,42 @@ require 'rubygems'
 require 'typhoeus'
 require 'json'
 
-class Map
-  attr_accessor :path, :map, :turn, :maximum_number_of_turns, :moves
+class Player
+  @@count = 0
+  @@players = []
+  
+  attr_accessor :id, :url, :request, :response
+  
+  def self.count
+    @@count
+  end
+  
+  def self.all
+    @@players
+  end
+  
+  def initialize
+    @@count += 1
+    @url = 'http://localhost:4567'
+    @id = @@count
+    @@players << self
+  end
+end
 
-  def initialize path
-    @path = path
-    @moves = []
-
+class Game
+  attr_accessor :id, :path, :map, :turn, :maximum_number_of_turns, :moves, :players
+  
+  @@path = './public/maps/'
+  
+  def initialize path, players
+    @id     = 1
+    @path   = @@path + path
+    @players = players
+    @moves  = []
+    @turn   = 0
+    @maximum_number_of_turns = 0
+    @hydra  = Typhoeus::Hydra.new
+    
     self.build
   end
 
@@ -18,71 +47,69 @@ class Map
   end
 
   # return a complete json of the actual map
-  def actual
-    {}.to_json
+  def snapshot
+    @map.to_json
   end
 
   # move a player from one node to another
-  def move
+  def move json
     #todo do the move, check for validity, etc...
+    p "move!"
     moves << {:player=>0, :from=>0, :to=>0, :soldiers=>0}
   end
 
   # next turn
-  def next
+  def next_turn
     @turn += 1
   end
-end
-
-while true
-  # start hydra
-  hydra = Typhoeus::Hydra.new
   
-  map = Map.new('public/maps/1.json')
+  # let's run!
+  def run
+    while self.turn < 100
+      # create and queue a http request for each player
+      @players.each do |player|
+        player.request = Typhoeus::Request.new(player.url,
+            :body          => '',
+            :method        => :post,
+            :headers       => {:Accept => "application/json"},
+            :timeout       => 1000,
+            :cache_timeout => 0,
+            :params        => {
+                :id=>self.id,
+                :turn=>self.turn,
+                :map=>self.snapshot
+            })
 
-  players = [
-    {:id=>1, :url=>'http://localhost:3000', :request=>nil, :response=>nil},
-    {:id=>2, :url=>'http://localhost:3000', :request=>nil, :response=>nil}
-  ]
-
-  # for each turn
-  while map.turn < map.maximum_number_of_turns
-    # create and queue a http request for each player
-    players.each do |player|
-      player[:request] = Typhoeus::Request.new(player[:url],
-          :body          => map.actual,
-          :method        => :post,
-          :headers       => {:Accept => "application/json"},
-          :timeout       => 1000,
-          :cache_timeout => 0,
-          :params        => {})
-
-      player[:request].on_complete do |response|
-        player[:response] = response
-      end
-
-      hydra.queue(player[:request])
-    end
-
-    # blocking call, waiting for all requests
-    hydra.run
-
-    # let's move!
-    players.each do |player|
-      if player[:response].success?
-        begin
-          response = JSON.parse( player[:response].body )
-        rescue
-          p "Can't parse json"
+        player.request.on_complete do |response|
+          player.response = response
         end
 
-        map.move( response ) if response
+        @hydra.queue(player.request)
       end
-    end
-    
-    map.next
-  end
 
-  # temp
-  break
+      # blocking call, waiting for all requests
+      @hydra.run
+
+      # let's move!
+      @players.each do |player|
+        if player.response.success?
+          begin
+            response = self.move( JSON.parse( player.response.body ) )
+          rescue
+            p "Can't parse json"
+          end
+        elsif player.response.timed_out?
+          p "Request timed out"
+        else
+          p player.response.curl_error_message
+        end
+      end
+
+      self.next_turn
+    end
+  end
 end
+
+players = [Player.new, Player.new]
+game = Game.new('1.map', players)
+game.run
