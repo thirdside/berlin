@@ -97,7 +97,7 @@ TS.NodeGraph = Class.create({
 	}
 });
 
-TS.Map = Class.create({
+TS.AIMap = Class.create({
 	initialize: function (container, config_url)
 	{
 		this.config_url	= config_url;
@@ -195,8 +195,8 @@ TS.Map = Class.create({
 		drawableLayers.each(function(layer) {
 			this.container.insert(this.layers[layer]);
 		}, this);
+		
 		/*
-
 		// PLAYERS
 		this.contexts.get('layer3').globalAlpha = 0.8;
 		var soldiers_box_width	  = 50;
@@ -221,6 +221,42 @@ TS.Map = Class.create({
 		*/
 	}
 });
+
+TS.AIPlayback = Class.create({
+	initialize: function (container, map_url, game_description_url)
+	{
+		this.map = new TS.AIMap(container, map_url);
+		this.map.observe('ready', this.onMapReady.bindAsEventListener(this));
+		this.ready = {map:false, self:false};
+		new Ajax.Request( config_url, {method: 'get', onComplete: this.onGameDescriptionLoaded.bindAsEventListener(this)});
+	},
+	
+	onMapReady: function ()
+	{
+		this.ready.map = true;
+		if (this.isReady())
+		{
+			this.start();
+		}
+	},
+	
+	onGameDescriptionLoaded: function (request)
+	{
+		this.ready.self = true;
+		
+		this.gameDescription = request.responseText.evalJSON();
+		
+		if (this.isReady())
+		{
+			this.start();
+		}
+	},
+	
+	isReady: function ()
+	{
+		return this.ready.all();
+	}
+})
 
 Object.extend(TS.NodeGraph, {
 	DAMPING : .5,
