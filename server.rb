@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'typhoeus'
-require 'json'
+require 'yajl/json_gem'
 
 class Player
   @@count = 0
@@ -18,7 +18,7 @@ class Player
   
   def initialize
     @@count += 1
-    @url = 'http://localhost:4567'
+    @url = 'http://localhost:4567/onturn'
     @id = @@count
     @@players << self
   end
@@ -69,15 +69,14 @@ class Game
       # create and queue a http request for each player
       @players.each do |player|
         player.request = Typhoeus::Request.new(player.url,
-            :body          => '',
             :method        => :post,
             :headers       => {:Accept => "application/json"},
-            :timeout       => 1000,
+            :timeout       => 5000,
             :cache_timeout => 0,
             :params        => {
-                :id=>self.id,
-                :turn=>self.turn,
-                :map=>self.snapshot
+              :turn=>self.turn,
+              :game=>self.id,
+              :json=>self.snapshot
             })
 
         player.request.on_complete do |response|
@@ -105,11 +104,12 @@ class Game
         end
       end
 
+      break
       self.next_turn
     end
   end
 end
 
-players = [Player.new, Player.new]
+players = [Player.new]
 game = Game.new('1.map', players)
 game.run
