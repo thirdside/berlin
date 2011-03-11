@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Player:</b>
+  <%= @artificial_intelligence.player %>
+</p>
+
+<p>
+  <b>Url:</b>
+  <%= @artificial_intelligence.url %>
+</p>
+
+
+<%= link_to 'Edit', edit_artificial_intelligence_path(@artificial_intelligence) %> |
+<%= link_to 'Back', artificial_intelligences_path %>

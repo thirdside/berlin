@@ -1,0 +1,21 @@
+class CreateGames < ActiveRecord::Migration
+  def self.up
+    create_table :games do |t|
+      t.references :map
+      t.references :winner
+      t.timestamp :time_start
+      t.timestamp :time_end
+      t.integer :number_of_turns
+      t.text :json
+
+      t.timestamps
+    end
+    
+    add_index :games, :winner_id
+    add_index :games, :map_id
+  end
+
+  def self.down
+    drop_table :games
+  end
+end

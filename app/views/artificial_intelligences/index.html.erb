@@ -1,0 +1,25 @@
+<h1>Listing artificial_intelligences</h1>
+
+<table>
+  <tr>
+    <th>Player</th>
+    <th>Url</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @artificial_intelligences.each do |artificial_intelligence| %>
+  <tr>
+    <td><%= artificial_intelligence.player %></td>
+    <td><%= artificial_intelligence.url %></td>
+    <td><%= link_to 'Show', artificial_intelligence %></td>
+    <td><%= link_to 'Edit', edit_artificial_intelligence_path(artificial_intelligence) %></td>
+    <td><%= link_to 'Destroy', artificial_intelligence, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Artificial intelligence', new_artificial_intelligence_path %>
