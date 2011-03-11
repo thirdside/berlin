@@ -153,10 +153,27 @@ TS.AIMap = Class.create(TS, {
 		return this.layers[layer] ? this.layers[layer].getContext('2d') : null;	
 	},
 	
-	// Called every time a new turn happens
-	onTurn: function ()
+	clearContext: function (layer)
 	{
-		
+		if (this.getContext(layer))
+			this.getContext(layer).clearRect(0, 0, this.layers[layer].width, this.layers[layer].height);
+	},
+	
+	// Called every time a new turn happens
+	onTurn: function (turn)
+	{
+		if (turn)
+		{
+			this.moves = turn.moves;
+			turn.node_state.each(function(nodeState) {
+				var node = this.nodeGraph.nodes[nodeState.node_id];
+				node.setSoldiers(nodeState.player_id, nodeState.nb_soldiers);
+			}, this);
+		} else
+		{
+			this.moves = [];
+		}
+		this.draw(['moves', 'players']);
 	}, 
 	
 	// Draws the layers to the screen
