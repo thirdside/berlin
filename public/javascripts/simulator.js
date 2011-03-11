@@ -181,7 +181,11 @@ TS.AIMap = Class.create(TS, {
 	{
 		drawableLayers = $A(drawableLayers);
 		
-		Object.keys(this.nodeGraph.nodes).each(function(nodeId){
+		drawableLayers.each(function (layer){
+			this.clearContext(layer);
+		}, this);
+		
+		Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
 			
 			var node = this.nodeGraph.nodes[nodeId];
 			
@@ -209,36 +213,47 @@ TS.AIMap = Class.create(TS, {
 					this.drawArrow(ctx, node.position.x, node.position.y, to.position.x, to.position.y, 16, "#444444", true)
 				}, this);
 			}
+			
+			if (drawableLayers.include('players'))
+			{
+				// PLAYERS
+				var ctx = this.getContext('players');
+				ctx.globalAlpha = 0.8;
+				var soldiers_box_width	  = 50;
+				var soldiers_box_height	 = 25;
+				var soldiers_box_padding_x  = 10;
+				var soldiers_box_padding_y  = 7;
+
+				ctx.fillStyle = "#333333";
+				ctx.fillRect (node.position.x + soldiers_box_padding_x, node.position.y + soldiers_box_padding_y, soldiers_box_width, soldiers_box_height);
+
+				ctx.fillStyle	= '#000000';
+				ctx.font		 = '20px sans-serif';
+				ctx.textAlign	= 'center';
+				ctx.textBaseline = 'top';
+				ctx.fillText(node.nbSoldiers, node.position.x + soldiers_box_width / 2 + soldiers_box_padding_x, node.position.y + soldiers_box_padding_y);
+			}
+			
+			if (drawableLayers.include('moves'))
+			{
+				this.moves.each(function (move) {
+					this.drawMove(move);
+				}, this);
+			}
 		}, this);
 		
 		// Add all the layers to the display area
 		drawableLayers.each(function(layer) {
 			this.container.insert(this.layers[layer]);
 		}, this);
-		
-		/*
-		// PLAYERS
-		this.contexts.get('layer3').globalAlpha = 0.8;
-		var soldiers_box_width	  = 50;
-		var soldiers_box_height	 = 25;
-		var soldiers_box_padding_x  = 10;
-		var soldiers_box_padding_y  = 7;
-
-		this.config.players.each(function(player){
-			player.starting_nodes.each(function(starting_node){
-				var node = this.nodes.get(starting_node.node);
-
-				this.contexts.get('layer3').fillStyle = player.color;
-				this.contexts.get('layer3').fillRect (node.x + soldiers_box_padding_x, node.y + soldiers_box_padding_y, soldiers_box_width, soldiers_box_height);
-
-				this.contexts.get('layer3').fillStyle	= '#000000';
-				this.contexts.get('layer3').font		 = '20px sans-serif';
-				this.contexts.get('layer3').textAlign	= 'center';
-				this.contexts.get('layer3').textBaseline = 'top';
-				this.contexts.get('layer3').fillText(starting_node.soldiers, node.x + soldiers_box_width / 2 + soldiers_box_padding_x, node.y + soldiers_box_padding_y);
-			}, this);
-		}, this);
-		*/
+	},
+	
+	drawMove: function (move)
+	{
+		var ctx = this.getContext("players");
+		var nodeFrom = this.nodeGraph.nodes[move.from];
+		var nodeTo = this.nodeGraph.nodes[move.to];
+		this.drawArrow(ctx, nodeFrom.position.x, nodeFrom.position.y, nodeTo.position.x, nodeTo.position.y, 15, "#ff00ff");
 	},
 	
 	drawArrow: function (ctx, fromX, fromY, toX, toY, size, color, noarrow)
@@ -322,12 +337,20 @@ TS.AIPlayback = Class.create(TS, {
 	{
 		if (this.gameDescription.turns.length > this.turnNumber)
 		{
-			console.log(this.gameDescription.turns[this.turnNumber]);
-			this.turnNumber++;
+			if (this.turn)
+			{
+				this.turn = null;
+			} else
+			{
+				this.turn = this.gameDescription.turns[this.turnNumber]
+				this.turnNumber++;
+			}
 		} else
 		{
+			this.turn = null;
 			this.timer.stop();
 		}
+		this.map.onTurn(this.turn);
 	}
 })
 
