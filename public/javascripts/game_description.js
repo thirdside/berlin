@@ -57,6 +57,18 @@
 					"to": 2,
 					"nb_soldiers": 6
 				}
+			],
+			"node_state": [
+				{
+					"node_id": 1,
+					"nb_soldiers": 5,
+					"player_id": 1
+				},
+				{
+					"node_id": 2,
+					"nb_soldiers": 5,
+					"player_id": 2
+				}
 			]
 		}
 	]
