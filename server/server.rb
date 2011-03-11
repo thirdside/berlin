@@ -34,6 +34,8 @@ class Game
     @ais    = ais
     @moves  = []
     @turn   = 0
+    @start  = Time.new
+    @end    = nil
     @hydra  = Typhoeus::Hydra.new
     @map    = map
   end
