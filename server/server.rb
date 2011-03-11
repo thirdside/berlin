@@ -25,14 +25,12 @@ end
 class Game
   attr_accessor :id, :map, :turn, :moves, :ais
   
-  @@path = File.expand_path( File.dirname( __FILE__ ) ) + '/../public/maps/'
-  
   def initialize map, ais
     raise ArgumentError if map.blank? || ais.blank?
     
     @id     = 1
     @ais    = ais
-    @moves  = []
+    @moves  = Hash.new{ |h,k| h[k] = {} }
     @turn   = 0
     @start  = Time.new
     @end    = nil
@@ -46,10 +44,11 @@ class Game
   end
 
   # move a player from one node to another
-  def move json
-    #todo do the move, check for validity, etc...
-    p "move!"
-    moves << {:player=>0, :from=>0, :to=>0, :soldiers=>0}
+  def move ai, json
+    json = JSON.parse( json )
+    
+    # add this move to the move list
+    moves[@turn][ai] << json
   end
 
   # next turn
@@ -89,7 +88,7 @@ class Game
         
         if rep.success?
           begin
-            self.move( JSON.parse( rep.body ) )
+            self.move( ai, rep.body )
           rescue
             p "Can't parse json"
           end
