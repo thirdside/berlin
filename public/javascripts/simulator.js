@@ -287,11 +287,7 @@ TS.AIMap = Class.create(TS, {
 						
 					// Draw Paths
 					var ctx = this.getContext('paths');
-					ctx.beginPath();
-					ctx.moveTo(node.position.x, node.position.y);
-					ctx.lineTo(to.position.x, to.position.y);
-					ctx.lineWidth = 2;
-					ctx.stroke();
+					this.drawArrow(ctx, node.position.x, node.position.y, to.position.x, to.position.y, 16, "#444444", true)
 				}, this);
 			}
 		}, this);
@@ -324,6 +320,34 @@ TS.AIMap = Class.create(TS, {
 			}, this);
 		}, this);
 		*/
+	},
+	
+	drawArrow: function (ctx, fromX, fromY, toX, toY, size, color, noarrow)
+	{
+		noarrow = noarrow || false;
+		color = color || "#000000";
+		
+		ctx.strokeStyle = color;
+		ctx.beginPath();
+		ctx.moveTo(fromX, fromY);
+		ctx.lineTo(toX, toY);
+		ctx.lineWidth = 5;
+		ctx.stroke();
+		
+		if (!noarrow)
+		{
+			ctx.beginPath();
+			ctx.fillStyle = color;
+			var angle = Math.atan2(toY - fromY, toX - fromX);
+			var angle1 = angle + Math.PI / 8;
+			var angle2 = angle - Math.PI / 8;
+			ctx.lineTo(Math.round(toX - Math.cos(angle1) * size), Math.round(toY - Math.sin(angle1) * size));
+			ctx.lineTo(Math.round(toX - Math.cos(angle2) * size), Math.round(toY - Math.sin(angle2) * size));
+			ctx.lineTo(toX, toY);
+			ctx.stroke();
+			ctx.fill();
+		}
+		
 	}
 });
 
