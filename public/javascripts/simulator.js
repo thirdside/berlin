@@ -16,6 +16,7 @@ TS.Node = Class.create(TS, {
 		this.id			= id;
 		this.type		= type;
 		this.links		= new Array();
+		this.nbSoldiers	= 0;
 	},
 	
 	linkTo: function (otherNode)
