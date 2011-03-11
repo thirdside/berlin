@@ -272,6 +272,7 @@ TS.AIMap = Class.create(TS, {
 			{
 				var img = this.graphics.nodes[node.type];
 				// Draw Nodes
+				
 				this.getContext('nodes').drawImage(
 						img,
 						node.position.x - img.width / 2,
@@ -355,6 +356,7 @@ TS.AIPlayback = Class.create(TS, {
 	initialize: function ($super, container, map_url, game_description_url)
 	{
 		$super();
+		this.turnNumber = 0;
 		this.map = new TS.AIMap(container, map_url);
 		this.map.observe('ready', this.onMapReady.bindAsEventListener(this));
 		this.ready = {map:false, self:false};
@@ -384,7 +386,30 @@ TS.AIPlayback = Class.create(TS, {
 	
 	isReady: function ()
 	{
-		return this.ready.all();
+		return $H(this.ready).all();
+	}, 
+	
+	start: function ()
+	{
+		if (!this.timer)
+		{
+			this.timer = new TS.Timer();
+			this.timer.observe("timer", this.onTimer.bind(this));
+		}
+		
+		this.timer.start(500, -1);
+	},
+	
+	onTimer: function ()
+	{
+		if (this.gameDescription.turns.length > this.turnNumber)
+		{
+			console.log(this.gameDescription.turns[this.turnNumber]);
+			this.turnNumber++;
+		} else
+		{
+			this.timer.stop();
+		}
 	}
 })
 
