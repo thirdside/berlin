@@ -7,18 +7,21 @@
 
 // Originally Mentel.Base from Aurelien Blond and Guillaume Malette
 var TS = TS || Class.create({}, {
-	initialize: function()
+	initialize: function ()
 	{
 		this._observers = {};
 	},
 
-	prepareObservers: function(eventName) {
+	prepareObservers: function (eventName)
+	{
 		this._observers[eventName] = this._observers[eventName] || new Array();
 		return this._observers[eventName];
 	},
 
-	observe: function(eventName, observer) {
-		if (Object.isString(eventName) && Object.isFunction(observer)) {
+	observe: function (eventName, observer) 
+	{
+		if (Object.isString(eventName) && Object.isFunction(observer)) 
+		{
 			var observers = this.prepareObservers(eventName);
 
 			if(!observers.include(observer))
@@ -26,8 +29,10 @@ var TS = TS || Class.create({}, {
 		}
 	},
 
-	stopObserving: function(eventName, observer) {
-		if (Object.isString(eventName) && Object.isFunction(observer)) {
+	stopObserving: function (eventName, observer)
+	{
+		if (Object.isString(eventName) && Object.isFunction(observer)) 
+		{
 			var observers = this.prepareObservers(eventName);
 			observers = observers.without(observer);
 		} else if (Object.isString(eventName))
@@ -36,8 +41,9 @@ var TS = TS || Class.create({}, {
 			this._observers = new Array();
 	},
 
-	fire: function(eventName) {
-		if (Object.isString(eventName)) {
+	fire: function (eventName) {
+		if (Object.isString(eventName)) 
+		{
 			var args = $A(arguments).slice(1);
 
 			var observers = this.prepareObservers(eventName);
