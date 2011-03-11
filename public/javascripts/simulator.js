@@ -107,6 +107,7 @@ TS.AIMap = Class.create(TS, {
 		this.container	= $(container);
 		this.layers		= {};
 		this.graphics	= {};
+		this.moves		= [];
 		
 		// load config
 		new Ajax.Request( config_url, {method: 'get', onComplete: this.onConfigLoaded.bindAsEventListener(this)});
