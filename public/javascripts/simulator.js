@@ -5,11 +5,53 @@
  * date: 07/03/2011
  */
 
-var TS = TS || Class.create({});
-
-TS.Node = Class.create({
-	initialize: function (id, type, x, y)
+// Originally Mentel.Base from Aurelien Blond and Guillaume Malette
+var TS = TS || Class.create({}, {
+	initialize: function()
 	{
+		this._observers = {};
+	},
+
+	prepareObservers: function(eventName) {
+		this._observers[eventName] = this._observers[eventName] || new Array();
+		return this._observers[eventName];
+	},
+
+	observe: function(eventName, observer) {
+		if (Object.isString(eventName) && Object.isFunction(observer)) {
+			var observers = this.prepareObservers(eventName);
+
+			if(!observers.include(observer))
+				observers.push(observer);
+		}
+	},
+
+	stopObserving: function(eventName, observer) {
+		if (Object.isString(eventName) && Object.isFunction(observer)) {
+			var observers = this.prepareObservers(eventName);
+			observers = observers.without(observer);
+		} else if (Object.isString(eventName))
+			this._observers = this._observers.without(eventName);
+		else
+			this._observers = new Array();
+	},
+
+	fire: function(eventName) {
+		if (Object.isString(eventName)) {
+			var args = $A(arguments).slice(1);
+
+			var observers = this.prepareObservers(eventName);
+			observers.each(function(observer) {
+				observer.apply(null, args);
+			}, this);
+		}
+	}
+});
+
+TS.Node = Class.create(TS, {
+	initialize: function ($super, id, type, x, y)
+	{
+		$super();
 		this.position	= {x: x, y: y};
 		this.velocity	= {x: 0, y: 0};
 		this.mass		= 3;
@@ -40,9 +82,10 @@ TS.Node = Class.create({
 	}
 });
 
-TS.NodeGraph = Class.create({
-	initialize: function (map)
+TS.NodeGraph = Class.create(TS, {
+	initialize: function ($super, map)
 	{
+		$super();
 		this.nodes = {};
 		this.map = map;
 		this.directed = map.map.directed || false;
@@ -97,9 +140,10 @@ TS.NodeGraph = Class.create({
 	}
 });
 
-TS.AIMap = Class.create({
-	initialize: function (container, config_url)
+TS.AIMap = Class.create(TS, {
+	initialize: function ($super, container, config_url)
 	{
+		$super();
 		this.config_url	= config_url;
 		this.container	= $(container);
 		this.layers		= {};
@@ -129,6 +173,8 @@ TS.AIMap = Class.create({
 			img.onload = this.onNodeImageLoad.bindAsEventListener(this, type.name);
 			img.src = type.image;
 		}, this);
+		
+		this.fire("ready");
 	},
 	
 	// Callback after each image is loaded
@@ -222,13 +268,14 @@ TS.AIMap = Class.create({
 	}
 });
 
-TS.AIPlayback = Class.create({
-	initialize: function (container, map_url, game_description_url)
+TS.AIPlayback = Class.create(TS, {
+	initialize: function ($super, container, map_url, game_description_url)
 	{
+		$super();
 		this.map = new TS.AIMap(container, map_url);
 		this.map.observe('ready', this.onMapReady.bindAsEventListener(this));
 		this.ready = {map:false, self:false};
-		new Ajax.Request( config_url, {method: 'get', onComplete: this.onGameDescriptionLoaded.bindAsEventListener(this)});
+		new Ajax.Request( game_description_url, {method: 'get', onComplete: this.onGameDescriptionLoaded.bindAsEventListener(this)});
 	},
 	
 	onMapReady: function ()
