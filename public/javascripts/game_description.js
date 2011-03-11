@@ -24,10 +24,10 @@
 		],
 	},
 	
-	"moves": [
+	"turns": [
 		{
 			"turn": 0,
-			"changes": [
+			"moves": [
 				{
 					"player_id": 1,
 					"from": 1,
@@ -37,8 +37,8 @@
 			]
 		},
 		{
-			"turn": 2,
-			"changes": [
+			"turn": 1,
+			"moves": [
 				{
 					"player_id": 1,
 					"from": 1,
