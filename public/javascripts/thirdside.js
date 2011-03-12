@@ -80,6 +80,11 @@ TS.Timer = Class.create(TS, {
 		this.interval	= setInterval(this.onTick.bind(this), this.delay);
 	},
 	
+	isRunning: function ()
+	{
+		return this.interval != null;
+	},
+	
 	onTick: function ()
 	{
 		var d = new Date();
