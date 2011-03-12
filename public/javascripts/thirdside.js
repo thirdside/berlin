@@ -120,6 +120,7 @@ TS.Color = Class.create({
 	 *   start_lum: luminosity at which to start
 	 *   lum_shift: go down this much luminosity after generating colors
 	 *   saturation: saturation to use
+	 *   hue_shift: offset this much hue after generating colors
 	 * }
 	 */
 	initialize: function (options)
@@ -130,7 +131,8 @@ TS.Color = Class.create({
 			step: 2,
 			start_lum: 70,
 			lum_shift: 22,
-			saturation: 100
+			saturation: 100,
+			hue_shift: 0
 		}, options || {})
 	},
 	
@@ -138,7 +140,7 @@ TS.Color = Class.create({
 	{
 		var boxes	= this.options.colors/this.options.step;
 		var box 	= Math.floor(((offset + this.options.colors - 1)%this.options.colors)/boxes) + ((offset+1)%boxes) * this.options.step;
-		var hue		= box * (360 / this.options.colors) + this.options.shift;
+		var hue		= box * (360 / this.options.colors) + this.options.shift + Math.floor(offset/this.options.colors) * this.options.hue_shift;
 		var rgb		= this.hsl2rgb(hue, this.options.saturation, this.options.start_lum - Math.floor(offset/this.options.colors) * this.options.lum_shift);
 		
 		color = ['r', 'g', 'b'].collect(function (l) {
