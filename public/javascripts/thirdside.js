@@ -139,11 +139,13 @@ TS.Color = Class.create({
 		var boxes	= this.options.colors/this.options.step;
 		var box 	= Math.floor(((offset + this.options.colors - 1)%this.options.colors)/boxes) + ((offset+1)%boxes) * this.options.step;
 		var hue		= box * (360 / this.options.colors) + this.options.shift;
-		var rgb = this.hsl2rgb(hue, this.options.saturation, this.options.start_lum - Math.floor(offset/this.options.colors) * this.options.lum_shift);
+		var rgb		= this.hsl2rgb(hue, this.options.saturation, this.options.start_lum - Math.floor(offset/this.options.colors) * this.options.lum_shift);
+		
 		color = ['r', 'g', 'b'].collect(function (l) {
 			var s = Math.floor(rgb[l]).toString(16);
 			return s.length == 2 ? s : "0" + s;
-		})
+		});
+		
 		return "#" + color.join("");
 	},
 	
@@ -168,7 +170,8 @@ TS.Color = Class.create({
 		}
 		return {r: r, g: g, b: b};
 	},
-
+	
+	// Thanks to jkd @ http://www.codingforums.com/showthread.php?t=11156
 	hueToRgb: function (m1, m2, hue) {
 		var v;
 		if (hue < 0)
