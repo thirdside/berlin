@@ -1,4 +1,20 @@
 #container
 
+#legend{:style => "float: right;"}
+  #controls
+    %button#rewind
+      Rewind
+    %button#back
+      Back
+    %button#pause{:style => "display:none;"}
+      Pause
+    %button#play{:disabled => true}
+      Play
+    %button#next
+      Next
+    %button#end
+      End
+  %ul#player-list
+
 :javascript
-  new TS.AIPlayback('container', '/maps/1.map', '/javascripts/game_description.js');
+  new TS.AIPlayback('container', 'controls', '/maps/1.map', '/javascripts/game_description.js');
