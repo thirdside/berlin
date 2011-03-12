@@ -108,6 +108,7 @@ TS.AIMap = Class.create(TS, {
 		this.layers		= {};
 		this.graphics	= {};
 		this.moves		= [];
+		this.color		= new TS.Color();
 		
 		// load config
 		new Ajax.Request( config_url, {method: 'get', onComplete: this.onConfigLoaded.bindAsEventListener(this)});
@@ -123,8 +124,9 @@ TS.AIMap = Class.create(TS, {
 		this.nodeGraph = new TS.NodeGraph(this.config);
 		
 		// Create a canvas element for each display layer
-		$A(['background', 'paths', 'nodes', 'players', 'moves', 'info']).each(function(layer) {
-			this.layers[layer] = new Element('canvas', {id: layer, width: this.config.map.width,  height: this.config.map.height});
+		$A(['background', 'paths', 'nodes', 'moves', 'players', 'info']).each(function(layer) {
+			this.layers[layer] = Raphael(0, 0, this.config.map.width,  this.config.map.height);
+			this.container.insert(this.layers[layer].canvas);
 		}, this);
 		
 		// Preload all the images
@@ -148,15 +150,9 @@ TS.AIMap = Class.create(TS, {
 	},
 
 	// Returns a context associated with a layer's canvas
-	getContext: function (layer)
+	getSVG: function (layer)
 	{
-		return this.layers[layer] ? this.layers[layer].getContext('2d') : null;	
-	},
-	
-	clearContext: function (layer)
-	{
-		if (this.getContext(layer))
-			this.getContext(layer).clearRect(0, 0, this.layers[layer].width, this.layers[layer].height);
+		return this.layers[layer] ? this.layers[layer] : null;	
 	},
 	
 	// Called every time a new turn happens
@@ -182,7 +178,7 @@ TS.AIMap = Class.create(TS, {
 		drawableLayers = $A(drawableLayers);
 		
 		drawableLayers.each(function (layer){
-			this.clearContext(layer);
+			this.getSVG(layer).clear();
 		}, this);
 		
 		Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
@@ -194,11 +190,12 @@ TS.AIMap = Class.create(TS, {
 			{
 				var img = this.graphics.nodes[node.type];
 				// Draw Nodes
-				
-				this.getContext('nodes').drawImage(
-						img,
+				this.getSVG('nodes').image(
+						img.src,
 						node.position.x - img.width / 2,
-						node.position.y - img.height / 2
+						node.position.y - img.height / 2,
+						img.width,
+						img.height
 				);
 			}
 			
@@ -209,79 +206,118 @@ TS.AIMap = Class.create(TS, {
 					var to = this.nodeGraph.nodes[otherNodeId];
 						
 					// Draw Paths
-					var ctx = this.getContext('paths');
-					this.drawArrow(ctx, node.position.x, node.position.y, to.position.x, to.position.y, 16, "#444444", true)
+					var svg = this.getSVG('paths');
+					this.drawArrow(svg, node.position.x, node.position.y, to.position.x, to.position.y, 16, "#444444")
 				}, this);
 			}
 			
 			if (drawableLayers.include('players'))
 			{
+				
 				// PLAYERS
-				var ctx = this.getContext('players');
-				ctx.globalAlpha = 0.8;
+				var svg = this.getSVG('players');
+				
 				var soldiers_box_width	  = 50;
 				var soldiers_box_height	 = 25;
 				var soldiers_box_padding_x  = 10;
 				var soldiers_box_padding_y  = 7;
-
-				ctx.fillStyle = "#333333";
-				ctx.fillRect (node.position.x + soldiers_box_padding_x, node.position.y + soldiers_box_padding_y, soldiers_box_width, soldiers_box_height);
-
-				ctx.fillStyle	= '#000000';
-				ctx.font		 = '20px sans-serif';
-				ctx.textAlign	= 'center';
-				ctx.textBaseline = 'top';
-				ctx.fillText(node.nbSoldiers, node.position.x + soldiers_box_width / 2 + soldiers_box_padding_x, node.position.y + soldiers_box_padding_y);
+				
+			//	if (node.nbSoldiers)
+				{
+					var tx = node.position.x + soldiers_box_width / 2 + soldiers_box_padding_x;
+					var ty = node.position.y + soldiers_box_padding_y;
+					t = svg.text(tx, ty, node.nbSoldiers);
+					t.attr({"font-size": 24});
+					var dim = {
+						x: tx - soldiers_box_padding_x - t[0].clientWidth/2,
+						y: ty - soldiers_box_padding_y - t[0].clientHeight/2,
+						w: t[0].clientWidth + soldiers_box_padding_x * 2,
+						h: t[0].clientHeight + soldiers_box_padding_y * 2
+					}
+					r = svg.rect(dim.x, dim.y, dim.w, dim.h, 6);
+					r.attr({stroke:"#000000", "fill-opacity": .85, fill: this.color.getColor(node.playerId)});
+					t.insertAfter(r);
+				}
 			}
-			
-			if (drawableLayers.include('moves'))
-			{
-				this.moves.each(function (move) {
-					this.drawMove(move);
-				}, this);
-			}
+		}, this);
+		if (drawableLayers.include('moves'))
+		{
+			this.moves.each(function (move) {
+				this.drawMove(move);
+			}, this);
+		}
+	},
+	// Fonction pour tester l'etalage des couleurs "aleatoires"
+	layOut: function ()
+	{
+		// PLAYERS
+		Object.keys(this.layers).each(function(layer) {
+			this.getSVG(layer).clear();
 		}, this);
 		
-		// Add all the layers to the display area
-		drawableLayers.each(function(layer) {
-			this.container.insert(this.layers[layer]);
-		}, this);
+		var svg = this.getSVG('info');
+		
+		var soldiers_box_width	  = 50;
+		var soldiers_box_height	 = 25;
+		var soldiers_box_padding_x  = 10;
+		var soldiers_box_padding_y  = 7;
+		for (i = 0; i < 36; i++)
+		{
+			var tx = ((i%12)+1) * 35;
+			var ty = 25 + Math.floor(i/12) * 40;
+			t = svg.text(tx, ty, 0);
+			t.attr({"font-size": 24});
+			var dim = {
+				x: tx - soldiers_box_padding_x - t[0].clientWidth/2,
+				y: ty - soldiers_box_padding_y - t[0].clientHeight/2,
+				w: t[0].clientWidth + soldiers_box_padding_x * 2,
+				h: t[0].clientHeight + soldiers_box_padding_y * 2
+			}
+			r = svg.rect(dim.x, dim.y, dim.w, dim.h, 6);
+			r.attr({stroke:"#000000", "fill-opacity": .85, fill: this.color.getColor(i+1)});
+			t.insertAfter(r);
+		}
 	},
 	
 	drawMove: function (move)
 	{
-		var ctx = this.getContext("players");
+		var svg = this.getSVG("players");
 		var nodeFrom = this.nodeGraph.nodes[move.from];
 		var nodeTo = this.nodeGraph.nodes[move.to];
-		this.drawArrow(ctx, nodeFrom.position.x, nodeFrom.position.y, nodeTo.position.x, nodeTo.position.y, 15, "#ff00ff");
+		this.drawArrow(svg, nodeFrom.position.x, nodeFrom.position.y, nodeTo.position.x, nodeTo.position.y, 15, "#ff00ff", false);
 	},
 	
-	drawArrow: function (ctx, fromX, fromY, toX, toY, size, color, noarrow)
+	drawArrow: function (svg, fromX, fromY, toX, toY, size, color, noarrow)
 	{
 		noarrow = noarrow || false;
 		color = color || "#000000";
 		
-		ctx.strokeStyle = color;
-		ctx.beginPath();
-		ctx.moveTo(fromX, fromY);
-		ctx.lineTo(toX, toY);
-		ctx.lineWidth = 5;
-		ctx.stroke();
+		//var path = "M#{fromX} #{fromY}S#{controlX} #{controlY} #{toX} #{toY}";
+		var path = "M#{fromX} #{fromY}L#{toX} #{toY}";
+		var inter = {fromX: fromX, fromY: fromY, toX: toX, toY: toY, controlX: toX, controlY: toY - (toY - fromY)/2};
+		var attr = {stroke: color, "stroke-width": 4, "stroke-linejoin": "round"};
+		pathStr = path.interpolate(inter);
+		path = svg.path(pathStr);
+		path.attr(attr);
 		
 		if (!noarrow)
 		{
-			ctx.beginPath();
-			ctx.fillStyle = color;
+			path = "M#{toX} #{toY}L#{a1X} #{a1Y}L#{a2X} #{a2Y}L#{toX} #{toY}";
 			var angle = Math.atan2(toY - fromY, toX - fromX);
 			var angle1 = angle + Math.PI / 8;
 			var angle2 = angle - Math.PI / 8;
-			ctx.lineTo(Math.round(toX - Math.cos(angle1) * size), Math.round(toY - Math.sin(angle1) * size));
-			ctx.lineTo(Math.round(toX - Math.cos(angle2) * size), Math.round(toY - Math.sin(angle2) * size));
-			ctx.lineTo(toX, toY);
-			ctx.stroke();
-			ctx.fill();
+			var inter = Object.extend(inter, {
+				a1X: Math.round(toX - Math.cos(angle1) * size),
+				a1Y: Math.round(toY - Math.sin(angle1) * size),
+				a2X: Math.round(toX - Math.cos(angle2) * size),
+				a2Y: Math.round(toY - Math.sin(angle2) * size)
+			});
+			
+			pathStr = path.interpolate(inter);
+			path = svg.path(pathStr);
+			attr.fill = color;
+			path.attr(attr);
 		}
-		
 	}
 });
 
@@ -351,6 +387,12 @@ TS.AIPlayback = Class.create(TS, {
 			this.timer.stop();
 		}
 		this.map.onTurn(this.turn);
+		
+		// Juste pour afficher les couleurs generees
+		if (this.gameDescription.turns.length <= this.turnNumber)
+		{
+			this.map.layOut();
+		}
 	}
 })
 
