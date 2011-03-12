@@ -284,7 +284,7 @@ TS.AIMap = Class.create(TS, {
 		var svg = this.getSVG("players");
 		var nodeFrom = this.nodeGraph.nodes[move.from];
 		var nodeTo = this.nodeGraph.nodes[move.to];
-		this.drawArrow(svg, nodeFrom.position.x, nodeFrom.position.y, nodeTo.position.x, nodeTo.position.y, 15, "#ff00ff", false);
+		this.drawArrow(svg, nodeFrom.position.x, nodeFrom.position.y, nodeTo.position.x, nodeTo.position.y, 15, this.color.getColor(move.player_id), false);
 	},
 	
 	drawArrow: function (svg, fromX, fromY, toX, toY, size, color, noarrow)
