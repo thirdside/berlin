@@ -106,3 +106,69 @@ TS.Timer = Class.create(TS, {
 		this.repeat		= 0;
 	}
 });
+
+TS.Color = Class.create({
+	
+	initialize: function (options)
+	{
+		this.options = Object.extend({
+			shift: 0,
+			colors: 12,
+			step: 4
+		}, options || {})
+	},
+	
+	getColor: function (offset)
+	{
+		var boxes	= this.options.colors/this.options.step;
+		var box 	= Math.floor(((offset + this.options.colors - 1)%this.options.colors)/boxes) + ((offset+1)%boxes) * this.options.step;
+		var hue		= box * (360 / this.options.colors) + this.options.shift;
+		var rgb = this.hsl2rgb(hue, 100, 70 - Math.floor(offset/this.options.colors) * 22);
+		color = ['r', 'g', 'b'].collect(function (l) {
+			var s = Math.floor(rgb[l]).toString(16);
+			return s.length == 2 ? s : "0" + s;
+		})
+		return "#" + color.join("");
+	},
+	
+	// Thanks to jkd @ http://www.codingforums.com/showthread.php?t=11156
+	hsl2rgb: function (h, s, l) {
+		var m1, m2, hue;
+		var r, g, b
+		s /=100;
+		l /= 100;
+		if (s == 0)
+			r = g = b = (l * 255);
+		else {
+			if (l <= 0.5)
+				m2 = l * (s + 1);
+			else
+				m2 = l + s - l * s;
+			m1 = l * 2 - m2;
+			hue = h / 360;
+			r = this.hueToRgb(m1, m2, hue + 1/3);
+			g = this.hueToRgb(m1, m2, hue);
+			b = this.hueToRgb(m1, m2, hue - 1/3);
+		}
+		return {r: r, g: g, b: b};
+	},
+
+	hueToRgb: function (m1, m2, hue) {
+		var v;
+		if (hue < 0)
+			hue += 1;
+		else if (hue > 1)
+			hue -= 1;
+
+		if (6 * hue < 1)
+			v = m1 + (m2 - m1) * hue * 6;
+		else if (2 * hue < 1)
+			v = m2;
+		else if (3 * hue < 2)
+			v = m1 + (m2 - m1) * (2/3 - hue) * 6;
+		else
+			v = m1;
+
+		return 255 * v;
+	}
+});
