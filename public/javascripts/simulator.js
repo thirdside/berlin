@@ -16,6 +16,7 @@ TS.Node = Class.create(TS, {
 		this.id			= id;
 		this.type		= type;
 		this.links		= new Array();
+		this.playerId	= null;
 		this.nbSoldiers	= 0;
 	},
 	
@@ -40,6 +41,7 @@ TS.Node = Class.create(TS, {
 		
 	}
 });
+
 
 TS.NodeGraph = Class.create(TS, {
 	initialize: function ($super, map)
@@ -98,6 +100,12 @@ TS.NodeGraph = Class.create(TS, {
 		}
 	}
 });
+
+
+Object.extend(TS.NodeGraph, {
+	DAMPING : .5,
+	TIMESTEP : .5
+})
 
 TS.AIMap = Class.create(TS, {
 	initialize: function ($super, container, config_url)
@@ -222,7 +230,7 @@ TS.AIMap = Class.create(TS, {
 				var soldiers_box_padding_x  = 10;
 				var soldiers_box_padding_y  = 7;
 				
-			//	if (node.nbSoldiers)
+				if (node.nbSoldiers || node.playerId != null)
 				{
 					var tx = node.position.x + soldiers_box_width / 2 + soldiers_box_padding_x;
 					var ty = node.position.y + soldiers_box_padding_y;
@@ -235,7 +243,7 @@ TS.AIMap = Class.create(TS, {
 						h: t[0].clientHeight + soldiers_box_padding_y * 2
 					}
 					r = svg.rect(dim.x, dim.y, dim.w, dim.h, 6);
-					r.attr({stroke:"#000000", "fill-opacity": .85, fill: this.color.getColor(node.playerId)});
+					r.attr({stroke:"#000000", "fill-opacity": .85, fill: this.getPlayerColor(node.playerId)});
 					t.insertAfter(r);
 				}
 			}
@@ -279,12 +287,14 @@ TS.AIMap = Class.create(TS, {
 		}
 	},
 	
+	
+	
 	drawMove: function (move)
 	{
 		var svg = this.getSVG("players");
 		var nodeFrom = this.nodeGraph.nodes[move.from];
 		var nodeTo = this.nodeGraph.nodes[move.to];
-		this.drawArrow(svg, nodeFrom.position.x, nodeFrom.position.y, nodeTo.position.x, nodeTo.position.y, 15, this.color.getColor(move.player_id), false);
+		this.drawArrow(svg, nodeFrom.position.x, nodeFrom.position.y, nodeTo.position.x, nodeTo.position.y, 15, this.getPlayerColor(move.player_id), false);
 	},
 	
 	drawArrow: function (svg, fromX, fromY, toX, toY, size, color, noarrow)
@@ -318,18 +328,163 @@ TS.AIMap = Class.create(TS, {
 			attr.fill = color;
 			path.attr(attr);
 		}
+	},
+	
+	getPlayerColor: function (playerId)
+	{
+		if (!playerId || playerId <= 0)
+		{
+			return "#CCCCCC";
+		}
+		
+		return this.color.getColor(this.getPlayerIndex(playerId+1));
+	},
+	
+	getPlayerIndex: function (playerId)
+	{
+		if (this.players)
+		{
+			for (i = 0; i < this.players.length; i++)
+			{
+				if (this.players[i].id == playerId) 
+				{
+					return i;
+				}
+			}
+		}
+		
+		return -1;
+	},
+	
+	getPlayerInfo: function (playerId)
+	{
+		var info = {
+			soldiers: 0, 
+			cities: 0, 
+			id: playerId, 
+			color: this.getPlayerColor(playerId), 
+			name: this.players[this.getPlayerIndex(playerId)].name
+		};
+		
+		Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
+			var node = this.nodeGraph.nodes[nodeId];
+		
+			if (node.playerId == playerId)
+			{
+				info.cities += 1;
+				info.soldiers += node.nbSoldiers;
+			}
+		}, this);
+		
+		return info;
 	}
 });
 
 TS.AIPlayback = Class.create(TS, {
-	initialize: function ($super, container, map_url, game_description_url)
+	initialize: function ($super, container, controls, map_url, game_description_url)
 	{
 		$super();
 		this.turnNumber = 0;
+		this.template = '<li><div class="color-box" style="background-color: #{color};"></div><span>#{name}: #{cities}, #{soldiers}</span></li>';
 		this.map = new TS.AIMap(container, map_url);
 		this.map.observe('ready', this.onMapReady.bindAsEventListener(this));
 		this.ready = {map:false, self:false};
+		this.controls = $(controls);
+		this.buttons = ["rewind", "back", "play", "pause", "next", "end"];
+		this.buttons.each(function (control) {
+			this[control] = this.controls.down("#" + control);
+			this[control].observe("click", this["on" + control.capitalize()].bindAsEventListener(this));
+		}, this);
+		
+		this.timer = new TS.Timer();
+		this.timer.observe("timer", this.onTimer.bind(this));
+		
+		this.playerList = $("player-list");
+		
+		this.enableControls();
+		
 		new Ajax.Request( game_description_url, {method: 'get', onComplete: this.onGameDescriptionLoaded.bindAsEventListener(this)});
+	},
+	
+	onRewind: function (e)
+	{
+		this.onPause();
+		this.turnNumber = 0;
+		this.drawCurrentTurn();
+	},
+	
+	onBack: function (e)
+	{
+		this.onPause();
+		this.turnNumber--;
+		this.drawCurrentTurn();
+	},
+	
+	onPlay: function (e)
+	{
+		if (this.turnNumber >= this.getMaxTurn())
+		{
+			this.turnNumber = 0;
+		}
+		
+		this.start();
+		this.enableControls();
+	},
+	
+	onPause: function ()
+	{
+		this.stop();
+		this.enableControls();
+	},
+	
+	onNext: function (e)
+	{
+		this.onPause();
+		this.turnNumber++;
+		this.drawCurrentTurn();
+	},
+	
+	onEnd: function (e)
+	{
+		this.turnNumber = this.getMaxTurn();
+		this.drawCurrentTurn();
+	},
+	
+	drawCurrentTurn: function (clear)
+	{
+		clear = clear || false;
+		
+		if (clear)
+		{
+			this.turn = null;
+		} else {
+			this.turn = this.gameDescription.turns[this.turnNumber];
+		}
+		
+		this.map.onTurn(this.turn);
+		this.enableControls();
+		this.updatePlayerList();
+	},
+	
+	updatePlayerList: function ()
+	{
+		this.playerList.update();
+		var playerInfos = this.gameDescription.infos.players.collect(function(player) {
+			return this.map.getPlayerInfo(player.id);
+		}, this).sortBy(function(infos){
+			return infos.cities;
+		}).reverse().each(function(infos){
+			infos.name = 
+			this.playerList.insert(this.template.interpolate(infos));
+		}, this);
+		
+		console.log(playerInfos);
+		
+	},
+	
+	getMaxTurn: function ()
+	{
+		return this.gameDescription.turns.length - 1;
 	},
 	
 	onMapReady: function ()
@@ -337,7 +492,27 @@ TS.AIPlayback = Class.create(TS, {
 		this.ready.map = true;
 		if (this.isReady())
 		{
-			this.start();
+			this.enableControls();
+		}
+	},
+	
+	enableControls: function ()
+	{
+		this.buttons.each(function(control){
+			this[control].disabled = this.isReady() ? "" : "disabled";
+		},this);
+		
+		this.play[this.timer.isRunning() ? "hide" : "show"]();
+		this.pause[this.timer.isRunning() ? "show" : "hide"]();
+		
+		if (this.turnNumber == 0)
+		{
+			this.back.disabled = "disabled";
+			this.rewind.disabled = "disabled";
+		} else if (this.turnNumber >= this.getMaxTurn())
+		{
+			this.next.disabled = "disabled";
+			this.end.disabled = "disabled;"
 		}
 	},
 	
@@ -347,56 +522,56 @@ TS.AIPlayback = Class.create(TS, {
 		
 		this.gameDescription = request.responseText.evalJSON();
 		
+		this.map.players = this.gameDescription.infos.players;
+		
 		if (this.isReady())
 		{
-			this.start();
+			this.enableControls();
 		}
 	},
 	
 	isReady: function ()
 	{
 		return $H(this.ready).all();
-	}, 
+	},
+	
+	stop: function ()
+	{
+		this.timer.stop();
+	},
 	
 	start: function ()
 	{
-		if (!this.timer)
-		{
-			this.timer = new TS.Timer();
-			this.timer.observe("timer", this.onTimer.bind(this));
-		}
-		
 		this.timer.start(500, -1);
 	},
 	
 	onTimer: function ()
 	{
-		if (this.gameDescription.turns.length > this.turnNumber)
+		var clear = false;
+		if (this.getMaxTurn() >= this.turnNumber)
 		{
 			if (this.turn)
 			{
-				this.turn = null;
-			} else
-			{
-				this.turn = this.gameDescription.turns[this.turnNumber]
-				this.turnNumber++;
+				clear = true;
 			}
 		} else
 		{
-			this.turn = null;
+			clear = true;
 			this.timer.stop();
 		}
-		this.map.onTurn(this.turn);
+		
+		this.drawCurrentTurn(clear);
+		this.enableControls();
+		
+		if (this.timer.isRunning() && clear)
+		{
+			this.turnNumber++;
+		}
 		
 		// Juste pour afficher les couleurs generees
-		if (this.gameDescription.turns.length <= this.turnNumber)
+		if (this.getMaxTurn() < this.turnNumber)
 		{
-			this.map.layOut();
+			//this.map.layOut();
 		}
 	}
-})
-
-Object.extend(TS.NodeGraph, {
-	DAMPING : .5,
-	TIMESTEP : .5
 })
