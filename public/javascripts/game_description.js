@@ -9,17 +9,20 @@
 			{
 				"id": 1,
 				"ai_id": 4,
-				"ai_version": "1.3.311231231"
+				"ai_version": "1.3.311231231",
+				"name": "Toto"
 			},
 			{
 				"id": 2,
 				"ai_id": 4,
-				"ai_version": "1.3.311231231"
+				"ai_version": "1.3.311231231",
+				"name": "Toto"
 			},
 			{
 				"id": 3,
 				"ai_id": 4,
-				"ai_version": "1.3.311231231"
+				"ai_version": "1.3.311231231",
+				"name": "Toto"
 			}
 		]
 	},
@@ -44,7 +47,7 @@
 				{
 					"node_id": 2,
 					"nb_soldiers": 1,
-					"player_id": 2
+					"player_id": 3
 				}
 			]
 		},
