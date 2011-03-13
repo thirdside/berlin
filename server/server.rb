@@ -18,10 +18,8 @@ ActiveRecord::Base.establish_connection(
   require File.expand_path( File.dirname( __FILE__ ) ) + "/../app/models/#{model}"
 end
 
-ais = ArtificialIntelligence.all * 3
-
 map = Map.first
-map.init( ais )
+map.init( ArtificialIntelligence.all )
 
 game = Game.new
 game.map = map

@@ -66,6 +66,10 @@ class Node
   end
 
   def occupied?
+    armies.size > 0
+  end
+
+  def owned?
     !owner.nil?
   end
 

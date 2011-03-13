@@ -66,7 +66,7 @@ class Game < ActiveRecord::Base
   end
 
   def spawn!
-    @map.nodes.values.select{ |node| node.occupied? }.each do |node|
+    @map.nodes.values.select{ |node| node.owned? }.each do |node|
       if node.soldiers_per_turn > 0
         p "Player ##{node.owner} gains #{node.soldiers_per_turn} soldiers on node ##{node.id}."
         node.add_soldiers node.owner, node.soldiers_per_turn
@@ -79,6 +79,9 @@ class Game < ActiveRecord::Base
     raise "Heugh? With what map?" if @map.nil?
 
     while @turn <= @map.maximum_number_of_turns
+      responses = {}
+      requests  = {}
+
       # calculate the actual state of the map
       @states[@turn] = @map.states
 
@@ -90,7 +93,7 @@ class Game < ActiveRecord::Base
 
       # create and queue a http request for each alive player
       alive_players.each do |player_id, player|
-        player.request = Typhoeus::Request.new(player.url,
+        requests[player_id] = Typhoeus::Request.new(player.url,
             :method        => :post,
             :headers       => {:Accept => "application/json"},
             :timeout       => @map.time_limit_per_turn,
@@ -102,23 +105,23 @@ class Game < ActiveRecord::Base
               :json=>self.snapshot
             })
 
-        player.request.on_complete do |response|
-          player.response = response
+        requests[player_id].on_complete do |response|
+          responses[player_id] = response
         end
 
-        @hydra.queue( player.request )
+        @hydra.queue( requests[player_id] )
       end
 
       # blocking call, waiting for all requests
       @hydra.run
 
       # let's move!
-      @map.players.each do |player_id, player|
-        rep = player.response
+      @map.players.keys.each do |player_id|
+        rep = responses[player_id]
 
         if rep.success?
           begin
-            self.register_move( player_id.to_s, rep.body )
+            self.register_move( player_id, rep.body )
           rescue
             p "Can't parse json"
           end
