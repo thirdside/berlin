@@ -38,10 +38,11 @@ class Map < ActiveRecord::Base
     players.each_with_index do |player, index|
       @players[index] = player 
     end
-
-    @parsed['spawn_points'][@players.size.to_s].each do |player, nodes|
+    
+    @parsed['spawn_points'][@players.size.to_s].each do |player_id, nodes|
       nodes.each do |node|
-        @nodes[node['node']].set_number_of_soldiers player, node['number_of_soldiers']
+        @nodes[node['node']].owner = player_id
+        @nodes[node['node']].add_soldiers player_id, node['number_of_soldiers']
       end
     end
   end

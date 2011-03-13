@@ -15,12 +15,31 @@ class Node
 
     @@nodes << self
   end
-  
+
+  def armies
+    a = {}
+    
+    @armies.select{ |player_id, number_of_soldiers| number_of_soldiers > 0 }.each do |army|
+      a[army[0]] = army[1]
+    end
+
+    a
+  end
+
+  def combat?
+    self.armies.size > 1
+  end
+
   def soldiers_per_turn
     @type.soldiers_per_turn
   end
 
-  def set_number_of_soldiers player_id, number_of_soldiers
+  def move_soldiers player_id, node, number_of_soldiers
+    self.add_soldiers player_id, number_of_soldiers * -1
+    node.add_soldiers player_id, number_of_soldiers
+  end
+
+  def add_soldiers player_id, number_of_soldiers
     @armies[player_id] += number_of_soldiers
   end
 
@@ -35,8 +54,13 @@ class Node
   def is_type? type
     self.type == type.to_s
   end
-
+  
   def adjacents
     @links
   end
+
+  def is_adjacent? node
+    self.adjacents.include? node
+  end
+
 end
