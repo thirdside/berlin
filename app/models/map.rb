@@ -11,9 +11,9 @@ class Map < ActiveRecord::Base
   end
   
   def build!
-    @maximum_number_of_turns  = @parsed['map']['maximum_number_of_turns'] || 100
-    @number_of_players        = @parsed['map']['number_of_players']       || []
-    @time_limit_per_turn      = @parsed['map']['time_limit_per_turn']     || 1000
+    @maximum_number_of_turns  = @parsed['infos']['maximum_number_of_turns'] || 100
+    @number_of_players        = @parsed['infos']['number_of_players']       || []
+    @time_limit_per_turn      = @parsed['infos']['time_limit_per_turn']     || 1000
 
     @parsed['types'].each do |type|
       @types[type['name']] = NodeType.new(type)
@@ -39,7 +39,7 @@ class Map < ActiveRecord::Base
       @players[index.to_s] = player 
     end
     
-    @parsed['spawn_points'][@players.size.to_s].each do |player_id, nodes|
+    @parsed['setup'][@players.size.to_s].each do |player_id, nodes|
       nodes.each do |node|
         @nodes[node['node']].owner = player_id
         @nodes[node['node']].add_soldiers player_id, node['number_of_soldiers']
@@ -62,6 +62,6 @@ class Map < ActiveRecord::Base
   end
 
   def directed?
-    (@parsed['map']['directed'] || false) == true
+    (@parsed['infos']['directed'] || false) == true
   end
 end

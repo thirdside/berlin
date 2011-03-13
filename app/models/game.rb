@@ -153,6 +153,22 @@ class Game < ActiveRecord::Base
     self.save!
   end
 
+  def info
+    {
+      :game_id                  => self.id,
+      :map_id                   => @map.id,
+      :time_start               => @start,
+      :time_end                 => @end,
+      :turns                    => @turn,
+      :maximum_number_of_turns  => @map.maximum_number_of_turns,
+      :players                  => [
+          {
+
+          }
+      ]
+    }
+  end
+
   def to_json
     temp = Hash.new{ |h,k|  h[k] = [] }
 
