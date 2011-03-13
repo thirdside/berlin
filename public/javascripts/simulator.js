@@ -477,9 +477,6 @@ TS.AIPlayback = Class.create(TS, {
 			infos.name = 
 			this.playerList.insert(this.template.interpolate(infos));
 		}, this);
-		
-		console.log(playerInfos);
-		
 	},
 	
 	getMaxTurn: function ()
