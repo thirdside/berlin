@@ -1,28 +1,33 @@
 class Map < ActiveRecord::Base
   attr_accessor :parsed, :types, :nodes, :number_of_players, :time_limit_per_turn, :players, :maximum_number_of_turns
   
-  def after_initialize
-    @parsed   = JSON.parse( self.read_attribute( :json ) )
+  after_initialize :build!
+  
+  def build!
+    # Fuuuuu Rails
+    return if defined? Rails.env
+
+    @parsed   = self.json.present? ? JSON.parse( self.json ) : {}
     @players  = {}
     @types    = {}
     @nodes    = {}
 
-    self.build!
-  end
-  
-  def build!
+    # taken from parsed json
     @maximum_number_of_turns  = @parsed['infos']['maximum_number_of_turns'] || 100
     @number_of_players        = @parsed['infos']['number_of_players']       || []
     @time_limit_per_turn      = @parsed['infos']['time_limit_per_turn']     || 1000
 
+    # get each node types
     @parsed['types'].each do |type|
       @types[type['name']] = NodeType.new(type)
     end
 
+    # build each node
     @parsed['nodes'].each do |node|
       @nodes[node['id']] = Node.new(node, @types[node['type']])
     end
 
+    # build paths
     @parsed['paths'].each do |path|
       @nodes[path['from']].link_to(@nodes[path['to']])
 

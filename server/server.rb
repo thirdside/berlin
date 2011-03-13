@@ -23,6 +23,6 @@ ais = ArtificialIntelligence.all * 3
 map = Map.first
 map.init( ais )
 
-game = Game.new
+game = Game.create
 game.map = map
 game.run

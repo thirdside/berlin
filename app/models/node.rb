@@ -16,7 +16,7 @@ class Node
     @@nodes << self
   end
 
-  def status
+  def state
     {:node_id=>@id, :player_id=>owner, :number_of_soldiers=>number_of_soldiers}
   end
 

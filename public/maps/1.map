@@ -10,8 +10,8 @@
 	},
 
 	"types": [
-		{"name": "city", "image": "/images/city.jpg", "soldiers_per_turn": 1},
-		{"name": "node", "image": "/images/node.gif", "soldiers_per_turn": 0}
+		{"name": "city", "image": "/images/city.jpg", "soldiers_per_turn": 1, "points": 1},
+		{"name": "node", "image": "/images/node.gif", "soldiers_per_turn": 0, "points": 0}
 	],
 	
 	"nodes": [

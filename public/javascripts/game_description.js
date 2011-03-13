@@ -38,7 +38,7 @@
                 }
             ],
 
-            "node_state": [
+            "states": [
                 {
                     "node_id": 1,
                     "number_of_soldiers": 100,
