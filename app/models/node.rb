@@ -16,6 +16,14 @@ class Node
     @@nodes << self
   end
 
+  def points
+    @type.points
+  end
+
+  def points?
+    points > 0
+  end
+
   def armies
     a = {}
     
@@ -52,14 +60,14 @@ class Node
   end
 
   def is_type? type
-    self.type == type.to_s
+    @type.name == type.to_s
   end
   
   def adjacents
     @links
   end
 
-  def is_adjacent? node
+  def adjacent? node
     self.adjacents.include? node
   end
 

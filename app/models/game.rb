@@ -6,7 +6,7 @@ class Game < ActiveRecord::Base
 
   def after_initialize
     @moves  = Hash.new{ |h,k| h[k] = Hash.new{ |h,k| h[k] = [] } }
-    @turn   = 1
+    @turn   = 0
     @start  = Time.new
     @end    = nil
     @hydra  = Typhoeus::Hydra.new unless defined? Rails.env
@@ -25,10 +25,10 @@ class Game < ActiveRecord::Base
       to                  = @map.nodes[move['to']]
       number_of_soldiers  = move['number_of_soldiers']
 
-      if from.is_adjacent? to
+      if from.adjacent? to
         if from.armies[player_id].present?
           if from.armies[player_id] >= number_of_soldiers && number_of_soldiers > 0
-            @moves[@turn][player_id] << {:from=>from, :to=>to, :number_of_soldiers=>number_of_soldiers}
+            @moves[@turn][player_id] << move
           end
         end
       end
@@ -41,7 +41,7 @@ class Game < ActiveRecord::Base
     @moves[@turn].each do |player_id, moves|
       moves.each do |move|
         p "move"
-        move[:from].move_soldiers player_id, move[:to], move[:number_of_soldiers]
+        @map.nodes[move['from']].move_soldiers player_id, @map.nodes[move['to']], move['number_of_soldiers']
       end
     end
 
@@ -72,7 +72,10 @@ class Game < ActiveRecord::Base
   def run
     raise "Heugh? With what map?" if @map.nil?
 
-    while @turn < @map.maximum_number_of_turns && @map.alive_players.size > 1
+    while @turn <= @map.maximum_number_of_turns && @map.alive_players.size > 1
+      # next turn
+      self.next_turn
+
       p "New turn ##{@turn}"
 
       # create and queue a http request for each player
@@ -83,6 +86,7 @@ class Game < ActiveRecord::Base
             :timeout       => @map.time_limit_per_turn,
             :cache_timeout => 0,
             :params        => {
+              :self=>id,
               :game=>self.id,
               :turn=>self.turn,
               :json=>self.snapshot
@@ -103,26 +107,59 @@ class Game < ActiveRecord::Base
         rep = player.response
 
         if rep.success?
-          #begin
+          begin
             self.move( player_id.to_s, rep.body )
-          #rescue
-          #  p "Can't parse json"
-          #end
+          rescue
+            p "Can't parse json"
+          end
         elsif rep.timed_out?
           p "Request timed out"
         else
           p rep.curl_error_message
         end
       end
-
-      # next turn
-      self.next_turn
     end
 
     self.end_of_game
   end
 
+  def ranking
+    results = {}
+    points  = Hash.new{ |h,k| h[k] = 0.0 }
+    total   = 0
+
+    @map.nodes.values.each do |node|
+      if node.points?
+        points[node.owner] += node.points if node.owner.present?
+        total += node.points
+      end
+    end
+
+    @map.players.keys.each do |player_id|
+      results[player_id] = points[player_id] == 0 ? 0.0 : (points[player_id] / total)
+    end
+
+    results
+  end
+
   def end_of_game
-    self.number_of_turns = @turn
+    @end = Time.now
+    
+    self.time_start       = @start
+    self.time_end         = @end
+    self.number_of_turns  = @turn
+    self.json             = to_json
+
+    self.save!
+  end
+
+  def to_json
+    temp = Hash.new{ |h,k|  h[k] = [] }
+
+    (0..@turn).each do |turn|
+      temp[turn]
+    end
+
+    temp
   end
 end

@@ -36,7 +36,7 @@ class Map < ActiveRecord::Base
     raise "This map can't be played with #{players.size} players. Available numbers of players are : #{@number_of_players.join(', ')}" unless @number_of_players.include? players.size
     
     players.each_with_index do |player, index|
-      @players[index] = player 
+      @players[index.to_s] = player 
     end
     
     @parsed['spawn_points'][@players.size.to_s].each do |player_id, nodes|
@@ -45,6 +45,20 @@ class Map < ActiveRecord::Base
         @nodes[node['node']].add_soldiers player_id, node['number_of_soldiers']
       end
     end
+  end
+
+  # TODO IMPORTANT!!! we'll need to add a total number of soldiers to player to avoid to recheck each node
+  # this is only a quick test code
+  def alive_players
+    temp = Hash.new{ |h,k| h[k] = 0 }
+
+    @nodes.values.each do |node|
+      @players.keys.each do |player_id|
+        temp[player_id] += node.armies[player_id] if node.armies[player_id].present?
+      end
+    end
+
+    temp.select{ |k,v| v > 0 }.map{ |player, total| player }
   end
 
   def directed?
