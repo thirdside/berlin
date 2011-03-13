@@ -1,5 +1,5 @@
 {
-	"map": {
+	"infos": {
 		"name": "Let's get ready to rumble!",
 		"version": 1,
 		"width": 500,
@@ -30,7 +30,7 @@
 		{"from": 4, "to": 3}
 	],
 
-	"spawn_points": {
+	"setup": {
 		"3": {
 			"0": [
 				{
