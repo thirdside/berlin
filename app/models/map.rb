@@ -52,18 +52,47 @@ class Map < ActiveRecord::Base
     end
   end
 
-  # TODO IMPORTANT!!! we'll need to add a total number of soldiers to player to avoid to recheck each node
-  # this is only a quick test code
-  def alive_players
-    temp = Hash.new{ |h,k| h[k] = 0 }
+  def number_of_soldiers_per_player
+    total = {}
+
+    @players.keys.each do |player_id|
+      total[player_id] = 0
+    end
 
     @nodes.values.each do |node|
       @players.keys.each do |player_id|
-        temp[player_id] += node.armies[player_id] if node.armies[player_id].present?
+        total[player_id] += node.armies[player_id] if node.armies[player_id].present?
       end
     end
 
-    temp.select{ |k,v| v > 0 }.map{ |player, total| player }
+    total
+  end
+
+  def number_of_nodes_per_player
+    total = {}
+
+    @players.keys.each do |player_id|
+      total[player_id] = 0
+    end
+
+    @nodes.values.each do |node|
+      @players.keys.each do |player_id|
+        total[player_id] += 1 if node.owner == player_id
+      end
+    end
+
+    total
+  end
+
+  def alive_players
+    soldiers  = number_of_soldiers_per_player.select{ |player_id, total| total > 0 }.keys
+    nodes     = number_of_nodes_per_player.select{ |player_id, total| total > 0 }.keys
+
+    @players.select{ |player_id, player| soldiers.include?( player_id ) || nodes.include?( player_id ) }
+  end
+
+  def states
+    @nodes.values.map{ |node| node.state }
   end
 
   def directed?

@@ -51,6 +51,12 @@ class Node
   end
 
   def move_soldiers player_id, node, number_of_soldiers
+    return if number_of_soldiers < 1
+    
+    # be sure to not move more soldiers than we have
+    number_of_soldiers = [@armies[player_id], number_of_soldiers].min
+
+    # move soldiers from one node to another
     self.add_soldiers player_id, number_of_soldiers * -1
     node.add_soldiers player_id, number_of_soldiers
   end

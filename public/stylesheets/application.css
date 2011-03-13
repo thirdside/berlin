@@ -4,6 +4,10 @@
   left: 0;
 }
 
+#controls {
+    float: right;
+}
+
 #player-list li {
 	list-style: none;
 	clear: both;

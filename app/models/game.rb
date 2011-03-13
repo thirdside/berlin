@@ -1,5 +1,5 @@
 class Game < ActiveRecord::Base
-  attr_accessor :turn, :moves
+  attr_accessor :uuid, :turn, :moves, :states
 
   belongs_to :map
   belongs_to :winner, :class_name=>"ArtificialIntelligence"
@@ -10,8 +10,10 @@ class Game < ActiveRecord::Base
     # Fuuuuu Rails
     return if defined? Rails.env
 
+    @uuid   = UUIDTools::UUID.random_create.to_s
     @moves  = Hash.new{ |h,k| h[k] = Hash.new{ |h,k| h[k] = [] } }
-    @turn   = 0
+    @states = {}
+    @turn   = 1
     @start  = Time.new
     @end    = nil
     @hydra  = Typhoeus::Hydra.new unless defined? Rails.env
@@ -19,12 +21,13 @@ class Game < ActiveRecord::Base
 
   # register moves for a player
   # json should be of format [{from, to, number_of_soldiers}, ...]
-  def move player_id, json
+  def register_move player_id, json
     JSON.parse( json ).each do |move|
       from                = @map.nodes[move['from']]
       to                  = @map.nodes[move['to']]
       number_of_soldiers  = move['number_of_soldiers']
 
+      # a move is valid if nodes are adjacent and if there's enough soldiers to move
       if from.adjacent? to
         if from.armies[player_id].present?
           if from.armies[player_id] >= number_of_soldiers && number_of_soldiers > 0
@@ -35,59 +38,66 @@ class Game < ActiveRecord::Base
     end
   end
 
-  # next turn
-  def next_turn
-    # execute valid moves...
+  def move!
     @moves[@turn].each do |player_id, moves|
       moves.each do |move|
-        p "move"
+        p "Player ##{player_id} moves #{move['number_of_soldiers']} soldiers from node ##{move['from']} to node ##{move['to']}."
         @map.nodes[move['from']].move_soldiers player_id, @map.nodes[move['to']], move['number_of_soldiers']
       end
     end
+  end
 
-    # execute combats...
+  def fight!
     @map.nodes.values.select{ |node| node.combat? }.each do |node|
+      p "There's a combat on node ##{node.id}!"
+
       while node.combat?
         node.armies.keys.each do |player_id|
-          node.add_soldiers player_id, -1
+          node.add_soldiers player_id, node.armies.values.min * -1
         end
       end
 
       # if there's still an army on the node, set the owner to the corresponding player
-      node.owner = node.armies.keys.first if node.armies.size > 0
+      if node.armies.size > 0
+        p "Player ##{node.armies.keys.first} is now the proud owner of node ##{node.id}"
+        node.owner = node.armies.keys.first
+      end
     end
+  end
 
-    # new soldiers!
+  def spawn!
     @map.nodes.values.select{ |node| node.occupied? }.each do |node|
-      node.add_soldiers node.owner, node.soldiers_per_turn
+      if node.soldiers_per_turn > 0
+        p "Player ##{node.owner} gains #{node.soldiers_per_turn} soldiers on node ##{node.id}."
+        node.add_soldiers node.owner, node.soldiers_per_turn
+      end
     end
-
-    p "End of turn"
-
-    # increment turn number
-    @turn += 1
   end
 
   # let's run!
   def run
     raise "Heugh? With what map?" if @map.nil?
 
-    while @turn <= @map.maximum_number_of_turns && @map.alive_players.size > 1
-      # next turn
-      self.next_turn
+    while @turn <= @map.maximum_number_of_turns
+      # calculate the actual state of the map
+      @states[@turn] = @map.states
 
-      p "New turn ##{@turn}"
+      # check for alive players
+      alive_players = @map.alive_players
 
-      # create and queue a http request for each player
-      @map.players.each do |id, player|
+      # is there more than 1 alive player?
+      break unless alive_players.size > 1
+
+      # create and queue a http request for each alive player
+      alive_players.each do |player_id, player|
         player.request = Typhoeus::Request.new(player.url,
             :method        => :post,
             :headers       => {:Accept => "application/json"},
             :timeout       => @map.time_limit_per_turn,
             :cache_timeout => 0,
             :params        => {
-              :self=>id,
-              :game=>self.id,
+              :self=>player_id,
+              :game=>self.uuid,
               :turn=>self.turn,
               :json=>self.snapshot
             })
@@ -108,7 +118,7 @@ class Game < ActiveRecord::Base
 
         if rep.success?
           begin
-            self.move( player_id.to_s, rep.body )
+            self.register_move( player_id.to_s, rep.body )
           rescue
             p "Can't parse json"
           end
@@ -118,6 +128,13 @@ class Game < ActiveRecord::Base
           p rep.curl_error_message
         end
       end
+
+      self.move!
+      self.fight!
+      self.spawn!
+
+      # next turn!
+      @turn += 1
     end
 
     self.end_of_game
@@ -153,11 +170,9 @@ class Game < ActiveRecord::Base
 
   def infos
     {
-      :game_id                  => self.id,
-      :time_start               => self.time_start,
-      :time_end                 => self.time_end,
+      :game_id                  => self.uuid,
       :map_id                   => @map.id,
-      :turns                    => @turn,
+      :turn                     => @turn,
       :maximum_number_of_turns  => @map.maximum_number_of_turns,
       :players                  => @map.players.map{ |player_id, player| {:id=>player_id, :name=>player.url} }
     }
@@ -167,10 +182,10 @@ class Game < ActiveRecord::Base
   def snapshot
     temp = Hash.new
 
+    temp[:infos]  = self.infos
     temp[:nodes]  = @map.parsed['nodes']
     temp[:paths]  = @map.parsed['paths']
-    temp[:infos]  = self.infos
-    temp[:states] = @map.nodes.values.map{ |node| node.state }
+    temp[:states] = @states[@turn]
 
     temp.to_json
   end
@@ -181,11 +196,10 @@ class Game < ActiveRecord::Base
 
     temp[:infos] = self.infos
     temp[:turns] = Hash.new{ |h,k| h[k] = {} }
-    
 
-    (0..@turn).each do |turn|
+    (1..@turn).each do |turn|
       temp[:turns][turn][:moves]  = @moves[turn]
-      temp[:turns][turn][:states] = @map.nodes.values.map{ |node| node.state }
+      temp[:turns][turn][:states] = @states[turn]
     end
 
     temp.to_json

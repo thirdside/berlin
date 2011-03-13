@@ -2,8 +2,8 @@
 
 <table>
   <tr>
-    <th>Map</th>
-    <th>Winner</th>
+    <th>#</th>
+    <th>JS</th>
     <th></th>
     <th></th>
     <th></th>
@@ -11,8 +11,7 @@
 
 <% @games.each do |game| %>
   <tr>
-    <td><%= game.map %></td>
-    <td><%= game.winner %></td>
+    <td><%= game.id %></td>
     <td><%= link_to 'Show', game %></td>
     <td><%= link_to 'Edit', edit_game_path(game) %></td>
     <td><%= link_to 'Destroy', game, :confirm => 'Are you sure?', :method => :delete %></td>
