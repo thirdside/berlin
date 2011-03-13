@@ -1,0 +1,19 @@
+#container canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#player-list li {
+	list-style: none;
+	clear: both;
+}
+
+#player-list span, div {
+	float: left;
+}
+
+.color-box {
+	width: 20px;
+	height: 20px;
+}
