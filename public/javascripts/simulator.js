@@ -49,7 +49,7 @@ TS.NodeGraph = Class.create(TS, {
 		$super();
 		this.nodes = {};
 		this.map = map;
-		this.directed = map.map.directed || false;
+		this.directed = map.infos.directed || false;
 		
 		// Create nodes
 		this.map.nodes.each(function(node){
@@ -133,7 +133,7 @@ TS.AIMap = Class.create(TS, {
 		
 		// Create a canvas element for each display layer
 		$A(['background', 'paths', 'nodes', 'moves', 'players', 'info']).each(function(layer) {
-			this.layers[layer] = Raphael(0, 0, this.config.map.width,  this.config.map.height);
+			this.layers[layer] = Raphael(0, 0, this.config.infos.width,  this.config.infos.height);
 			this.container.insert(this.layers[layer].canvas);
 		}, this);
 		
@@ -169,7 +169,7 @@ TS.AIMap = Class.create(TS, {
 		if (turn)
 		{
 			this.moves = turn.moves;
-			turn.node_state.each(function(nodeState) {
+			turn.states.each(function(nodeState) {
 				var node = this.nodeGraph.nodes[nodeState.node_id];
 				node.setSoldiers(nodeState.player_id, nodeState.nb_soldiers);
 			}, this);
