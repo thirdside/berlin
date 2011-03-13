@@ -27,52 +27,24 @@
 		]
 	},
 	
-	"turns": [
-		{
-			"turn": 0,
-			"moves": [
-				{
-					"player_id": 1,
+	"turns": {
+        "0": {
+            "moves": [
+                {
+                    "player_id": 1,
 					"from": 1,
 					"to": 2,
 					"nb_soldiers": 6
-				}
-			],
-			"node_state": [
-				{
-					"node_id": 1,
-					"nb_soldiers": 1,
-					"player_id": 1
-				},
-				{
-					"node_id": 2,
-					"nb_soldiers": 1,
-					"player_id": 3
-				}
-			]
-		},
-		{
-			"turn": 1,
-			"moves": [
-				{
-					"player_id": 1,
-					"from": 1,
-					"to": 2,
-					"nb_soldiers": 6
-				}
-			],
-			"node_state": [
-				{
-					"node_id": 1,
-					"nb_soldiers": 5,
-					"player_id": 1
-				},
-				{
-					"node_id": 2,
-					"nb_soldiers": 5,
-					"player_id": 2
-				}
-			]
-		}
-	]
+                }
+            ],
+
+            "states": [
+                {
+                    "node_id": 1,
+                    "number_of_soldiers": 100,
+                    "player_id": 1
+                }
+            ]
+        }
+    }
 }

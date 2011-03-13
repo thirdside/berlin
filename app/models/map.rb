@@ -1,28 +1,33 @@
 class Map < ActiveRecord::Base
   attr_accessor :parsed, :types, :nodes, :number_of_players, :time_limit_per_turn, :players, :maximum_number_of_turns
   
-  def after_initialize
-    @parsed   = JSON.parse( self.read_attribute( :json ) )
+  after_initialize :build!
+  
+  def build!
+    # Fuuuuu Rails
+    return if defined? Rails.env
+
+    @parsed   = self.json.present? ? JSON.parse( self.json ) : {}
     @players  = {}
     @types    = {}
     @nodes    = {}
 
-    self.build!
-  end
-  
-  def build!
-    @maximum_number_of_turns  = @parsed['map']['maximum_number_of_turns'] || 100
-    @number_of_players        = @parsed['map']['number_of_players']       || []
-    @time_limit_per_turn      = @parsed['map']['time_limit_per_turn']     || 1000
+    # taken from parsed json
+    @maximum_number_of_turns  = @parsed['infos']['maximum_number_of_turns'] || 100
+    @number_of_players        = @parsed['infos']['number_of_players']       || []
+    @time_limit_per_turn      = @parsed['infos']['time_limit_per_turn']     || 1000
 
+    # get each node types
     @parsed['types'].each do |type|
       @types[type['name']] = NodeType.new(type)
     end
 
+    # build each node
     @parsed['nodes'].each do |node|
       @nodes[node['id']] = Node.new(node, @types[node['type']])
     end
 
+    # build paths
     @parsed['paths'].each do |path|
       @nodes[path['from']].link_to(@nodes[path['to']])
 
@@ -39,7 +44,7 @@ class Map < ActiveRecord::Base
       @players[index.to_s] = player 
     end
     
-    @parsed['spawn_points'][@players.size.to_s].each do |player_id, nodes|
+    @parsed['setup'][@players.size.to_s].each do |player_id, nodes|
       nodes.each do |node|
         @nodes[node['node']].owner = player_id
         @nodes[node['node']].add_soldiers player_id, node['number_of_soldiers']
@@ -62,6 +67,6 @@ class Map < ActiveRecord::Base
   end
 
   def directed?
-    (@parsed['map']['directed'] || false) == true
+    (@parsed['infos']['directed'] || false) == true
   end
 end

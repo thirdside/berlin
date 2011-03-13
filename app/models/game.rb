@@ -4,7 +4,12 @@ class Game < ActiveRecord::Base
   belongs_to :map
   belongs_to :winner, :class_name=>"ArtificialIntelligence"
 
-  def after_initialize
+  after_initialize :build!
+
+  def build!
+    # Fuuuuu Rails
+    return if defined? Rails.env
+
     @moves  = Hash.new{ |h,k| h[k] = Hash.new{ |h,k| h[k] = [] } }
     @turn   = 0
     @start  = Time.new
@@ -12,13 +17,8 @@ class Game < ActiveRecord::Base
     @hydra  = Typhoeus::Hydra.new unless defined? Rails.env
   end
 
-  # return a complete json of the actual map
-  def snapshot
-    @map.to_json
-  end
-
   # register moves for a player
-  # json should be of format [{from, to, number}, {from, to, number}, ...]
+  # json should be of format [{from, to, number_of_soldiers}, ...]
   def move player_id, json
     JSON.parse( json ).each do |move|
       from                = @map.nodes[move['from']]
@@ -143,23 +143,51 @@ class Game < ActiveRecord::Base
   end
 
   def end_of_game
-    @end = Time.now
-    
     self.time_start       = @start
-    self.time_end         = @end
+    self.time_end         = Time.now
     self.number_of_turns  = @turn
     self.json             = to_json
 
     self.save!
   end
 
+  def infos
+    {
+      :game_id                  => self.id,
+      :time_start               => self.time_start,
+      :time_end                 => self.time_end,
+      :map_id                   => @map.id,
+      :turns                    => @turn,
+      :maximum_number_of_turns  => @map.maximum_number_of_turns,
+      :players                  => @map.players.map{ |player_id, player| {:id=>player_id, :name=>player.url} }
+    }
+  end
+
+  # return a complete json of the actual map
+  def snapshot
+    temp = Hash.new
+
+    temp[:nodes]  = @map.parsed['nodes']
+    temp[:paths]  = @map.parsed['paths']
+    temp[:infos]  = self.infos
+    temp[:states] = @map.nodes.values.map{ |node| node.state }
+
+    temp.to_json
+  end
+
+  # save the game in json format for joy and pleasure
   def to_json
-    temp = Hash.new{ |h,k|  h[k] = [] }
+    temp = Hash.new
+
+    temp[:infos] = self.infos
+    temp[:turns] = Hash.new{ |h,k| h[k] = {} }
+    
 
     (0..@turn).each do |turn|
-      temp[turn]
+      temp[:turns][turn][:moves]  = @moves[turn]
+      temp[:turns][turn][:states] = @map.nodes.values.map{ |node| node.state }
     end
 
-    temp
+    temp.to_json
   end
 end

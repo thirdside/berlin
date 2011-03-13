@@ -16,6 +16,14 @@ class Node
     @@nodes << self
   end
 
+  def state
+    {:node_id=>@id, :player_id=>owner, :number_of_soldiers=>number_of_soldiers}
+  end
+
+  def number_of_soldiers
+    armies.empty? ? 0 : armies.to_a.first[1]
+  end
+
   def points
     @type.points
   end
