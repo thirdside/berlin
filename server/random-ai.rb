@@ -39,7 +39,7 @@ class Game
       {
         :from => node.id,
         :to => node.adjacent_nodes.sample.id,
-        :number_of_soldiers => 1 + rand(node.number_of_soldiers)
+        :number_of_soldiers => rand(node.number_of_soldiers + 1)
       }
     end
   end

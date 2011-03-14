@@ -43,7 +43,7 @@ class Node
   end
 
   def combat?
-    self.armies.size > 1
+    armies.size > 1
   end
 
   def soldiers_per_turn

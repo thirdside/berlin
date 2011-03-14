@@ -48,17 +48,22 @@ class Game < ActiveRecord::Base
   end
 
   def fight!
-    @map.nodes.values.select{ |node| node.combat? }.each do |node|
-      p "There's a combat on node ##{node.id}!"
+    @map.nodes.values.select{ |node| node.occupied? }.each do |node|
 
       while node.combat?
+        p "There's a combat on node ##{node.id}!"
+
+        casualties = node.armies.values.min
+
+        p "Each army lose #{casualties} soldiers."
+
         node.armies.keys.each do |player_id|
-          node.add_soldiers player_id, node.armies.values.min * -1
+          node.add_soldiers player_id, casualties * -1
         end
       end
 
       # if there's still an army on the node, set the owner to the corresponding player
-      if node.armies.size > 0
+      if node.occupied?
         p "Player ##{node.armies.keys.first} is now the proud owner of node ##{node.id}"
         node.owner = node.armies.keys.first
       end
@@ -78,18 +83,19 @@ class Game < ActiveRecord::Base
   def run
     raise "Heugh? With what map?" if @map.nil?
 
-    while @turn <= @map.maximum_number_of_turns
+    while true
+      # reset response and request
       responses = {}
       requests  = {}
-
-      # calculate the actual state of the map
-      @states[@turn] = @map.states
 
       # check for alive players
       alive_players = @map.alive_players
 
       # is there more than 1 alive player?
       break unless alive_players.size > 1
+      
+      # calculate the new state of the map
+      @states[@turn] = @map.states
 
       # create and queue a http request for each alive player
       alive_players.each do |player_id, player|
@@ -136,8 +142,8 @@ class Game < ActiveRecord::Base
       self.fight!
       self.spawn!
 
-      # next turn!
-      @turn += 1
+      # next turn?
+      @turn + 1 > @map.maximum_number_of_turns ? break : @turn += 1
     end
 
     self.end_of_game

@@ -19,7 +19,7 @@ ActiveRecord::Base.establish_connection(
 end
 
 map = Map.first
-map.init( ArtificialIntelligence.all )
+map.init( ArtificialIntelligence.find(:all, :limit=>2) )
 
 game = Game.new
 game.map = map

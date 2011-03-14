@@ -30,7 +30,7 @@ class Map < ActiveRecord::Base
     # build paths
     @parsed['paths'].each do |path|
       @nodes[path['from']].link_to(@nodes[path['to']])
-
+      
       unless self.directed?
         @nodes[path['to']].link_to(@nodes[path['from']])
       end
