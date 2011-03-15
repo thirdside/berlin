@@ -1,0 +1,17 @@
+%h1 Listing artificial_intelligences
+
+%table
+  %thead
+    %tr
+      %th User
+      %th Games
+      %th Victories
+
+  %tbody
+    - @artificial_intelligences.each do |artificial_intelligence|
+      %tr
+        %td= artificial_intelligence.user.username
+        %td= artificial_intelligence.games.count
+        %td= artificial_intelligence.victory_percent :string=>true
+
+= link_to 'New Artificial intelligence', new_artificial_intelligence_path

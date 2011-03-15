@@ -9,8 +9,7 @@ class CreateGames < ActiveRecord::Migration
 
       t.timestamps
     end
-    
-    add_index :games, :winner_id
+
     add_index :games, :map_id
   end
 

@@ -4,6 +4,9 @@ class Game < ActiveRecord::Base
   belongs_to :map
   belongs_to :winner, :class_name=>"ArtificialIntelligence"
 
+  has_many :artificial_intelligence_games, :dependent=>:destroy
+  has_many :artificial_intelligences, :through=>:artificial_intelligence_games
+
   after_initialize :build!
 
   def build!
@@ -169,10 +172,19 @@ class Game < ActiveRecord::Base
   end
 
   def end_of_game
+    # get the results
+    results = ranking
+
+    # save information
     self.time_start       = @start
     self.time_end         = Time.now
     self.number_of_turns  = @turn
     self.json             = to_json
+
+    # save scores
+    @map.players.each do |player_id, player|
+      self.artificial_intelligence_games.build( :artificial_intelligence=>player, :score=>results[player_id] )
+    end
 
     self.save!
   end

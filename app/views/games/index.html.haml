@@ -1,0 +1,19 @@
+%h1 Listing games
+
+%table
+  %thead
+    %tr
+      %th #
+      %th Map
+      %th.icon
+      %th.icon
+      %th.icon
+
+  %tbody
+    - @games.each do |game|
+      %tr
+        %td= game.id
+        %td= game.map.id
+        %td
+        %td
+        %td

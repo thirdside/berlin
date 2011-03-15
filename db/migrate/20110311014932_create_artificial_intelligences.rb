@@ -3,7 +3,7 @@ class CreateArtificialIntelligences < ActiveRecord::Migration
     create_table :artificial_intelligences do |t|
       t.references :user, :null=>false
       t.string :url
-      t.integer :artificial_intelligence_games_count
+      t.integer :artificial_intelligence_games_count, :default=>0
       
       t.timestamps
     end
