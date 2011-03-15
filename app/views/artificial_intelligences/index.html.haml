@@ -6,12 +6,14 @@
       %th User
       %th Games
       %th Victories
+      %th.icon
 
   %tbody
     - @artificial_intelligences.each do |artificial_intelligence|
       %tr
         %td= artificial_intelligence.user.username
         %td= artificial_intelligence.games.count
-        %td= artificial_intelligence.victory_percent :string=>true
+        %td= "%.2f" % artificial_intelligence.score.to_f.percentage_of( artificial_intelligence.games.count )
+        %td= link_to_show artificial_intelligence
 
 = link_to 'New Artificial intelligence', new_artificial_intelligence_path

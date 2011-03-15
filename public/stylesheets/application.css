@@ -1,5 +1,5 @@
 body {
-    font-family: Tahoma, sans-serif;
+    font: normal 11px auto "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
     padding: 0;
     margin: 0;
     background-color: #edeeef;
@@ -37,10 +37,30 @@ ul.menu li a {
 table {
     width: 100%;
     border-collapse: collapse;
+    color: #4F6B72;
+}
+
+table thead th {
+    border-top: 1px solid #C1DAD7;
+    background-color: #dddddd;
+    font-weight: bold;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #eeeeee;
+}
+
+table tbody tr:hover td {
+    background-color: #b0bcff;
 }
 
 table th, table td {
-    padding: 4px;
+    border-bottom: 1px solid #C1DAD7;
+    padding: 4px 6px;
 }
 
 table th.icon, table td.icon {
@@ -48,9 +68,9 @@ table th.icon, table td.icon {
 }
 
 #container canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 #controls {
@@ -58,15 +78,15 @@ table th.icon, table td.icon {
 }
 
 #player-list li {
-	list-style: none;
-	clear: both;
+	  list-style: none;
+	  clear: both;
 }
 
 #player-list span, #player-list div {
-	float: left;
+	  float: left;
 }
 
 .color-box {
-	width: 20px;
-	height: 20px;
+	  width: 20px;
+	  height: 20px;
 }

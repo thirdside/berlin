@@ -1,4 +1,7 @@
 class GamesController < InheritedResources::Base
+  
+  has_scope :order, :default => "games.id DESC"
+  
   def show
     @game = Game.find(params[:id])
 

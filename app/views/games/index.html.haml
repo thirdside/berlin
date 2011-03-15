@@ -5,8 +5,7 @@
     %tr
       %th #
       %th Map
-      %th.icon
-      %th.icon
+      %th Players
       %th.icon
 
   %tbody
@@ -14,6 +13,5 @@
       %tr
         %td= game.id
         %td= game.map.id
-        %td
-        %td
-        %td
+        %td= game.artificial_intelligences.count
+        %td= link_to_show game
