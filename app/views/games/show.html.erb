@@ -14,9 +14,11 @@
   <input type="submit" id="next" value=">" />
   <input type="submit" id="end" value=">>" />
 </div>
+<div id="player-list">
+</div>
 
 <script type="text/javascript">
-  new TS.AIPlayback("container", "controls", "<%= map_path(@game.map, :format=>:json) %>", "<%= game_path(@game, :format=>:json) %>");
+  new TS.AIPlayback("container", "controls", "player-list", "<%= map_path(@game.map, :format=>:json) %>", "<%= game_path(@game, :format=>:json) %>");
 </script>
 
 <%= link_to 'Edit', edit_game_path(@game) %> |
