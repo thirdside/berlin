@@ -95,14 +95,14 @@ class Game < ActiveRecord::Base
       responses = {}
       requests  = {}
 
+      # calculate the new state of the map
+      @states[@turn] = @map.states
+      
       # check for alive players
       alive_players = @map.alive_players
 
       # is there more than 1 alive player?
       break unless alive_players.size > 1
-      
-      # calculate the new state of the map
-      @states[@turn] = @map.states
 
       # create and queue a http request for each alive player
       alive_players.each do |player_id, player|
