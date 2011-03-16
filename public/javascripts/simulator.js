@@ -251,7 +251,7 @@ TS.AIMap = Class.create(TS, {
 				}
 			}
 		}, this);
-		if (drawableLayers.include('moves'))
+		if (drawableLayers.include('moves') && this.moves)
 		{
 			Object.keys(this.moves).each(function (player_id) {
 				this.drawMove(this.moves[player_id], player_id);
@@ -387,7 +387,7 @@ TS.AIMap = Class.create(TS, {
 });
 
 TS.AIPlayback = Class.create(TS, {
-	initialize: function ($super, container, controls, map_url, game_description_url)
+	initialize: function ($super, container, controls, player_list, map_url, game_description_url)
 	{
 		$super();
 		this.turnNumber = 0;
@@ -405,7 +405,7 @@ TS.AIPlayback = Class.create(TS, {
 		this.timer = new TS.Timer();
 		this.timer.observe("timer", this.onTimer.bind(this));
 		
-		this.playerList = $("player-list");
+		this.playerList = $(player_list);
 		
 		this.enableControls();
 		
@@ -456,18 +456,11 @@ TS.AIPlayback = Class.create(TS, {
 		this.drawCurrentTurn();
 	},
 	
-	drawCurrentTurn: function (clear)
+	drawCurrentTurn: function ()
 	{
-		clear = clear || false;
+		var mapTurn = this.getTurnAt(this.turnNumber);
 		
-		if (clear)
-		{
-			this.turn = null;
-		} else {
-			this.turn = this.getTurnAt(this.turnNumber);
-		}
-		
-		this.map.onTurn(this.turn);
+		this.map.onTurn(mapTurn);
 		this.enableControls();
 		this.updatePlayerList();
 	},
@@ -480,20 +473,38 @@ TS.AIPlayback = Class.create(TS, {
 		}, this).sortBy(function(infos){
 			return infos.cities;
 		}).reverse().each(function(infos){
-			infos.name = 
 			this.playerList.insert(this.template.interpolate(infos));
 		}, this);
 	},
 	
 	getMaxTurn: function ()
 	{
-		return Object.keys(this.gameDescription.turns).length;
+		if (!this.maxTurns)
+		{
+			this.maxTurns = Object.keys(this.gameDescription.turns).length * TS.AIPlayback.RENDERING_STAGES.length;
+			
+			while (null == this.getTurnAt(this.maxTurns) || Object.keys(this.getTurnAt(this.maxTurns)).length == 0)
+			{
+				this.maxTurns--;
+			}
+		}
+		return this.maxTurns;
 	},
 	
 	getTurnAt: function (index)
 	{
-		var key = Object.keys(this.gameDescription.turns).sort()[index];
-		return this.gameDescription.turns[key];
+		var key = Object.keys(this.gameDescription.turns).sort()[Math.floor(index/TS.AIPlayback.RENDERING_STAGES.length)];
+		var stage = TS.AIPlayback.RENDERING_STAGES[index % TS.AIPlayback.RENDERING_STAGES.length];
+		var turn = this.gameDescription.turns[key];
+		
+		var renderable_turn;
+
+		if (turn && turn[stage])
+		{
+			renderable_turn = {};
+			renderable_turn[stage] = turn[stage];
+		}
+		return renderable_turn;
 	},
 	
 	onMapReady: function ()
@@ -556,32 +567,19 @@ TS.AIPlayback = Class.create(TS, {
 	
 	onTimer: function ()
 	{
-		var clear = false;
-		
-		if (this.getMaxTurn() > this.turnNumber)
-		{
-			if (this.turn)
-			{
-				clear = true;
-			}
-		} else
-		{
-			clear = true;
-			this.timer.stop();
-		}
-		
-		this.drawCurrentTurn(clear);
+		this.drawCurrentTurn();
 		this.enableControls();
 		
-		if (this.timer.isRunning() && clear)
+		if (this.timer.isRunning() && this.getMaxTurn() > this.turnNumber)
 		{
 			this.turnNumber++;
-		}
-		
-		// Juste pour afficher les couleurs generees
-		if (this.getMaxTurn() <= this.turnNumber)
+		} else
 		{
-			//this.map.layOut();
+			this.timer.stop();
 		}
 	}
-})
+});
+
+Object.extend(TS.AIPlayback, {
+	RENDERING_STAGES: ['states', 'clear', 'moves', 'clear.end']
+});
