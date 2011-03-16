@@ -1,4 +1,4 @@
-%h1 Listing artificial_intelligences
+%h2 Listing artificial_intelligences
 
 %table
   %thead
@@ -13,7 +13,7 @@
       %tr
         %td= artificial_intelligence.user.username
         %td= artificial_intelligence.games.count
-        %td= "%.2f" % artificial_intelligence.score.to_f.percentage_of( artificial_intelligence.games.count )
+        %td= artificial_intelligence.score.to_f.percentage_of( artificial_intelligence.games.count ).to_decimals
         %td= link_to_show artificial_intelligence
 
 = link_to 'New Artificial intelligence', new_artificial_intelligence_path

@@ -15,7 +15,13 @@
   %body
 
     #wrapper
-      %h1.logo Berlin
+      #header
+        %h1#logo Berlin
+
+        - if user_signed_in?
+          = render :partial => '/layouts/signed_in'
+        - else
+          = render :partial => '/layouts/log_in'
 
       %ul.menu
         %li= link_to ArtificialIntelligence.human_name.pluralize, artificial_intelligences_path

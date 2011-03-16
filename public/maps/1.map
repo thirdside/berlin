@@ -4,46 +4,58 @@
 		"version": 1,
 		"width": 500,
 		"height": 500,
-		"number_of_players": [3],
-		"time_limit_per_turn": 1000,
-		"directed": false 
+		"number_of_players": [2,3],
+		"time_limit_per_turn": 5000,
+		"maximum_number_of_turns": 10,
+		"directed": false
 	},
 
 	"types": [
 		{"name": "city", "image": "/images/city.jpg", "soldiers_per_turn": 1, "points": 1},
-		{"name": "node", "image": "/images/node.gif", "soldiers_per_turn": 0, "points": 0}
+		{"name": "node", "image": "/images/node.gif", "soldiers_per_turn": 0, "points": 1}
 	],
-	
+
 	"nodes": [
-		{"id": 1, "type": "node", "x": 10, "y": 20},
-		{"id": 2, "type": "city", "x": 300, "y": 100},
+		{"id": 1, "type": "city", "x": 10, "y": 20},
+		{"id": 2, "type": "node", "x": 300, "y": 100},
 		{"id": 3, "type": "node", "x": 200, "y": 200},
-		{"id": 4, "type": "node", "x": 150, "y": 400},
-		{"id": 5, "type": "node", "x": 450, "y": 100},
-		{"id": 6, "type": "node", "x": 480, "y": 400}
+		{"id": 4, "type": "node", "x": 150, "y": 400}
 	],
 
 	"paths": [
 		{"from": 1, "to": 2},
 		{"from": 2, "to": 3},
-		{"from": 1, "to": 3},
-		{"from": 4, "to": 3}
+		{"from": 3, "to": 4}
 	],
 
 	"setup": {
+        "2": {
+            "0": [
+                {
+                    "node": 1,
+                    "number_of_soldiers":15
+                }
+            ],
+            "1": [
+                {
+                    "node": 4,
+                    "number_of_soldiers":1
+                }
+            ]
+        },
 		"3": {
 			"0": [
 				{
 					"node": 1,
-					"number_of_soldiers": 1
-				},
+					"number_of_soldiers": 4
+				}
+			],
+
+			"1":[
 				{
 					"node": 2,
 					"number_of_soldiers": 1
-				}
-			],
-			
-			"1":[
+				},
 				{
 					"node": 3,
 					"number_of_soldiers": 1
@@ -53,7 +65,7 @@
 					"number_of_soldiers": 1
 				}
 			],
-			
+
 			"2":[
 				{
 					"node": 5,

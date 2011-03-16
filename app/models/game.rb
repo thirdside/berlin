@@ -1,13 +1,17 @@
 class Game < ActiveRecord::Base
   attr_accessor :uuid, :turn, :moves, :states
 
-  belongs_to :map
+  belongs_to :map, :counter_cache=>true
   belongs_to :winner, :class_name=>"ArtificialIntelligence"
 
   has_many :artificial_intelligence_games, :dependent=>:destroy
   has_many :artificial_intelligences, :through=>:artificial_intelligence_games
 
   after_initialize :build!
+
+  def number_of_players
+    artificial_intelligences.count
+  end
 
   def build!
     # Fuuuuu Rails

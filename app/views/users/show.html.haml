@@ -1,0 +1,13 @@
+%table
+  %thead
+    %tr
+      %th Name
+      %th Version
+      %th.icon
+
+  %tbody
+    - @user.artificial_intelligences.each do |artificial_intelligence|
+      %tr
+        %td= artificial_intelligence.name
+        %td= artificial_intelligence.version
+        %td.icon= link_to_show artificial_intelligence

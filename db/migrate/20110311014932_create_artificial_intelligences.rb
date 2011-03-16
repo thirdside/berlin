@@ -2,7 +2,9 @@ class CreateArtificialIntelligences < ActiveRecord::Migration
   def self.up
     create_table :artificial_intelligences do |t|
       t.references :user, :null=>false
-      t.string :url
+      t.string  :name, :null=>false
+      t.string  :version
+      t.string  :url, :null=>false
       t.integer :artificial_intelligence_games_count, :default=>0
       
       t.timestamps
