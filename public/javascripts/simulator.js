@@ -115,7 +115,7 @@ TS.AIMap = Class.create(TS, {
 		this.container	= $(container);
 		this.layers		= {};
 		this.graphics	= {};
-		this.moves		= [];
+		this.moves		= {};
 		this.color		= new TS.Color();
 		
 		// load config
@@ -169,10 +169,13 @@ TS.AIMap = Class.create(TS, {
 		if (turn)
 		{
 			this.moves = turn.moves;
-			turn.states.each(function(nodeState) {
-				var node = this.nodeGraph.nodes[nodeState.node_id];
-				node.setSoldiers(nodeState.player_id, nodeState.nb_soldiers);
-			}, this);
+			if (turn.states)
+			{
+				turn.states.each(function(nodeState) {
+					var node = this.nodeGraph.nodes[nodeState.node_id];
+					node.setSoldiers(nodeState.player_id, nodeState.number_of_soldiers);
+				}, this);
+			}
 		} else
 		{
 			this.moves = [];
@@ -250,8 +253,8 @@ TS.AIMap = Class.create(TS, {
 		}, this);
 		if (drawableLayers.include('moves'))
 		{
-			this.moves.each(function (move) {
-				this.drawMove(move);
+			Object.keys(this.moves).each(function (player_id) {
+				this.drawMove(this.moves[player_id], player_id);
 			}, this);
 		}
 	},
@@ -289,12 +292,15 @@ TS.AIMap = Class.create(TS, {
 	
 	
 	
-	drawMove: function (move)
+	drawMove: function (moves, player_id)
 	{
-		var svg = this.getSVG("players");
-		var nodeFrom = this.nodeGraph.nodes[move.from];
-		var nodeTo = this.nodeGraph.nodes[move.to];
-		this.drawArrow(svg, nodeFrom.position.x, nodeFrom.position.y, nodeTo.position.x, nodeTo.position.y, 15, this.getPlayerColor(move.player_id), false);
+		$A(moves).each(function (move){
+			var svg = this.getSVG("players");
+			var nodeFrom = this.nodeGraph.nodes[move.from];
+			var nodeTo = this.nodeGraph.nodes[move.to];
+			this.drawArrow(svg, nodeFrom.position.x, nodeFrom.position.y, nodeTo.position.x, nodeTo.position.y, 15, this.getPlayerColor(player_id), false);			
+		}, this);
+
 	},
 	
 	drawArrow: function (svg, fromX, fromY, toX, toY, size, color, noarrow)
@@ -458,7 +464,7 @@ TS.AIPlayback = Class.create(TS, {
 		{
 			this.turn = null;
 		} else {
-			this.turn = this.gameDescription.turns[this.turnNumber];
+			this.turn = this.getTurnAt(this.turnNumber);
 		}
 		
 		this.map.onTurn(this.turn);
@@ -481,7 +487,13 @@ TS.AIPlayback = Class.create(TS, {
 	
 	getMaxTurn: function ()
 	{
-		return this.gameDescription.turns.length - 1;
+		return Object.keys(this.gameDescription.turns).length;
+	},
+	
+	getTurnAt: function (index)
+	{
+		var key = Object.keys(this.gameDescription.turns).sort()[index];
+		return this.gameDescription.turns[key];
 	},
 	
 	onMapReady: function ()
@@ -545,7 +557,8 @@ TS.AIPlayback = Class.create(TS, {
 	onTimer: function ()
 	{
 		var clear = false;
-		if (this.getMaxTurn() >= this.turnNumber)
+		
+		if (this.getMaxTurn() > this.turnNumber)
 		{
 			if (this.turn)
 			{
@@ -566,7 +579,7 @@ TS.AIPlayback = Class.create(TS, {
 		}
 		
 		// Juste pour afficher les couleurs generees
-		if (this.getMaxTurn() < this.turnNumber)
+		if (this.getMaxTurn() <= this.turnNumber)
 		{
 			//this.map.layOut();
 		}
