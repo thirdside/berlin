@@ -117,6 +117,7 @@ TS.AIMap = Class.create(TS, {
 		this.graphics	= {};
 		this.moves		= {};
 		this.color		= new TS.Color();
+		this.size = {width: this.container.getWidth(), height: this.container.getHeight()};
 		
 		// load config
 		new Ajax.Request( config_url, {method: 'get', onComplete: this.onConfigLoaded.bindAsEventListener(this)});
@@ -133,7 +134,7 @@ TS.AIMap = Class.create(TS, {
 		
 		// Create a canvas element for each display layer
 		$A(['background', 'paths', 'nodes', 'moves', 'players', 'info']).each(function(layer) {
-			this.layers[layer] = Raphael(0, 0, this.config.infos.width,  this.config.infos.height);
+			this.layers[layer] = Raphael(0, 0, this.size.width,  this.size.height);
 			this.container.insert(this.layers[layer].canvas);
 		}, this);
 		
@@ -203,11 +204,15 @@ TS.AIMap = Class.create(TS, {
 				// Draw Nodes
 				this.getSVG('nodes').image(
 						img.src,
-						node.position.x - img.width / 2,
-						node.position.y - img.height / 2,
+						this.getRelativePosition(node.position.x, 'width') - img.width / 2,
+						this.getRelativePosition(node.position.y, 'height') - img.height / 2,
 						img.width,
 						img.height
 				);
+				
+				console.log(this.getRelativePosition(node.position.x, 'width') - img.height/2)
+				
+				console.log(node.position.x, node.position.x/100*this.size.width, this.size.width)
 			}
 			
 			// Draw paths only if necessary (1st time)
@@ -218,7 +223,16 @@ TS.AIMap = Class.create(TS, {
 						
 					// Draw Paths
 					var svg = this.getSVG('paths');
-					this.drawArrow(svg, node.position.x, node.position.y, to.position.x, to.position.y, 16, "#444444")
+					this.drawArrow(
+						svg, 
+						this.getRelativePosition(node.position.x, 'width'), 
+						this.getRelativePosition(node.position.y, 'height'), 
+						this.getRelativePosition(to.position.x, 'width'), 
+						this.getRelativePosition(to.position.y, 'height'), 
+						16, 
+						"#444444", 
+						!this.nodeGraph.directed
+					);
 				}, this);
 			}
 			
@@ -235,8 +249,8 @@ TS.AIMap = Class.create(TS, {
 				
 				if (node.nbSoldiers || node.playerId != null)
 				{
-					var tx = node.position.x + soldiers_box_width / 2 + soldiers_box_padding_x;
-					var ty = node.position.y + soldiers_box_padding_y;
+					var tx = this.getRelativePosition(node.position.x, 'width') + soldiers_box_width / 2 + soldiers_box_padding_x;
+					var ty = this.getRelativePosition(node.position.y, 'height') + soldiers_box_padding_y;
 					t = svg.text(tx, ty, node.nbSoldiers);
 					t.attr({"font-size": 24});
 					var dim = {
@@ -254,50 +268,32 @@ TS.AIMap = Class.create(TS, {
 		if (drawableLayers.include('moves') && this.moves)
 		{
 			Object.keys(this.moves).each(function (move) {
-				this.drawMove(move);
+				this.drawMove(this.moves[move]);
 			}, this);
 		}
 	},
-	// Fonction pour tester l'etalage des couleurs "aleatoires"
-	layOut: function ()
+	
+	getRelativePosition: function (percent, side)
 	{
-		// PLAYERS
-		Object.keys(this.layers).each(function(layer) {
-			this.getSVG(layer).clear();
-		}, this);
-		
-		var svg = this.getSVG('info');
-		
-		var soldiers_box_width	  = 50;
-		var soldiers_box_height	 = 25;
-		var soldiers_box_padding_x  = 10;
-		var soldiers_box_padding_y  = 7;
-		for (i = 0; i < 36; i++)
-		{
-			var tx = ((i%12)+1) * 35;
-			var ty = 25 + Math.floor(i/12) * 40;
-			t = svg.text(tx, ty, 0);
-			t.attr({"font-size": 24});
-			var dim = {
-				x: tx - soldiers_box_padding_x - t[0].clientWidth/2,
-				y: ty - soldiers_box_padding_y - t[0].clientHeight/2,
-				w: t[0].clientWidth + soldiers_box_padding_x * 2,
-				h: t[0].clientHeight + soldiers_box_padding_y * 2
-			}
-			r = svg.rect(dim.x, dim.y, dim.w, dim.h, 6);
-			r.attr({stroke:"#000000", "fill-opacity": .85, fill: this.color.getColor(i+1)});
-			t.insertAfter(r);
-		}
+		return percent/100*this.size[side];
 	},
-	
-	
 	
 	drawMove: function (move)
 	{
+			console.log(move);
 			var svg = this.getSVG("players");
 			var nodeFrom = this.nodeGraph.nodes[move.from];
 			var nodeTo = this.nodeGraph.nodes[move.to];
-			this.drawArrow(svg, nodeFrom.position.x, nodeFrom.position.y, nodeTo.position.x, nodeTo.position.y, 15, this.getPlayerColor(move.player_id), false);
+			this.drawArrow(
+				svg, 
+				this.getRelativePosition(nodeFrom.position.x, 'width'),
+				this.getRelativePosition(nodeFrom.position.y, 'height'),
+				this.getRelativePosition(nodeTo.position.x, 'width'),
+				this.getRelativePosition(nodeTo.position.y, 'height'),
+				15, 
+				this.getPlayerColor(move.player_id), 
+				false
+			);
 	},
 	
 	drawArrow: function (svg, fromX, fromY, toX, toY, size, color, noarrow)
@@ -540,10 +536,10 @@ TS.AIPlayback = Class.create(TS, {
 		this.gameDescription = request.responseText.evalJSON();
 		
 		this.map.players = this.gameDescription.infos.players;
-		
+		this.enableControls();
 		if (this.isReady())
 		{
-			this.enableControls();
+			this.drawCurrentTurn();
 		}
 	},
 	
@@ -578,5 +574,5 @@ TS.AIPlayback = Class.create(TS, {
 });
 
 Object.extend(TS.AIPlayback, {
-	RENDERING_STAGES: ['states', 'clear', 'moves', 'clear.end']
+	RENDERING_STAGES: ['states', 'moves']
 });
