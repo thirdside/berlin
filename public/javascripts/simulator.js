@@ -253,8 +253,8 @@ TS.AIMap = Class.create(TS, {
 		}, this);
 		if (drawableLayers.include('moves') && this.moves)
 		{
-			Object.keys(this.moves).each(function (player_id) {
-				this.drawMove(this.moves[player_id], player_id);
+			Object.keys(this.moves).each(function (move) {
+				this.drawMove(move);
 			}, this);
 		}
 	},
@@ -292,15 +292,12 @@ TS.AIMap = Class.create(TS, {
 	
 	
 	
-	drawMove: function (moves, player_id)
+	drawMove: function (move)
 	{
-		$A(moves).each(function (move){
 			var svg = this.getSVG("players");
 			var nodeFrom = this.nodeGraph.nodes[move.from];
 			var nodeTo = this.nodeGraph.nodes[move.to];
-			this.drawArrow(svg, nodeFrom.position.x, nodeFrom.position.y, nodeTo.position.x, nodeTo.position.y, 15, this.getPlayerColor(player_id), false);			
-		}, this);
-
+			this.drawArrow(svg, nodeFrom.position.x, nodeFrom.position.y, nodeTo.position.x, nodeTo.position.y, 15, this.getPlayerColor(move.player_id), false);
 	},
 	
 	drawArrow: function (svg, fromX, fromY, toX, toY, size, color, noarrow)
