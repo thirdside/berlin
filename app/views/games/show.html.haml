@@ -1,20 +1,20 @@
-#container
+%h1= @game.map.name
 
-#legend{:style => "float: right;"}
-  #controls
-    %button#rewind
-      Rewind
-    %button#back
-      Back
-    %button#pause{:style => "display:none;"}
-      Pause
-    %button#play{:disabled => true}
-      Play
-    %button#next
-      Next
-    %button#end
-      End
-  %ul#player-list
+
+#container{:style=>"width: 1024px; height: 800px; position: relative;"}
+
+#progress_bar_container
+  #progress_bar
+
+#controls
+  %input#rewind{:type=>:submit, :value=>"<<"}
+  %input#back{:type=>:submit, :value=>"<"}
+  %input#play{:type=>:submit, :value=>"play"}
+  %input#pause{:type=>:submit, :value=>"pause"}
+  %input#next{:type=>:submit, :value=>">"}
+  %input#end{:type=>:submit, :value=>">>"}
+
+#player-list
 
 :javascript
-  new TS.AIPlayback('container', 'controls', '/maps/1.map', '/javascripts/game_description.js');
+  new TS.AIPlayback("container", "controls", "player-list", "#{map_path(@game.map, :format=>:json)}", "#{game_path(@game, :format=>:json)}");

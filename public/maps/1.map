@@ -2,8 +2,6 @@
 	"infos": {
 		"name": "Let's get ready to rumble!",
 		"version": 1,
-		"width": 500,
-		"height": 500,
 		"number_of_players": [2,3],
 		"time_limit_per_turn": 5000,
 		"maximum_number_of_turns": 10,
@@ -16,10 +14,10 @@
 	],
 
 	"nodes": [
-		{"id": 1, "type": "city", "x": 10, "y": 20},
-		{"id": 2, "type": "node", "x": 300, "y": 100},
-		{"id": 3, "type": "node", "x": 200, "y": 200},
-		{"id": 4, "type": "node", "x": 150, "y": 400}
+		{"id": 1, "type": "city", "x": 2, "y": 4},
+		{"id": 2, "type": "node", "x": 10, "y": 99},
+		{"id": 3, "type": "node", "x": 50.5, "y": 50},
+		{"id": 4, "type": "node", "x": 90, "y": 30}
 	],
 
 	"paths": [

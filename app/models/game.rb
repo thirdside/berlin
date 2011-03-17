@@ -39,7 +39,7 @@ class Game < ActiveRecord::Base
       if from.adjacent? to
         if from.armies[player_id].present?
           if from.armies[player_id] >= number_of_soldiers && number_of_soldiers > 0
-            @moves[@turn] << {:player_id=>player_id, :number_of_soldiers=>number_of_soldiers, :from=>move['from'], :to=>move['to']}
+            @moves[@turn] << {'player_id'=>player_id, 'number_of_soldiers'=>number_of_soldiers, 'from'=>move['from'], 'to'=>move['to']}
           end
         end
       end
