@@ -1,5 +1,5 @@
 class Game < ActiveRecord::Base
-  attr_accessor :uuid, :turn, :moves, :states
+  attr_accessor :uuid, :turn, :moves, :states, :spawns
 
   belongs_to :map, :counter_cache=>true
   belongs_to :winner, :class_name=>"ArtificialIntelligence"
@@ -18,12 +18,13 @@ class Game < ActiveRecord::Base
     return if defined? Rails.env
 
     @uuid   = UUIDTools::UUID.random_create.to_s
-    @moves  = Hash.new{ |h,k| h[k] = Hash.new{ |h,k| h[k] = [] } }
+    @moves  = Hash.new{ |h,k| h[k] = [] }
+    @spawns = Hash.new{ |h,k| h[k] = [] }
     @states = {}
     @turn   = 1
     @start  = Time.new
     @end    = nil
-    @hydra  = Typhoeus::Hydra.new unless defined? Rails.env
+    @hydra  = Typhoeus::Hydra.new
   end
 
   # register moves for a player
@@ -38,7 +39,7 @@ class Game < ActiveRecord::Base
       if from.adjacent? to
         if from.armies[player_id].present?
           if from.armies[player_id] >= number_of_soldiers && number_of_soldiers > 0
-            @moves[@turn][player_id] << move
+            @moves[@turn] << {:player_id=>player_id, :number_of_soldiers=>number_of_soldiers, :from=>move['from'], :to=>move['to']}
           end
         end
       end
@@ -46,11 +47,9 @@ class Game < ActiveRecord::Base
   end
 
   def move!
-    @moves[@turn].each do |player_id, moves|
-      moves.each do |move|
-        p "Player ##{player_id} moves #{move['number_of_soldiers']} soldiers from node ##{move['from']} to node ##{move['to']}."
-        @map.nodes[move['from']].move_soldiers player_id, @map.nodes[move['to']], move['number_of_soldiers']
-      end
+    @moves[@turn].each do |move|
+      p "Player ##{move['player_id']} moves #{move['number_of_soldiers']} soldiers from node ##{move['from']} to node ##{move['to']}."
+      @map.nodes[move['from']].move_soldiers move['player_id'], @map.nodes[move['to']], move['number_of_soldiers']
     end
   end
 
@@ -82,6 +81,7 @@ class Game < ActiveRecord::Base
       if node.soldiers_per_turn > 0
         p "Player ##{node.owner} gains #{node.soldiers_per_turn} soldiers on node ##{node.id}."
         node.add_soldiers node.owner, node.soldiers_per_turn
+        @spawns[@turn] << {:player_id=>node.owner, :number_of_soldiers=>node.soldiers_per_turn, :node_id=>node.id}
       end
     end
   end
@@ -90,19 +90,21 @@ class Game < ActiveRecord::Base
   def run
     raise "Heugh? With what map?" if @map.nil?
 
-    while true
+    while @turn <= @map.maximum_number_of_turns
+      # check for alive players
+      alive_players = @map.alive_players
+
+      # is there more than 1 alive player?
+      break unless alive_players.size > 1
+
+      p "#{@turn} - new turn!"
+
       # reset response and request
       responses = {}
       requests  = {}
 
       # calculate the new state of the map
       @states[@turn] = @map.states
-      
-      # check for alive players
-      alive_players = @map.alive_players
-
-      # is there more than 1 alive player?
-      break unless alive_players.size > 1
 
       # create and queue a http request for each alive player
       alive_players.each do |player_id, player|
@@ -145,13 +147,16 @@ class Game < ActiveRecord::Base
         end
       end
 
-      self.move!
-      self.fight!
-      self.spawn!
+      move!
+      fight!
+      spawn!
 
-      # next turn?
-      @turn + 1 > @map.maximum_number_of_turns ? break : @turn += 1
+      # next turn
+      @turn += 1
     end
+
+    # calculate the new state of the map
+    @states[@turn] = @map.states
 
     self.end_of_game
   end

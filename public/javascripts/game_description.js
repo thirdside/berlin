@@ -34,7 +34,7 @@
                     "player_id": 1,
 					"from": 1,
 					"to": 2,
-					"nb_soldiers": 6
+					"number_of_soldiers": 6
                 }
             ],
 
