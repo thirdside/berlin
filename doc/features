@@ -1,4 +1,34 @@
-Email de compte rendu
-Statistiques de combat
-Timeline
-Plusieurs types de soldats (? complexe pour l'ordre lors d'une attaque)
+Todo
+    afficher image background
+    couleurs des fleches
+    padding sur les fleches avant les nodes
+    Ajout du nombre de soldat qui bouge
+    ladder
+    pouvoir demander une game dans /artificial_intelligences/mine
+    1 point / victoire, max 1 / jour / joueur
+    like sur une game, likable
+    comments sur commentable
+    ajuster le layout
+    breadcrumbs
+    profile
+    after sign-in, my account
+    progress bar in game
+    game contre random-ai compte pas
+    debug-mode for ai (juste demande game contre random, peut pas se faire demander) (polymorphic)
+    peut joueur contre les autres en debuggable
+    game contre autre ai meme player compte pas
+    flag sur ai -> debuggable (guil-made, random, easy, medium, hard, superhard, christ-made)
+    flag offline, after 3 miss on ready
+    lua, java, python, node.js en guise d'api startup
+    doc
+
+Version future
+    meilleur doc
+    teams!!!
+    Email de compte rendu
+    Statistiques de combat
+    Timeline
+    Plusieurs types de soldats (? complexe pour l'ordre lors d'une attaque)
+
+Utopique
+    Support pour IE < 9
