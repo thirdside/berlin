@@ -135,7 +135,6 @@ TS.AIMap = Class.create(TS, {
 		// Create a canvas element for each display layer
 		$A(['background', 'paths', 'nodes', 'moves', 'players', 'info']).each(function(layer) {
 			this.layers[layer] = Raphael(0, 0, this.size.width,  this.size.height);
-			this.container.insert(this.layers[layer].canvas);
 		}, this);
 		
 		// Preload all the images
@@ -193,6 +192,13 @@ TS.AIMap = Class.create(TS, {
 			this.getSVG(layer).clear();
 		}, this);
 		
+		if (drawableLayers.include('moves') && this.moves)
+		{
+			Object.keys(this.moves).each(function (move) {
+				this.drawMove(this.moves[move]);
+			}, this);
+		}
+		
 		Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
 			
 			var node = this.nodeGraph.nodes[nodeId];
@@ -209,10 +215,6 @@ TS.AIMap = Class.create(TS, {
 						img.width,
 						img.height
 				);
-				
-				console.log(this.getRelativePosition(node.position.x, 'width') - img.height/2)
-				
-				console.log(node.position.x, node.position.x/100*this.size.width, this.size.width)
 			}
 			
 			// Draw paths only if necessary (1st time)
@@ -230,7 +232,7 @@ TS.AIMap = Class.create(TS, {
 						this.getRelativePosition(to.position.x, 'width'), 
 						this.getRelativePosition(to.position.y, 'height'), 
 						16, 
-						"#444444", 
+						this.config.infos.path_color || "#444444", 
 						!this.nodeGraph.directed
 					);
 				}, this);
@@ -242,7 +244,7 @@ TS.AIMap = Class.create(TS, {
 				// PLAYERS
 				var svg = this.getSVG('players');
 				
-				var soldiers_box_width	  = 50;
+				var soldiers_box_width	  = 20;
 				var soldiers_box_height	 = 25;
 				var soldiers_box_padding_x  = 10;
 				var soldiers_box_padding_y  = 7;
@@ -252,7 +254,7 @@ TS.AIMap = Class.create(TS, {
 					var tx = this.getRelativePosition(node.position.x, 'width') + soldiers_box_width / 2 + soldiers_box_padding_x;
 					var ty = this.getRelativePosition(node.position.y, 'height') + soldiers_box_padding_y;
 					t = svg.text(tx, ty, node.nbSoldiers);
-					t.attr({"font-size": 24});
+					t.attr({"font-size": 14});
 					var dim = {
 						x: tx - soldiers_box_padding_x - t[0].clientWidth/2,
 						y: ty - soldiers_box_padding_y - t[0].clientHeight/2,
@@ -265,12 +267,13 @@ TS.AIMap = Class.create(TS, {
 				}
 			}
 		}, this);
-		if (drawableLayers.include('moves') && this.moves)
-		{
-			Object.keys(this.moves).each(function (move) {
-				this.drawMove(this.moves[move]);
-			}, this);
-		}
+		
+		
+		this.container.update();
+		Object.keys(this.layers).each(function(layer){
+			this.container.insert({bottom: this.layers[layer].canvas});
+		}, this);
+		
 	},
 	
 	getRelativePosition: function (percent, side)
@@ -280,7 +283,6 @@ TS.AIMap = Class.create(TS, {
 	
 	drawMove: function (move)
 	{
-			console.log(move);
 			var svg = this.getSVG("players");
 			var nodeFrom = this.nodeGraph.nodes[move.from];
 			var nodeTo = this.nodeGraph.nodes[move.to];
@@ -292,18 +294,20 @@ TS.AIMap = Class.create(TS, {
 				this.getRelativePosition(nodeTo.position.y, 'height'),
 				15, 
 				this.getPlayerColor(move.player_id), 
-				false
+				false, 
+				true
 			);
 	},
 	
-	drawArrow: function (svg, fromX, fromY, toX, toY, size, color, noarrow)
+	drawArrow: function (svg, fromX, fromY, toX, toY, size, color, noarrow, bezier)
 	{
 		noarrow = noarrow || false;
+		bezier = bezier || false;
 		color = color || "#000000";
 		
-		//var path = "M#{fromX} #{fromY}S#{controlX} #{controlY} #{toX} #{toY}";
-		var path = "M#{fromX} #{fromY}L#{toX} #{toY}";
-		var inter = {fromX: fromX, fromY: fromY, toX: toX, toY: toY, controlX: toX, controlY: toY - (toY - fromY)/2};
+		var path = bezier? "M#{fromX} #{fromY}S#{controlX} #{controlY} #{toX} #{toY}" : "M#{fromX} #{fromY}L#{toX} #{toY}";
+		var control = {x: fromX + (toX - fromX)/2 + (toY - fromY) * .035, y: fromY + (toY - fromY)/2 + (toX - fromX) * -.035};
+		var inter = {fromX: fromX, fromY: fromY, toX: toX, toY: toY, controlX: control.x, controlY: control.y};
 		var attr = {stroke: color, "stroke-width": 4, "stroke-linejoin": "round"};
 		pathStr = path.interpolate(inter);
 		path = svg.path(pathStr);
@@ -331,12 +335,11 @@ TS.AIMap = Class.create(TS, {
 	
 	getPlayerColor: function (playerId)
 	{
-		if (!playerId || playerId <= 0)
+		if (!playerId || playerId < 0)
 		{
 			return "#CCCCCC";
 		}
-		
-		return this.color.getColor(this.getPlayerIndex(playerId+1));
+		return this.color.getColor(this.getPlayerIndex(playerId) + 1);
 	},
 	
 	getPlayerIndex: function (playerId)
@@ -359,7 +362,7 @@ TS.AIMap = Class.create(TS, {
 	{
 		var info = {
 			soldiers: 0, 
-			cities: 0, 
+			city: 0, 
 			id: playerId, 
 			color: this.getPlayerColor(playerId), 
 			name: this.players[this.getPlayerIndex(playerId)].name
@@ -370,25 +373,28 @@ TS.AIMap = Class.create(TS, {
 		
 			if (node.playerId == playerId)
 			{
-				info.cities += 1;
+				if (!info[node.type])
+					info[node.type] = 0;
+					
+				info[node.type] += 1;
 				info.soldiers += node.nbSoldiers;
 			}
 		}, this);
-		
+		 
 		return info;
 	}
 });
 
 TS.AIPlayback = Class.create(TS, {
-	initialize: function ($super, container, controls, player_list, map_url, game_description_url)
+	initialize: function ($super, containers, map_url, game_description_url)
 	{
 		$super();
 		this.turnNumber = 0;
-		this.template = '<li><div class="color-box" style="background-color: #{color};"></div><span>#{name}: #{cities}, #{soldiers}</span></li>';
-		this.map = new TS.AIMap(container, map_url);
+		this.template = '<li><div class="color-box" style="background-color: #{color};"></div><span>#{name}: #{city}, #{soldiers}</span></li>';
+		this.map = new TS.AIMap(containers.map, map_url);
 		this.map.observe('ready', this.onMapReady.bindAsEventListener(this));
 		this.ready = {map:false, self:false};
-		this.controls = $(controls);
+		this.controls = $(containers.controls);
 		this.buttons = ["rewind", "back", "play", "pause", "next", "end"];
 		this.buttons.each(function (control) {
 			this[control] = this.controls.down("#" + control);
@@ -398,7 +404,8 @@ TS.AIPlayback = Class.create(TS, {
 		this.timer = new TS.Timer();
 		this.timer.observe("timer", this.onTimer.bind(this));
 		
-		this.playerList = $(player_list);
+		this.playerList = $(containers.player_list);
+		this.progressBar = $(containers.progress_bar);
 		
 		this.enableControls();
 		
@@ -456,6 +463,12 @@ TS.AIPlayback = Class.create(TS, {
 		this.map.onTurn(mapTurn);
 		this.enableControls();
 		this.updatePlayerList();
+		this.updateProgress();
+	},
+	
+	updateProgress: function ()
+	{
+		this.progressBar.setStyle("width: #{percent}%".interpolate({percent: this.turnNumber/this.getMaxTurn() * 100}));
 	},
 	
 	updatePlayerList: function ()
@@ -561,15 +574,15 @@ TS.AIPlayback = Class.create(TS, {
 	onTimer: function ()
 	{
 		this.drawCurrentTurn();
-		this.enableControls();
 		
-		if (this.timer.isRunning() && this.getMaxTurn() > this.turnNumber)
+		if (this.timer.isRunning() && this.getMaxTurn() >= this.turnNumber)
 		{
 			this.turnNumber++;
 		} else
 		{
 			this.timer.stop();
 		}
+		this.enableControls();
 	}
 });
 

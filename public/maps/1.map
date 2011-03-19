@@ -5,7 +5,8 @@
 		"number_of_players": [2,3],
 		"time_limit_per_turn": 5000,
 		"maximum_number_of_turns": 10,
-		"directed": false
+		"directed": false,
+		"path_color": "#FF00FF"
 	},
 
 	"types": [

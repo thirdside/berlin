@@ -1,7 +1,7 @@
 %h1= @game.map.name
 
 
-#container{:style=>"width: 1024px; height: 800px; position: relative;"}
+#map{:style=>"width: 1024px; height: 800px; position: relative;"}
 
 #progress_bar_container
   #progress_bar
@@ -17,4 +17,4 @@
 #player-list
 
 :javascript
-  new TS.AIPlayback("container", "controls", "player-list", "#{map_path(@game.map, :format=>:json)}", "#{game_path(@game, :format=>:json)}");
+  new TS.AIPlayback({"map": "map", "controls": "controls", player_list: "player-list", "progress_bar": "progress_bar"}, "#{map_path(@game.map, :format=>:json)}", "#{game_path(@game, :format=>:json)}");
