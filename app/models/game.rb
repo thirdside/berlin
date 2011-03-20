@@ -230,6 +230,7 @@ class Game < ActiveRecord::Base
     (1..@turn).each do |turn|
       temp[:turns][turn][:moves]  = @moves[turn]
       temp[:turns][turn][:states] = @states[turn]
+      temp[:turns][turn][:spawns] = @spawns[turn]
     end
 
     temp.to_json
