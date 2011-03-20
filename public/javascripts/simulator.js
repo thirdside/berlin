@@ -240,30 +240,19 @@ TS.AIMap = Class.create(TS, {
 			
 			if (drawableLayers.include('players'))
 			{
-				
 				// PLAYERS
 				var svg = this.getSVG('players');
 				
-				var soldiers_box_width	  = 20;
-				var soldiers_box_height	 = 25;
-				var soldiers_box_padding_x  = 10;
-				var soldiers_box_padding_y  = 7;
-				
 				if (node.nbSoldiers || node.playerId != null)
 				{
-					var tx = this.getRelativePosition(node.position.x, 'width') + soldiers_box_width / 2 + soldiers_box_padding_x;
-					var ty = this.getRelativePosition(node.position.y, 'height') + soldiers_box_padding_y;
-					t = svg.text(tx, ty, node.nbSoldiers);
-					t.attr({"font-size": 14});
-					var dim = {
-						x: tx - soldiers_box_padding_x - t[0].clientWidth/2,
-						y: ty - soldiers_box_padding_y - t[0].clientHeight/2,
-						w: t[0].clientWidth + soldiers_box_padding_x * 2,
-						h: t[0].clientHeight + soldiers_box_padding_y * 2
-					}
-					r = svg.rect(dim.x, dim.y, dim.w, dim.h, 6);
-					r.attr({stroke:"#000000", "fill-opacity": .85, fill: this.getPlayerColor(node.playerId)});
-					t.insertAfter(r);
+					this.drawBox(
+						svg, 
+						this.getRelativePosition(node.position.x, 'width'), 
+						this.getRelativePosition(node.position.y, 'height'), 
+						node.nbSoldiers, 
+						"#000000", 
+						this.getPlayerColor(node.playerId)
+					);
 				}
 			}
 		}, this);
@@ -273,7 +262,25 @@ TS.AIMap = Class.create(TS, {
 		Object.keys(this.layers).each(function(layer){
 			this.container.insert({bottom: this.layers[layer].canvas});
 		}, this);
+	},
+	
+	drawBox: function (svg, x, y, text, stroke_color, bkg_color)
+	{
+		var BOX = {width: 20, height: 20, padding_x: 10, padding_y: 7};
 		
+		var tx = x + BOX.width / 2 + BOX.padding_x;
+		var ty = y + BOX.padding_y;
+		t = svg.text(tx, ty, text);
+		t.attr({"font-size": 14});
+		var dim = {
+			x: tx - BOX.padding_x - t[0].clientWidth/2,
+			y: ty - BOX.padding_y - t[0].clientHeight/2,
+			w: t[0].clientWidth + BOX.padding_x * 2,
+			h: t[0].clientHeight + BOX.padding_y * 2
+		}
+		r = svg.rect(dim.x, dim.y, dim.w, dim.h, 6);
+		r.attr({stroke:stroke_color, "fill-opacity": .85, fill: bkg_color});
+		t.insertAfter(r);
 	},
 	
 	getRelativePosition: function (percent, side)
@@ -283,20 +290,37 @@ TS.AIMap = Class.create(TS, {
 	
 	drawMove: function (move)
 	{
-			var svg = this.getSVG("players");
-			var nodeFrom = this.nodeGraph.nodes[move.from];
-			var nodeTo = this.nodeGraph.nodes[move.to];
-			this.drawArrow(
-				svg, 
-				this.getRelativePosition(nodeFrom.position.x, 'width'),
-				this.getRelativePosition(nodeFrom.position.y, 'height'),
-				this.getRelativePosition(nodeTo.position.x, 'width'),
-				this.getRelativePosition(nodeTo.position.y, 'height'),
-				15, 
-				this.getPlayerColor(move.player_id), 
-				false, 
-				true
-			);
+		var svg = this.getSVG("players");
+		var nodeFrom = this.nodeGraph.nodes[move.from];
+		var nodeTo = this.nodeGraph.nodes[move.to];
+		
+		nodeFromX = this.getRelativePosition(nodeFrom.position.x, 'width');
+		nodeFromY = this.getRelativePosition(nodeFrom.position.y, 'height');
+		nodeToX = this.getRelativePosition(nodeTo.position.x, 'width');
+		nodeToY = this.getRelativePosition(nodeTo.position.y, 'height');
+		
+		this.drawArrow(
+			svg, 
+			nodeFromX,
+			nodeFromY,
+			nodeToX,
+			nodeToY,
+			15, 
+			this.getPlayerColor(move.player_id), 
+			false, 
+			true
+		);
+		
+		this.drawBox(
+			svg,
+			nodeFromX + (nodeToX - nodeFromX)*.75,
+			nodeFromY + (nodeToY - nodeFromY)*.75,
+			move.number_of_soldiers,
+			"#000000",
+			this.getPlayerColor(move.player_id)
+		);
+		console.log(nodeFromX + (nodeToX - nodeFromX)/2,
+		nodeFromY + (nodeToY - nodeFromY)/2);
 	},
 	
 	drawArrow: function (svg, fromX, fromY, toX, toY, size, color, noarrow, bezier)
@@ -362,8 +386,9 @@ TS.AIMap = Class.create(TS, {
 	{
 		var info = {
 			soldiers: 0, 
-			city: 0, 
-			id: playerId, 
+			city: 0,
+			id: playerId,
+			nodePoints: 0,
 			color: this.getPlayerColor(playerId), 
 			name: this.players[this.getPlayerIndex(playerId)].name
 		};
@@ -375,7 +400,8 @@ TS.AIMap = Class.create(TS, {
 			{
 				if (!info[node.type])
 					info[node.type] = 0;
-					
+				
+				info.nodePoints += 1
 				info[node.type] += 1;
 				info.soldiers += node.nbSoldiers;
 			}
@@ -587,5 +613,5 @@ TS.AIPlayback = Class.create(TS, {
 });
 
 Object.extend(TS.AIPlayback, {
-	RENDERING_STAGES: ['states', 'moves']
+	RENDERING_STAGES: ['states', 'spawns', 'moves']
 });
