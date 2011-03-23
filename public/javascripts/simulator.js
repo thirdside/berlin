@@ -525,7 +525,9 @@ TS.AIPlayback = Class.create(TS, {
 	
 	getTurnAt: function (index)
 	{
-		var key = Object.keys(this.gameDescription.turns).sort()[Math.floor(index/TS.AIPlayback.RENDERING_STAGES.length)];
+		var key = Object.keys(this.gameDescription.turns).sortBy(function(e){
+			return parseInt(e);
+		})[Math.floor(index/TS.AIPlayback.RENDERING_STAGES.length)];
 		var stage = TS.AIPlayback.RENDERING_STAGES[index % TS.AIPlayback.RENDERING_STAGES.length];
 		var turn = this.gameDescription.turns[key];
 		
