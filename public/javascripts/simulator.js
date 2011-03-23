@@ -115,7 +115,6 @@ TS.AIMap = Class.create(TS, {
 		this.container	= $(container);
 		this.layers		= {};
 		this.graphics	= {};
-		this.moves		= {};
 		this.color		= new TS.Color();
 		this.size = {width: this.container.getWidth(), height: this.container.getHeight()};
 		
@@ -168,7 +167,6 @@ TS.AIMap = Class.create(TS, {
 	{
 		if (turn)
 		{
-			this.moves = turn.moves;
 			if (turn.states)
 			{
 				turn.states.each(function(nodeState) {
@@ -176,26 +174,25 @@ TS.AIMap = Class.create(TS, {
 					node.setSoldiers(nodeState.player_id, nodeState.number_of_soldiers);
 				}, this);
 			}
-		} else
-		{
-			this.moves = [];
 		}
-		this.draw(['moves', 'players']);
+		
+		this.draw(['moves', 'players'], turn);
 	}, 
 	
 	// Draws the layers to the screen
-	draw: function (drawableLayers)
+	draw: function (drawableLayers, turn)
 	{
+		turn = turn || {};
 		drawableLayers = $A(drawableLayers);
 		
 		drawableLayers.each(function (layer){
 			this.getSVG(layer).clear();
 		}, this);
 		
-		if (drawableLayers.include('moves') && this.moves)
+		if (drawableLayers.include('moves') && turn.moves)
 		{
-			Object.keys(this.moves).each(function (move) {
-				this.drawMove(this.moves[move]);
+			Object.keys(turn.moves).each(function (move) {
+				this.drawMove(turn.moves[move]);
 			}, this);
 		}
 		
@@ -257,6 +254,25 @@ TS.AIMap = Class.create(TS, {
 			}
 		}, this);
 		
+		if (drawableLayers.include('players') && turn.spawns)
+		{
+			turn.spawns.each(function(spawn){
+				console.log(spawn);
+				var node = this.nodeGraph.nodes[spawn.node_id];
+				paths = this.drawBox(
+					this.getSVG('players'),
+					this.getRelativePosition(node.position.x, 'width'),
+					this.getRelativePosition(node.position.y, 'height'),
+					"+" + spawn.number_of_soldiers,
+					"#000000",
+					this.getPlayerColor(spawn.player_id)
+				);
+				
+				paths.each(function(path){
+					path.animate({y: path.y - 30}, 2000);
+				}, this)
+			}, this);
+		}
 		
 		this.container.update();
 		Object.keys(this.layers).each(function(layer){
@@ -279,8 +295,10 @@ TS.AIMap = Class.create(TS, {
 			h: t[0].clientHeight + BOX.padding_y * 2
 		}
 		r = svg.rect(dim.x, dim.y, dim.w, dim.h, 6);
-		r.attr({stroke:stroke_color, "fill-opacity": .85, fill: bkg_color});
+		r.attr({stroke:stroke_color, "fill-opacity": 1, fill: bkg_color});
 		t.insertAfter(r);
+		
+		return [r, t];
 	},
 	
 	getRelativePosition: function (percent, side)
@@ -319,8 +337,6 @@ TS.AIMap = Class.create(TS, {
 			"#000000",
 			this.getPlayerColor(move.player_id)
 		);
-		console.log(nodeFromX + (nodeToX - nodeFromX)/2,
-		nodeFromY + (nodeToY - nodeFromY)/2);
 	},
 	
 	drawArrow: function (svg, fromX, fromY, toX, toY, size, color, noarrow, bezier)
