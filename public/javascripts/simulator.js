@@ -107,6 +107,136 @@ Object.extend(TS.NodeGraph, {
 	TIMESTEP : .5
 })
 
+
+TS.Drawable = Class.create(TS, {
+	initialize: function (container, position, size)
+	{
+		this.container = container;
+		this.position = Object.extend({x: 0, y: 0}, position || {});
+		this.size = Object.extend({width: 1, height: 1}, size || {});
+	},
+	
+	getRelativePosition: function (percent, side)
+	{
+		return percent/100*this.size[side];
+	},
+});
+
+TS.Canvas = Class.create(TS.Drawable, {
+	
+});
+
+TS.SVG = Class.create(TS.Drawable, {
+	initialize: function($super, container, position, size)
+	{
+		$super(container, position, size);
+		this.raphael = Raphael(this.position.x, this.position.y, this.size.width, this.size.height);
+		container.insert(this.raphael.canvas);
+	},
+	
+	clear: function ()
+	{
+		this.raphael.clear();
+	},
+	
+	image: function(img, position, options)
+	{
+		options = Object.extend({
+			ratio: 1
+		}, options || {})
+		
+		this.raphael.image(
+			img.src,
+			this.getRelativePosition(position.x, 'width') - (img.width * options.ratio) / 2,
+			this.getRelativePosition(position.y, 'height') - (img.height * options.ratio) / 2,
+			img.width * options.ratio,
+			img.height * options.ratio
+		);
+	},
+	
+	drawArrow: function (from, to, options)
+	{
+		options = Object.extend({
+			arrow: false,
+			bezier: false,
+			color: "#000000",
+			controlRatio: .035,
+			strokeWidth: 4,
+			lineJoin: "round",
+			arrowSize: 15
+		}, options || {});
+		
+		var path = options.bezier? "M#{fromX} #{fromY}S#{controlX} #{controlY} #{toX} #{toY}" : "M#{fromX} #{fromY}L#{toX} #{toY}";
+		
+		var inter = {
+			fromX: this.getRelativePosition(from.x, 'width'), 
+			fromY: this.getRelativePosition(from.y, 'height'), 
+			toX: this.getRelativePosition(to.x, 'width'), 
+			toY: this.getRelativePosition(to.y, 'height')
+		}
+		
+		inter.controlX = inter.fromX + (inter.toX - inter.fromX)/2 + (inter.toY - inter.fromY) * options.controlRatio;
+		inter.controlY = inter.fromY + (inter.toY - inter.fromY)/2 + (inter.toX - inter.fromX) * options.controlRatio * -1;
+		
+		var attr = {stroke: options.color, "stroke-width": options.strokeWidth, "stroke-linejoin": options.lineJoin};
+		pathStr = path.interpolate(inter);
+		path = this.raphael.path(pathStr);
+		path.attr(attr);
+		
+		if (options.arrow)
+		{
+			path = "M#{toX} #{toY}L#{a1X} #{a1Y}L#{a2X} #{a2Y}L#{toX} #{toY}";
+			var angle = Math.atan2(inter.toY - inter.fromY, inter.toX - inter.fromX);
+			var angle1 = angle + Math.PI / 8;
+			var angle2 = angle - Math.PI / 8;
+			var inter = Object.extend(inter, {
+				a1X: Math.round(inter.toX - Math.cos(angle1) * options.arrowSize),
+				a1Y: Math.round(inter.toY - Math.sin(angle1) * options.arrowSize),
+				a2X: Math.round(inter.toX - Math.cos(angle2) * options.arrowSize),
+				a2Y: Math.round(inter.toY - Math.sin(angle2) * options.arrowSize)
+			});
+			
+			pathStr = path.interpolate(inter);
+			path = this.raphael.path(pathStr);
+			attr.fill = options.color;
+			path.attr(attr);
+		}
+	},
+	
+	drawBox: function (position, text, options)
+	{
+		options = Object.extend({
+			stroke_color: "#000000",
+			text_color:  "#000000",
+			fill_color: "#FFFFFF", 
+			padding_x: 10,
+			padding_y: 7,
+			font_size: 14,
+			corner_radius: 6,
+			width: null,
+			height: null
+		}, options || {});
+		
+		t = this.raphael.text(0, 0, text);
+		t.attr({"font-size": 14});
+				
+		var dim = {
+			x: this.getRelativePosition(position.x, 'width'),
+			y: this.getRelativePosition(position.y, 'height'),
+			width: t.getBBox().width + options.padding_x * 2,
+			height: t.getBBox().height + options.padding_y * 2
+		}
+		
+		t.attr({x: dim.x, y: dim.y});
+		
+		r = this.raphael.rect(dim.x - dim.width/2, dim.y - dim.height/2, options.width || dim.width, options.height || dim.height, options.corner_radius);
+		r.attr({stroke:options.stroke_color, "fill-opacity": 1, fill: options.fill_color});
+		t.insertAfter(r);
+		
+		return [r, t];
+	}
+});
+
 TS.AIMap = Class.create(TS, {
 	initialize: function ($super, container, config_url)
 	{
@@ -133,7 +263,7 @@ TS.AIMap = Class.create(TS, {
 		
 		// Create a canvas element for each display layer
 		$A(['background', 'paths', 'nodes', 'moves', 'players', 'info']).each(function(layer) {
-			this.layers[layer] = Raphael(0, 0, this.size.width,  this.size.height);
+			this.layers[layer] = new TS.SVG(this.container, {x:0, y:0}, {width: this.size.width,  height: this.size.height});
 		}, this);
 		
 		// Preload all the images
@@ -157,7 +287,7 @@ TS.AIMap = Class.create(TS, {
 	},
 
 	// Returns a context associated with a layer's canvas
-	getSVG: function (layer)
+	getLayer: function (layer)
 	{
 		return this.layers[layer] ? this.layers[layer] : null;	
 	},
@@ -186,7 +316,7 @@ TS.AIMap = Class.create(TS, {
 		drawableLayers = $A(drawableLayers);
 		
 		drawableLayers.each(function (layer){
-			this.getSVG(layer).clear();
+			this.getLayer(layer).clear();
 		}, this);
 		
 		if (drawableLayers.include('moves') && turn.moves)
@@ -205,13 +335,7 @@ TS.AIMap = Class.create(TS, {
 			{
 				var img = this.graphics.nodes[node.type];
 				// Draw Nodes
-				this.getSVG('nodes').image(
-						img.src,
-						this.getRelativePosition(node.position.x, 'width') - img.width / 2,
-						this.getRelativePosition(node.position.y, 'height') - img.height / 2,
-						img.width,
-						img.height
-				);
+				this.getLayer('nodes').image(img, node.position);
 			}
 			
 			// Draw paths only if necessary (1st time)
@@ -219,160 +343,74 @@ TS.AIMap = Class.create(TS, {
 			{
 				node.links.each(function(otherNodeId) {
 					var to = this.nodeGraph.nodes[otherNodeId];
-						
-					// Draw Paths
-					var svg = this.getSVG('paths');
-					this.drawArrow(
-						svg, 
-						this.getRelativePosition(node.position.x, 'width'), 
-						this.getRelativePosition(node.position.y, 'height'), 
-						this.getRelativePosition(to.position.x, 'width'), 
-						this.getRelativePosition(to.position.y, 'height'), 
-						16, 
-						this.config.infos.path_color || "#444444", 
-						!this.nodeGraph.directed
+					
+					this.getLayer('paths').drawArrow(
+						node.position, 
+						to.position,
+						{
+							arrow: this.nodeGraph.directed,
+							color: this.config.infos.path_color || "#444444"
+						}
 					);
 				}, this);
 			}
 			
-			if (drawableLayers.include('players'))
+			if (drawableLayers.include('players') && node.nbSoldiers || node.playerId != null)
 			{
-				// PLAYERS
-				var svg = this.getSVG('players');
-				
-				if (node.nbSoldiers || node.playerId != null)
-				{
-					this.drawBox(
-						svg, 
-						this.getRelativePosition(node.position.x, 'width'), 
-						this.getRelativePosition(node.position.y, 'height'), 
-						node.nbSoldiers, 
-						"#000000", 
-						this.getPlayerColor(node.playerId)
-					);
-				}
+				this.getLayer('players').drawBox( 
+					node.position, 
+					node.nbSoldiers, 
+					{
+						fill_color: this.getPlayerColor(node.playerId)
+					}
+				);
 			}
 		}, this);
 		
 		if (drawableLayers.include('players') && turn.spawns)
 		{
 			turn.spawns.each(function(spawn){
-				console.log(spawn);
 				var node = this.nodeGraph.nodes[spawn.node_id];
-				paths = this.drawBox(
-					this.getSVG('players'),
-					this.getRelativePosition(node.position.x, 'width'),
-					this.getRelativePosition(node.position.y, 'height'),
-					"+" + spawn.number_of_soldiers,
-					"#000000",
-					this.getPlayerColor(spawn.player_id)
-				);
 				
-				paths.each(function(path){
-					path.animate({y: path.y - 30}, 2000);
-				}, this)
+				paths = this.getLayer('players').drawBox(
+					node.position,
+					"+" + spawn.number_of_soldiers,
+					{
+						fill_color: this.getPlayerColor(spawn.player_id)
+					}
+				);
 			}, this);
 		}
-		
-		this.container.update();
-		Object.keys(this.layers).each(function(layer){
-			this.container.insert({bottom: this.layers[layer].canvas});
-		}, this);
-	},
-	
-	drawBox: function (svg, x, y, text, stroke_color, bkg_color)
-	{
-		var BOX = {width: 20, height: 20, padding_x: 10, padding_y: 7};
-		
-		var tx = x + BOX.width / 2 + BOX.padding_x;
-		var ty = y + BOX.padding_y;
-		t = svg.text(tx, ty, text);
-		t.attr({"font-size": 14});
-		var dim = {
-			x: tx - BOX.padding_x - t[0].clientWidth/2,
-			y: ty - BOX.padding_y - t[0].clientHeight/2,
-			w: t[0].clientWidth + BOX.padding_x * 2,
-			h: t[0].clientHeight + BOX.padding_y * 2
-		}
-		r = svg.rect(dim.x, dim.y, dim.w, dim.h, 6);
-		r.attr({stroke:stroke_color, "fill-opacity": 1, fill: bkg_color});
-		t.insertAfter(r);
-		
-		return [r, t];
-	},
-	
-	getRelativePosition: function (percent, side)
-	{
-		return percent/100*this.size[side];
 	},
 	
 	drawMove: function (move)
 	{
-		var svg = this.getSVG("players");
+		var layer = this.getLayer("players");
 		var nodeFrom = this.nodeGraph.nodes[move.from];
 		var nodeTo = this.nodeGraph.nodes[move.to];
 		
-		nodeFromX = this.getRelativePosition(nodeFrom.position.x, 'width');
-		nodeFromY = this.getRelativePosition(nodeFrom.position.y, 'height');
-		nodeToX = this.getRelativePosition(nodeTo.position.x, 'width');
-		nodeToY = this.getRelativePosition(nodeTo.position.y, 'height');
-		
-		this.drawArrow(
-			svg, 
-			nodeFromX,
-			nodeFromY,
-			nodeToX,
-			nodeToY,
-			15, 
-			this.getPlayerColor(move.player_id), 
-			false, 
-			true
+		layer.drawArrow(
+			nodeFrom.position,
+			nodeTo.position,
+			{
+				color: this.getPlayerColor(move.player_id),
+				bezier: true,
+				arrow: true
+			}
 		);
 		
-		this.drawBox(
-			svg,
-			nodeFromX + (nodeToX - nodeFromX)*.75,
-			nodeFromY + (nodeToY - nodeFromY)*.75,
+		layer.drawBox(
+			{
+				x: nodeFrom.position.x + (nodeTo.position.x - nodeFrom.position.x)*.75,
+				y: nodeFrom.position.y + (nodeTo.position.y - nodeFrom.position.y)*.75
+			},
 			move.number_of_soldiers,
-			"#000000",
-			this.getPlayerColor(move.player_id)
+			{
+				fill_color: this.getPlayerColor(move.player_id)
+			}
 		);
 	},
-	
-	drawArrow: function (svg, fromX, fromY, toX, toY, size, color, noarrow, bezier)
-	{
-		noarrow = noarrow || false;
-		bezier = bezier || false;
-		color = color || "#000000";
-		
-		var path = bezier? "M#{fromX} #{fromY}S#{controlX} #{controlY} #{toX} #{toY}" : "M#{fromX} #{fromY}L#{toX} #{toY}";
-		var control = {x: fromX + (toX - fromX)/2 + (toY - fromY) * .035, y: fromY + (toY - fromY)/2 + (toX - fromX) * -.035};
-		var inter = {fromX: fromX, fromY: fromY, toX: toX, toY: toY, controlX: control.x, controlY: control.y};
-		var attr = {stroke: color, "stroke-width": 4, "stroke-linejoin": "round"};
-		pathStr = path.interpolate(inter);
-		path = svg.path(pathStr);
-		path.attr(attr);
-		
-		if (!noarrow)
-		{
-			path = "M#{toX} #{toY}L#{a1X} #{a1Y}L#{a2X} #{a2Y}L#{toX} #{toY}";
-			var angle = Math.atan2(toY - fromY, toX - fromX);
-			var angle1 = angle + Math.PI / 8;
-			var angle2 = angle - Math.PI / 8;
-			var inter = Object.extend(inter, {
-				a1X: Math.round(toX - Math.cos(angle1) * size),
-				a1Y: Math.round(toY - Math.sin(angle1) * size),
-				a2X: Math.round(toX - Math.cos(angle2) * size),
-				a2Y: Math.round(toY - Math.sin(angle2) * size)
-			});
-			
-			pathStr = path.interpolate(inter);
-			path = svg.path(pathStr);
-			attr.fill = color;
-			path.attr(attr);
-		}
-	},
-	
+
 	getPlayerColor: function (playerId)
 	{
 		if (!playerId || playerId < 0)
@@ -546,7 +584,6 @@ TS.AIPlayback = Class.create(TS, {
 		})[Math.floor(index/TS.AIPlayback.RENDERING_STAGES.length)];
 		var stage = TS.AIPlayback.RENDERING_STAGES[index % TS.AIPlayback.RENDERING_STAGES.length];
 		var turn = this.gameDescription.turns[key];
-		
 		var renderable_turn;
 
 		if (turn && turn[stage])
