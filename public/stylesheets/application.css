@@ -1,37 +1,134 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
 body {
     font: normal 11px auto "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
     padding: 0;
     margin: 0;
-    background-color: #edeeef;
+    background-color: #343434;
+    background-image: url(/images/background.jpg);
+    background-repeat: repeat-x;
     color: #333333;
 }
 
 div#wrapper {
     width: 1024px;
-    background: #ffffff;
     margin: 0 auto 0 auto;
+    position: relative;
+}
+
+div#main {
     padding: 20px;
+    background-image: url(/images/transparent.png);
+    border-radius: 15px;
 }
 
-ul.menu {
-    list-style: none;
-    width: auto;
-    border-top: 1px solid #eeeeee;
-    border-bottom: 1px solid #eeeeee;
-    padding: 8px 0 4px 0;
+div#header {
+    padding: 20px 0;
+    position: relative;
 }
 
-ul.menu li {
-    display: inline;
-    margin-left: 20px;
-}
-
-ul.menu li a {
-    color: #454545;
+div#header h1 {
     text-transform: uppercase;
-    font-size: 18px;
+    color: #ffffff;
+    text-shadow: 1px 1px 10px #000;
+    font-size: 60px;
+    letter-spacing: -3px;
+    font-weight: bold;
+    background-image: url(/images/tank.png);
+    background-repeat: no-repeat;
+    background-position: 184px 16px;
+}
+
+div#footer {
+    color: #cccccc;
+    padding: 20px 0;
+}
+
+div#content {
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+div#content h2 {
+    color: #343434;
+    padding: 0 0 20px;
+}
+
+ul#menu {
+    list-style: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+}
+
+ul#menu li {
+    display: inline-block;
+    margin-left: 20px;
+    position: relative;
+    float: left;
+    padding: 0 0 15px;
+}
+
+ul#menu > li > a {
+    color: #ffffff;
+    text-transform: capitalize;
+    font-size: 14px;
     text-decoration: none;
-    letter-spacing: -1px;
+    border-radius: 10px;
+    padding: 2px 10px;
+    outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+}
+
+ul#menu > li:hover > a, ul#menu > li.active > a {
+    background: #f78d1d;
+	background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#f47a20));
+	background: -moz-linear-gradient(top,  #faa51a,  #f47a20);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20');
+}
+
+ul#menu li ul {
+    display: none;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px #2E2E2E;
+    position: absolute;
+    width: 185px;
+    top: 30px;
+    right: 0;
+}
+
+ul#menu li ul li {
+    display: block;
+    float: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul#menu li ul li a {
+    display: block;
+    padding: 5px;
+    color: #4E4E4E;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0px white;
+    text-align: left;
+    text-decoration: none;
+}
+
+ul#menu li:hover ul {
+    display: block;
+}
+
+ul#menu li ul li a:hover {
+    background-color: #dddddd;
 }
 
 table {

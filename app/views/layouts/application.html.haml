@@ -9,22 +9,33 @@
                               'prototype',
                               'raphael',
                               'thirdside',
-                              'simulator', :cache=>true
+                              'simulator',
+                              :cache=>true
     = csrf_meta_tag
 
   %body
-
     #wrapper
       #header
-        %h1#logo Berlin
+        %h1
+          Berlin
+          
+        %ul#menu
+          - menu.each do |model, links|
+            %li{:class=>controller.controller_name.classify == model.name ? :active : nil}
+              = link_to model.model_name.human, '#'
+              %ul
+                - links.each do |link|
+                  %li= link_to t( "controllers.#{model.model_name.underscore.pluralize}.actions.#{link[:action]}" ), link[:href]
 
-        - if user_signed_in?
-          = render :partial => '/layouts/signed_in'
-        - else
-          = render :partial => '/layouts/log_in'
+      #main
+        #content
+          - if false
+            - if user_signed_in?
+              = render :partial => '/layouts/signed_in'
+            - else
+              = render :partial => '/layouts/log_in'
 
-      %ul.menu
-        %li= link_to ArtificialIntelligence.human_name.pluralize, artificial_intelligences_path
-        %li= link_to Game.human_name.pluralize, games_path
+          = yield
 
-      = yield
+      #footer
+        2011 &copy Thirdside
