@@ -42,15 +42,16 @@ div#header {
 }
 
 div#header h1 {
+    font-family: 'Michroma';
     text-transform: uppercase;
     color: #ffffff;
     text-shadow: 1px 1px 10px #000;
-    font-size: 60px;
-    letter-spacing: -3px;
-    font-weight: bold;
+    font-size: 50px;
+    /*
     background-image: url(/images/tank.png);
     background-repeat: no-repeat;
     background-position: 184px 16px;
+    */
 }
 
 div#user-info {
