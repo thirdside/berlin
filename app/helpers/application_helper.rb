@@ -1,14 +1,9 @@
 module ApplicationHelper
   def menu
-    {
-        ArtificialIntelligence => [
-          {:action=>:index, :href=>artificial_intelligences_path},
-          {:action=>:new, :href=>new_artificial_intelligence_path}
-        ],
-
-        Game => [
-          {:action=>:index, :href=>games_path}
-        ]
-    }
+    temp = {}
+    temp[User]                    = user_path( current_user ) if user_signed_in?
+    temp[ArtificialIntelligence]  = artificial_intelligences_path
+    temp[Game]                    = games_path
+    temp
   end
 end

@@ -10,3 +10,8 @@ en:
     games:
       actions:
         index: Liste
+
+  activerecord:
+    models:
+      game: Game
+      artificial_intelligence: Artificial Intelligence

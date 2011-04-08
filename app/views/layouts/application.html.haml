@@ -6,7 +6,6 @@
 
     = stylesheet_link_tag :all, :cache=>true
     = javascript_include_tag  :defaults,
-                              'prototype',
                               'raphael',
                               'thirdside',
                               'simulator',
@@ -18,23 +17,43 @@
       #header
         %h1
           Berlin
-          
-        %ul#menu
-          - menu.each do |model, links|
-            %li{:class=>controller.controller_name.classify == model.name ? :active : nil}
-              = link_to model.model_name.human, '#'
-              %ul
-                - links.each do |link|
-                  %li= link_to t( "controllers.#{model.model_name.underscore.pluralize}.actions.#{link[:action]}" ), link[:href]
+
+        - if user_signed_in?
+          #user-info
+            %ul
+              %li.data
+
+                %ul
+                  %li= current_user.email
+                  %li= request.remote_addr
+                  %li= link_to 'Log out', destroy_user_session_path
+
+              %li
+                .title
+                  AI
+                .info
+                  2
+              %li
+                .title
+                  Games
+                .info
+                  36
+              %li
+                .title
+                  Victories
+                .info
+                  87%
+
+      %ul#menu
+        - menu.each do |model, url|
+          %li{:class=>controller.controller_name == model.model_name.tableize ? 'active' : nil}= link_to model.model_name.human, url
 
       #main
-        #content
-          - if false
-            - if user_signed_in?
-              = render :partial => '/layouts/signed_in'
-            - else
-              = render :partial => '/layouts/log_in'
+        - if content_for? :user
+          .content
+            = yield :user
 
+        .content
           = yield
 
       #footer
