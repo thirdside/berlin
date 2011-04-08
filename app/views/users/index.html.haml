@@ -1,8 +1,9 @@
 - if user_signed_in?
-  - content_for :info do
-    %h2= current_user.username
+  - content_for :top do
+    .content
+      %h2= current_user.username
 
-    Infos sur current_user. A determiner.
+      Infos sur current_user. A determiner.
 
 %h2= t('titles.all_users')
 

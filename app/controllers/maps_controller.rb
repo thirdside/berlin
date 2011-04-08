@@ -1,4 +1,7 @@
 class MapsController < InheritedResources::Base
+
+  include Pageable
+
   def show
     @map = Map.find(params[:id])
 

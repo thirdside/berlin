@@ -1,8 +1,9 @@
 - if user_signed_in?
-  - content_for :info do
-    %h2= t('titles.my_artificial_intelligences')
+  - content_for :top do
+    .content
+      %h2= t('titles.my_artificial_intelligences')
 
-    = render :partial=>'list', :locales=>{:collection=>current_user.artificial_intelligences}
+      = render :partial=>'list', :locales=>{:collection=>current_user.artificial_intelligences}
 
 %h2= t('titles.all_artificial_intelligences')
 

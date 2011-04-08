@@ -1,5 +1,7 @@
 class GamesController < InheritedResources::Base
-  
+
+  include Pageable
+
   has_scope :order, :default => "games.id DESC"
   
   def show
@@ -10,9 +12,4 @@ class GamesController < InheritedResources::Base
       format.json { render :json => @game.json }
     end
   end
-
-  protected
-    def collection
-      @games ||= end_of_association_chain.page(params[:page])
-    end
 end

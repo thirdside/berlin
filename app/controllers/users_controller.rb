@@ -1,5 +1,7 @@
 class UsersController < InheritedResources::Base
 
+  include Pageable
+
   has_scope :order, :default => "users.username"
 
   protected

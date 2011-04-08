@@ -27,12 +27,14 @@
           %li{:class=>controller.controller_name == model.model_name.tableize ? 'active' : nil}= link_to model.model_name.human.pluralize, url
 
       #main
-        - if content_for? :info
-          .content
-            = yield :info
+        - if content_for? :top
+          = yield :top
 
         .content
           = yield
+
+        - if content_for? :bottom
+          = yield :bottom
 
       #footer
         2011 &copy Thirdside

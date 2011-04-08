@@ -1,9 +1,13 @@
-%h2= @game.map.name
+- content_for :top do
+  .content
+    %h2= @game.map.name
 
-#map{:style=>"width: 1024px; height: 800px; position: relative;"}
+    %ul#player-list
 
-#progress_bar_container
-  #progress_bar
+  #progress_bar_container
+    #progress_bar
+
+#map{:style=>"width: 965px; height: 500px; position: relative;"}
 
 #controls
   %input#rewind{:type=>:submit, :value=>"<<"}
@@ -13,7 +17,16 @@
   %input#next{:type=>:submit, :value=>">"}
   %input#end{:type=>:submit, :value=>">>"}
 
-#player-list
-
 :javascript
-  new TS.AIPlayback({"map": "map", "controls": "controls", player_list: "player-list", "progress_bar": "progress_bar"}, "#{map_path(@game.map, :format=>:json)}", "#{game_path(@game, :format=>:json)}");
+  document.observe("dom:loaded", function() {
+    new TS.AIPlayback(
+      {
+        "map": "map",
+        "controls": "controls",
+        "player_list": "player-list",
+        "progress_bar": "progress_bar"
+      },
+      "#{map_path(@game.map, :format=>:json)}",
+      "#{game_path(@game, :format=>:json)}"
+    );
+  });

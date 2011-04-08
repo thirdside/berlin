@@ -31,7 +31,7 @@ div#wrapper {
 }
 
 div#main {
-    padding: 20px 20px 10px 20px;
+    padding: 15px 20px 15px 20px;
     background-image: url(/images/transparent.png);
     border-radius: 15px;
 }
@@ -87,14 +87,15 @@ div#user-info > ul > li div.info {
 
 div#footer {
     color: #cccccc;
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 div.content {
     background-color: #ffffff;
     padding: 10px;
-    margin-bottom: 10px;
+    margin: 5px 0 5px 0;
     border-radius: 5px;
+    position: relative;
 }
 
 div.content h2 {
@@ -120,6 +121,8 @@ ul#menu > li > a {
     font-size: 14px;
     text-decoration: none;
     border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
     padding: 2px 10px;
     outline: none;
 	cursor: pointer;
@@ -223,22 +226,62 @@ table th.icon, table td.icon {
     left: 0;
 }
 
+#progress_bar_container {
+    padding: 1px;
+    background-color: #ffffff;
+    border-radius: 4px;
+}
+
+#progress_bar_container #progress_bar {
+    border-radius: 4px;
+    background: #f78d1d;
+    width: 0;
+    height: 5px;
+}
+
 #controls {
-    float: right;
+    text-align: center;
+}
+
+#controls input {
+    padding: 2px 10px;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    text-transform: capitalize;
+    font-size: 16px;
+    text-decoration: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+    background: #f78d1d;
+}
+
+#controls input[disabled] {
+    background: #cccccc;
+    cursor: default;
 }
 
 #player-list li {
-	  list-style: none;
-	  clear: both;
+    list-style: none;
 }
 
-#player-list span, #player-list div {
-	  float: left;
+#player-list li span {
+    font-size: 14px;
+    line-height: 20px;
+    vertical-align: top;
 }
 
-.color-box {
-	  width: 20px;
-	  height: 20px;
+#player-list li .color-box {
+    display: inline-block;
+    border: 1px solid #333333;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
 }
 
 .pagination {
