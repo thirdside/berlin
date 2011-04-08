@@ -1,7 +1,5 @@
 development:
-  adapter: mysql
-  database: berlin_development
-  username: root
-  password: password
+  adapter: sqlite3
+  database: db/berlin_development.sqlite3
   pool: 5
   timeout: 5000
