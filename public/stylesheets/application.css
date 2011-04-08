@@ -42,15 +42,16 @@ div#header {
 }
 
 div#header h1 {
+    font-family: 'Michroma';
     text-transform: uppercase;
     color: #ffffff;
     text-shadow: 1px 1px 10px #000;
-    font-size: 60px;
-    letter-spacing: -3px;
-    font-weight: bold;
+    font-size: 50px;
+    /*
     background-image: url(/images/tank.png);
     background-repeat: no-repeat;
     background-position: 184px 16px;
+    */
 }
 
 div#user-info {
@@ -96,9 +97,10 @@ div.content {
     border-radius: 5px;
 }
 
-div#content h2 {
+div.content h2 {
     color: #343434;
-    padding: 0 0 20px;
+    padding: 0 0 10px;
+    text-shadow: 2px 2px 5px #cccccc;
 }
 
 ul#menu {
@@ -199,8 +201,20 @@ table th, table td {
     padding: 4px 6px;
 }
 
+table td {
+    border-right: 1px dotted #C1DAD7;
+}
+
+table td:last-child {
+    border-right: none;
+}
+
 table th.icon, table td.icon {
     width: 16px;
+}
+
+.centered {
+    text-align: center;
 }
 
 #container canvas {
@@ -226,3 +240,18 @@ table th.icon, table td.icon {
 	  width: 20px;
 	  height: 20px;
 }
+
+.pagination {
+    padding: 10px 10px 0 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.pagination span {
+    margin: 0 2px 0 2px;
+}
+
+.pagination a {
+    color: #333333;
+}
+

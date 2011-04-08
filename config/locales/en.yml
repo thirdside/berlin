@@ -2,16 +2,31 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  titles:
+    all_users: List of all users
+    all_artificial_intelligences: List of all artificial intelligences
+    my_artificial_intelligences: My artificial intelligences
+
   controllers:
     artificial_intelligences:
       actions:
-        index: Liste
-        new: Nouvelle
+        index: List
+        new: New
     games:
       actions:
-        index: Liste
+        index: List
 
   activerecord:
     models:
+      user: User
       game: Game
       artificial_intelligence: Artificial Intelligence
+    attributes:
+      game:
+        victory: Victory
+
+  views:
+    pagination:
+      previous: "&laquo; "
+      next: " &raquo;"
+      truncate: "..."

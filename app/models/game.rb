@@ -13,6 +13,11 @@ class Game < ActiveRecord::Base
     artificial_intelligences.count
   end
 
+  def winners
+    max = artificial_intelligence_games.map(&:score).max
+    artificial_intelligence_games.select{ |w| w.score == max }.map(&:artificial_intelligence)
+  end
+
   def build!
     # Fuuuuu Rails
     return if defined? Rails.env

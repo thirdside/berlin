@@ -4,14 +4,18 @@
   %thead
     %tr
       %th #
-      %th Map
-      %th Players
+      %th= Map.model_name.human
+      %th= ArtificialIntelligence.model_name.human.pluralize
+      %th= Game.human_attribute_name :winner
       %th.icon
 
   %tbody
     - @games.each do |game|
       %tr
         %td= game.id
-        %td= game.map.id
-        %td= game.number_of_players
+        %td= game.map.name
+        %td.centered= game.number_of_players
+        %td= game.winners.map(&:name).to_sentence
         %td= link_to_show game
+
+= paginate @games

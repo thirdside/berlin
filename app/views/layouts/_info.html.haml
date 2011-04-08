@@ -1,0 +1,24 @@
+#user-info
+  %ul
+    %li.data
+
+      %ul
+        %li= current_user.email
+        %li= request.remote_addr
+        %li= link_to 'Log out', destroy_user_session_path
+
+    %li
+      .title
+        AI
+      .info
+        = current_user.artificial_intelligences.count
+    %li
+      .title
+        Games
+      .info
+        = current_user.artificial_intelligence_games.count
+    %li
+      .title
+        Score
+      .info
+        = current_user.score.percentage_of( 1 ).to_decimals( 1 )

@@ -1,15 +1,23 @@
-%h2 Listing users
+- if user_signed_in?
+  - content_for :info do
+    %h2= current_user.username
+
+    Infos sur current_user. A determiner.
+
+%h2= t('titles.all_users')
 
 %table
   %thead
     %tr
-      %th Username
-      %th Artificial Intelligences
+      %th= User.human_attribute_name :username
+      %th= ArtificialIntelligence.model_name.human.pluralize
+      %th= Game.model_name.human.pluralize
       %th.icon
 
   %tbody
     - @users.each do |user|
       %tr
         %td= user.username
-        %td= user.artificial_intelligences.count
+        %td.centered= user.artificial_intelligences.count
+        %td.centered= user.artificial_intelligence_games.count
         %td.icon= link_to_show user

@@ -1,22 +1,9 @@
-- content_for :user do
-  Test
+- if user_signed_in?
+  - content_for :info do
+    %h2= t('titles.my_artificial_intelligences')
 
-%h2 Listing artificial intelligences
+    = render :partial=>'list', :locales=>{:collection=>current_user.artificial_intelligences}
 
-%table
-  %thead
-    %tr
-      %th User
-      %th Games
-      %th Victories
-      %th.icon
+%h2= t('titles.all_artificial_intelligences')
 
-  %tbody
-    - @artificial_intelligences.each do |artificial_intelligence|
-      %tr
-        %td= artificial_intelligence.user.username
-        %td= artificial_intelligence.games.count
-        %td= artificial_intelligence.score.to_f.percentage_of( artificial_intelligence.games.count ).to_decimals
-        %td= link_to_show artificial_intelligence
-
-= link_to 'New Artificial intelligence', new_artificial_intelligence_path
+= render :partial=>'list', :locales=>{:collection=>@artificial_intelligences}
