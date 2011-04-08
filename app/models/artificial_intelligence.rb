@@ -1,4 +1,5 @@
-class ArtificialIntelligence < ActiveRecord::Base  
+class ArtificialIntelligence < ActiveRecord::Base
+
   belongs_to :user, :counter_cache=>true
 
   has_many :artificial_intelligence_games, :dependent=>:destroy

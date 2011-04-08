@@ -20,39 +20,16 @@
           Berlin
 
         - if user_signed_in?
-          #user-info
-            %ul
-              %li.data
-
-                %ul
-                  %li= current_user.email
-                  %li= request.remote_addr
-                  %li= link_to 'Log out', destroy_user_session_path
-
-              %li
-                .title
-                  AI
-                .info
-                  2
-              %li
-                .title
-                  Games
-                .info
-                  36
-              %li
-                .title
-                  Victories
-                .info
-                  87%
+          = render :partial=>'/layouts/info'
 
       %ul#menu
         - menu.each do |model, url|
-          %li{:class=>controller.controller_name == model.model_name.tableize ? 'active' : nil}= link_to model.model_name.human, url
+          %li{:class=>controller.controller_name == model.model_name.tableize ? 'active' : nil}= link_to model.model_name.human.pluralize, url
 
       #main
-        - if content_for? :user
+        - if content_for? :info
           .content
-            = yield :user
+            = yield :info
 
         .content
           = yield

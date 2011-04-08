@@ -10,4 +10,9 @@ class GamesController < InheritedResources::Base
       format.json { render :json => @game.json }
     end
   end
+
+  protected
+    def collection
+      @games ||= end_of_association_chain.page(params[:page])
+    end
 end
