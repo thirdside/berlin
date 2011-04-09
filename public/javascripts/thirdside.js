@@ -112,6 +112,68 @@ TS.Timer = Class.create(TS, {
 	}
 });
 
+TS.Keyboard = {};
+Object.extend(TS.Keyboard, {
+	
+	MODIFIERS: ["TAB", "ALT", "CTRL", "SHIFT"],
+	OBSERVERS: {},
+	
+	/**
+	 * key: the letter corresponding to the key pressed
+	 * modifiers: an array of modifiers keys
+	 * callback: callback function
+	 */
+	registerCallback: function (key, modifiers, callback)
+	{
+		if (!this.started)
+		{
+			Event.observe(window, 'keydown', this.onKeyDown.bindAsEventListener(this));
+			this.started = true;
+		}
+		
+		this.prepareObservers(this.hash(key, modifiers)).push(callback);
+	},
+	
+	prepareObservers: function (hash)
+	{
+		if (!this.OBSERVERS[hash])
+		{
+			this.OBSERVERS[hash] = [];
+		}
+		
+		return this.OBSERVERS[hash];
+	},
+	
+	onKeyDown: function (e)
+	{
+		if (e.findElement() instanceof HTMLBodyElement)
+		{
+			this.prepareObservers(this.hash(e)).each(function(callback){
+				callback(e);
+			});
+		}
+	},
+	
+	hash: function (key, modifiers)
+	{
+		if (key instanceof KeyboardEvent)
+		{
+			var event = key;
+			key = event.keyCode || event.which;
+			modifiers = this.MODIFIERS.findAll(function(m)
+			{
+				return event[m.toLowerCase() + "Key"];
+			});
+		} else if (Object.isString(key))
+		{
+			key = key.toUpperCase().charCodeAt(0);
+		}
+		
+		return ([key] + this.MODIFIERS.collect(function(m) { return modifiers.include(m)}, this)).toString();
+	}
+});
+
+
 /**
  * Generates colors (like for players)
  */
