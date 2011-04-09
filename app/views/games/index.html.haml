@@ -1,6 +1,7 @@
 .content
-  .right
-    = link_to t('games.new'), new_game_path, :class=>:button
+  - if user_signed_in?
+    .right
+      = link_to t('games.new'), new_game_path, :class=>:button
 
   %h2 Listing games
 
