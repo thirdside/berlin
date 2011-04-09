@@ -1,21 +1,21 @@
-- content_for :top do
-  .content
-    %h2= @game.map.name
+.content
+  %h2= @game.map.name
 
-    %ul#player-list
+  %ul#player-list
 
-  #progress_bar_container
-    #progress_bar
+#progress_bar_container
+  #progress_bar
 
-#map{:style=>"width: 965px; height: 500px; position: relative;"}
+.content
+  #map
 
-#controls
-  %input#rewind{:type=>:submit, :value=>"<<"}
-  %input#back{:type=>:submit, :value=>"<"}
-  %input#play{:type=>:submit, :value=>"play"}
-  %input#pause{:type=>:submit, :value=>"pause"}
-  %input#next{:type=>:submit, :value=>">"}
-  %input#end{:type=>:submit, :value=>">>"}
+  #controls
+    %input#rewind{:type=>:submit, :value=>"<<"}
+    %input#back{:type=>:submit, :value=>"<"}
+    %input#play{:type=>:submit, :value=>"play"}
+    %input#pause{:type=>:submit, :value=>"pause"}
+    %input#next{:type=>:submit, :value=>">"}
+    %input#end{:type=>:submit, :value=>">>"}
 
 :javascript
   document.observe("dom:loaded", function() {

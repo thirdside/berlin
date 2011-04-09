@@ -2,8 +2,12 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  common:
+    no_result: No result
+    
   titles:
     all_users: List of all users
+    all_maps: List of all maps
     all_artificial_intelligences: List of all artificial intelligences
     my_artificial_intelligences: My artificial intelligences
 
@@ -30,3 +34,11 @@ en:
       previous: "&laquo; "
       next: " &raquo;"
       truncate: "..."
+
+  artificial_intelligences:
+    new: New artificial intelligence
+    available: Available artificial intelligences
+    selected: Selected artificial intelligences
+
+  games:
+    new: New game

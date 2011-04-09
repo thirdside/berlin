@@ -21,4 +21,4 @@
       .title
         Score
       .info
-        = current_user.score.percentage_of( 1 ).to_decimals( 1 )
+        = current_user.score( :percentage=>true )
