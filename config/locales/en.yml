@@ -42,3 +42,5 @@ en:
 
   games:
     new: New game
+    success: The game has started! The result should appears here within few seconds...
+    failure: There has been an error with the game you asked. We have been noticed of the error.

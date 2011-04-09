@@ -36,8 +36,8 @@ end
 # params[:ais] : List of AI ids
 get '/fight' do
   begin
-    map = Map.find(params[:map])
-    ais = ArtificialIntelligence.find(params[:ais])
+    map = Map.find(params[:map_id])
+    ais = ArtificialIntelligence.find(params[:ais_id])
     run map, ais
   rescue Exception => e
     log( e )

@@ -23,6 +23,21 @@ a:hover {
     text-decoration: underline;
 }
 
+.flash {
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.flash.notice {
+    background-color: #ccffcc;
+    border: 1px solid #009900;
+}
+
+.flash.alert {
+    background-color: #ffcccc;
+    border: 1px solid #990000;
+}
+
 div#wrapper {
     width: 1024px;
     margin: 0 auto 0 auto;

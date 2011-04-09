@@ -32,6 +32,10 @@
             = link_to 'Register', new_registration_path( :user )
 
       #main
+
+        - flash.each do |flash, message|
+          .flash{:class=>flash}= message
+
         = yield
 
       #footer

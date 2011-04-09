@@ -42,3 +42,12 @@ module BerlinWeb
     config.filter_parameters += [:password]
   end
 end
+
+BERLIN_SERVER = {
+  :protocol => 'http',
+  :url      => 'http://localhost:3010/fight',
+  :params   => {
+    :map => 'map_id',
+    :ais => 'ais_id'
+  }
+}
