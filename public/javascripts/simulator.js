@@ -677,6 +677,10 @@ TS.AIPlayback = Class.create(TS, {
 			this[control].observe("click", this["on" + control.capitalize()].bindAsEventListener(this));
 		}, this);
 		
+		TS.Keyboard.registerCallback(" ", [], this.togglePlayPause.bind(this));
+		TS.Keyboard.registerCallback(Event.KEY_LEFT, [], this.onBack.bindAsEventListener(this));
+		TS.Keyboard.registerCallback(Event.KEY_RIGHT, [], this.onNext.bindAsEventListener(this));
+		
 		this.timer = new TS.Timer();
 		this.timer.observe("timer", this.onTimer.bind(this));
 		
@@ -688,6 +692,12 @@ TS.AIPlayback = Class.create(TS, {
 		new Ajax.Request( game_description_url, {method: 'get', onComplete: this.onGameDescriptionLoaded.bindAsEventListener(this)});
 	},
 	
+	togglePlayPause: function (e)
+	{
+		e.stop();
+		this.timer.isRunning()? this.onPause() : this.onPlay();
+	},
+	
 	onRewind: function (e)
 	{
 		this.onPause();
@@ -697,6 +707,7 @@ TS.AIPlayback = Class.create(TS, {
 	
 	onBack: function (e)
 	{
+		e.stop();
 		this.onPause();
 		this.turnNumber--;
 		this.drawCurrentTurn();
@@ -721,6 +732,7 @@ TS.AIPlayback = Class.create(TS, {
 	
 	onNext: function (e)
 	{
+		e.stop();
 		this.onPause();
 		this.turnNumber++;
 		this.drawCurrentTurn();
@@ -734,6 +746,8 @@ TS.AIPlayback = Class.create(TS, {
 	
 	drawCurrentTurn: function ()
 	{
+		if (this.turnNumber < 0) this.turnNumber = 0;
+		if (this.turnNumber > this.getMaxTurn()) this.turnNumber = this.getMaxTurn();
 		var mapTurn = this.getTurnAt(this.turnNumber);
 		
 		this.map.onTurn(mapTurn);
