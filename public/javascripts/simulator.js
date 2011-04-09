@@ -878,5 +878,5 @@ TS.AIPlayback = Class.create(TS, {
 });
 
 Object.extend(TS.AIPlayback, {
-	RENDERING_STAGES: ['states', 'spawns', 'moves']
+	RENDERING_STAGES: ['states', 'moves', 'spawns']
 });
