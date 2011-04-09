@@ -254,6 +254,11 @@ table th.icon, table td.icon {
     text-align: center;
 }
 
+#map {
+    width: 960px;
+    height: 500px;
+}
+
 #container canvas {
     position: absolute;
     top: 0;
