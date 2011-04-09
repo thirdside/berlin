@@ -29,13 +29,12 @@ class GamesController < InheritedResources::Base
   end
 
   def create
-    map = Map.find(params[:game][:map_id])
-    ais = ArtificialIntelligence.find(params[:game][:artificial_intelligence_ids])
     rep = nil
-    msg = nil
-    err = nil
 
     begin
+      map = Map.find(params[:game][:map_id])
+      ais = ArtificialIntelligence.find(params[:game][:artificial_intelligence_ids])
+
       case BERLIN_SERVER[:protocol]
         when 'http'
           # Format : /fight?map_id=X&ais_id[]=Y&ais_id[]=Z
@@ -45,18 +44,21 @@ class GamesController < InheritedResources::Base
           rep = Net::HTTP.get_response( URI.parse( url ) )
       end
     rescue Exception => e
-      rep = e.inspect
+      redirect_to( new_game_path, :alert=>e.inspect ) and return
     end
 
     case rep
       when Net::HTTPSuccess
-        msg = I18n.t('games.success')
-      when Net::HTTPForbidden
-        err = I18n.t('games.failure')
+        redirect_to games_path, :notice=>I18n.t('games.success')
       else
-        err = rep.inspect
-    end
+        case rep
+          when Net::HTTPForbidden
+            err = I18n.t('games.problem')
+          else
+            err = I18n.t('games.failure')
+        end
 
-    redirect_to games_path, :notice=>msg, :alert=>err
+        redirect_to new_game_path, :alert=>err
+    end
   end
 end
