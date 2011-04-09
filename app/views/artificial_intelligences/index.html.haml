@@ -4,10 +4,10 @@
       = link_to t('artificial_intelligences.new'), new_artificial_intelligence_path, :class=>:button
 
     %h2= t('titles.my_artificial_intelligences')
-
-    = render :partial=>'list', :locales=>{:collection=>current_user.artificial_intelligences}
+    
+    = render :partial=>'list', :locals=>{:resources=>current_user.artificial_intelligences}
 
 .content
   %h2= t('titles.all_artificial_intelligences')
 
-  = render :partial=>'list', :locales=>{:collection=>@artificial_intelligences}
+  = render :partial=>'list', :locals=>{:resources=>@artificial_intelligences}

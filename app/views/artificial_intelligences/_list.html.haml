@@ -1,4 +1,4 @@
-- if collection.empty?
+- if resources.empty?
   = t('common.no_result')
   
 - else
@@ -12,7 +12,7 @@
         %th.icon
 
     %tbody
-      - collection.each do |resource|
+      - resources.each do |resource|
         %tr
           %td= resource.user.username
           %td= resource.name
