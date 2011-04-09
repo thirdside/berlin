@@ -26,15 +26,13 @@
         - menu.each do |model, url|
           %li{:class=>controller.controller_name == model.model_name.tableize ? 'active' : nil}= link_to model.model_name.human.pluralize, url
 
+        - unless user_signed_in?
+          .right
+            = link_to 'Sign in', new_session_path( :user )
+            = link_to 'Register', new_registration_path( :user )
+
       #main
-        - if content_for? :top
-          = yield :top
-
-        .content
-          = yield
-
-        - if content_for? :bottom
-          = yield :bottom
+        = yield
 
       #footer
         2011 &copy Thirdside

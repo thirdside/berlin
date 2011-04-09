@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
-gem 'mysql'
 gem 'rails'
+gem 'mysql'
 gem 'haml'
 gem 'inherited_resources'
 gem 'has_scope'

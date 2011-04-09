@@ -1,0 +1,41 @@
+.content
+  %h2= t('games.new')
+
+  - form_for @game do |f|
+    #hidden_fields
+    .field
+      = label :game, :map_id, Map.model_name.human
+      = select :game, :map_id, options_from_collection_for_select( Map.all, :id, :name, params[:map_id] )
+    .field
+      .label
+        = t('artificial_intelligences.available')
+      = t('artificial_intelligences.selected')
+    .field
+      .label
+        .data-container#available_ais
+          - ArtificialIntelligence.ordered.each do |ai|
+            .row{:id=>"artificial_intelligence_#{ai.id}"}
+              = ai.name
+      .data-container#selected_ais
+        - if @selected_ai
+          .row{:id=>"artificial_intelligence_#{@selected_ai.id}"}
+            = @selected_ai.name
+    .clear
+    .field.nolabel
+      = f.submit
+
+:javascript
+  Sortable.create('available_ais', {tag: 'div', dropOnEmpty: true, constraint: null, containment: ['available_ais', 'selected_ais']});
+  Sortable.create('selected_ais', {tag: 'div', dropOnEmpty: true, constraint: null, containment: ['available_ais', 'selected_ais'], onUpdate: selected_ais_updated});
+
+  function selected_ais_updated (container)
+  {
+    var hiddens = $('hidden_fields');;
+    hiddens.update('');
+
+    container.childElements().each(function(div){
+      var element = new Element('input', {type: 'hidden', name: 'game[artificial_intelligence_ids][]'});
+      element.value = div.id.split('_').last();
+      hiddens.insert( element );
+    });
+  }

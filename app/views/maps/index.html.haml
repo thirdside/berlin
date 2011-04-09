@@ -1,0 +1,22 @@
+.content
+  %h2= t('titles.all_maps')
+
+  %table
+    %thead
+      %tr
+        %th #
+        %th= Map.human_attribute_name( :name )
+        %th= Map.human_attribute_name( :version )
+        %th= Game.model_name.human.pluralize
+        %th.icon
+
+    %tbody
+      - @maps.each do |map|
+        %tr
+          %td= map.id
+          %td= map.name
+          %td= map.version
+          %td.centered= map.games.count
+          %td= link_to_show map
+
+  = paginate @maps

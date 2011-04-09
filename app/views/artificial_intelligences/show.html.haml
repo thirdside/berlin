@@ -1,17 +1,21 @@
+.content
+  .right
+    = link_to t('games.new'), new_game_path( :artificial_intelligence_id => @artificial_intelligence.id ), :class=>:button
 
+  %h2= @artificial_intelligence.name
 
-%table
-  %thead
-    %tr
-      %th Map
-      %th Number of players
-      %th Score
-      %th.icon
-
-  %tbody
-    - @artificial_intelligence.artificial_intelligence_games.each do |artificial_intelligence_game|
+  %table
+    %thead
       %tr
-        %td= artificial_intelligence_game.game.map.name
-        %td= artificial_intelligence_game.game.number_of_players
-        %td= artificial_intelligence_game.score.percentage_of( 1 )
-        %td.icon= link_to_show artificial_intelligence_game.game
+        %th Map
+        %th Number of players
+        %th Score
+        %th.icon
+
+    %tbody
+      - @artificial_intelligence.artificial_intelligence_games.each do |artificial_intelligence_game|
+        %tr
+          %td= artificial_intelligence_game.game.map.name
+          %td= artificial_intelligence_game.game.number_of_players
+          %td= artificial_intelligence_game.score.percentage_of( 1 )
+          %td.icon= link_to_show artificial_intelligence_game.game
