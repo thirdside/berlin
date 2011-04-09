@@ -16,8 +16,6 @@ post '/onturn' do
   game = @@games[game_id]
   game.update json
   
-  turn = params[:turn]
-  
   game.turn_moves.to_json
 end
 
