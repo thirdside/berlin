@@ -1,17 +1,21 @@
-%table
-  %thead
-    %tr
-      %th= User.model_name.human
-      %th= ArtificialIntelligence.human_attribute_name :name
-      %th= Game.model_name.human.pluralize
-      %th= Game.human_attribute_name( :victory ).pluralize
-      %th.icon
-
-  %tbody
-    - collection.each do |artificial_intelligence|
+- if resources.empty?
+  = t('common.no_result')
+  
+- else
+  %table
+    %thead
       %tr
-        %td= artificial_intelligence.user.username
-        %td= artificial_intelligence.name
-        %td.centered= artificial_intelligence.games.count
-        %td.centered= artificial_intelligence.score.to_f.percentage_of( artificial_intelligence.games.count ).to_decimals
-        %td= link_to_show artificial_intelligence
+        %th= User.model_name.human
+        %th= ArtificialIntelligence.human_attribute_name :name
+        %th= Game.model_name.human.pluralize
+        %th= Game.human_attribute_name( :victory ).pluralize
+        %th.icon
+
+    %tbody
+      - resources.each do |resource|
+        %tr
+          %td= resource.user.username
+          %td= resource.name
+          %td.centered= resource.games.count
+          %td.centered= resource.score.to_f.percentage_of( resource.games.count ).to_decimals
+          %td= link_to_show resource

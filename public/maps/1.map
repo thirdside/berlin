@@ -6,19 +6,19 @@
 		"time_limit_per_turn": 5000,
 		"maximum_number_of_turns": 10,
 		"directed": false,
-		"path_color": "#FF00FF"
+		"path_color": "#cccccc"
 	},
 
 	"types": [
-		{"name": "city", "image": "/images/city.jpg", "soldiers_per_turn": 1, "points": 1},
-		{"name": "node", "image": "/images/node.gif", "soldiers_per_turn": 0, "points": 1}
+		{"name": "city", "image": "/images/80/castle.png", "soldiers_per_turn": 1, "points": 1},
+		{"name": "node", "image": "/images/80/node.gif", "soldiers_per_turn": 0, "points": 1}
 	],
 
 	"nodes": [
 		{"id": 1, "type": "city", "x": 5, "y": 4},
 		{"id": 2, "type": "node", "x": 10, "y": 95},
 		{"id": 3, "type": "node", "x": 50.5, "y": 50},
-		{"id": 4, "type": "node", "x": 80, "y": 55}
+		{"id": 4, "type": "city", "x": 80, "y": 55}
 	],
 
 	"paths": [
@@ -42,7 +42,7 @@
 			"1": [
 				{
 					"node": 4,
-					"number_of_soldiers":1
+					"number_of_soldiers":15
 				}
 			]
 		},

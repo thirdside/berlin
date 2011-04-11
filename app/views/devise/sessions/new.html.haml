@@ -1,0 +1,24 @@
+.content
+  %h2 Sign in
+
+  = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+
+    = devise_error_messages!
+
+    .field
+      = f.label :email
+      = f.text_field :email
+    .field
+      = f.label :password
+      = f.password_field :password
+
+    - if devise_mapping.rememberable?
+      .field
+        = f.label :remember_me
+        = f.check_box :remember_me
+
+    .field.nolabel
+      = f.submit "Sign in"
+
+    .field.nolabel.text
+      = link_to "Forgot your password?", new_password_path(resource_name)

@@ -1,21 +1,26 @@
-%h2 Listing games
+.content
+  - if user_signed_in?
+    .right
+      = link_to t('games.new'), new_game_path, :class=>:button
 
-%table
-  %thead
-    %tr
-      %th #
-      %th= Map.model_name.human
-      %th= ArtificialIntelligence.model_name.human.pluralize
-      %th= Game.human_attribute_name :winner
-      %th.icon
+  %h2 Listing games
 
-  %tbody
-    - @games.each do |game|
+  %table
+    %thead
       %tr
-        %td= game.id
-        %td= game.map.name
-        %td.centered= game.number_of_players
-        %td= game.winners.map(&:name).to_sentence
-        %td= link_to_show game
+        %th #
+        %th= Map.model_name.human
+        %th= ArtificialIntelligence.model_name.human.pluralize
+        %th= Game.human_attribute_name :winner
+        %th.icon
 
-= paginate @games
+    %tbody
+      - @games.each do |game|
+        %tr
+          %td= game.id
+          %td= game.map.name
+          %td.centered= game.number_of_players
+          %td= game.winners.map(&:name).to_sentence
+          %td= link_to_show game
+
+  = paginate @games

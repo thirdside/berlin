@@ -2,7 +2,6 @@ class Game < ActiveRecord::Base
   attr_accessor :uuid, :turn, :moves, :states, :spawns
 
   belongs_to :map, :counter_cache=>true
-  belongs_to :winner, :class_name=>"ArtificialIntelligence"
 
   has_many :artificial_intelligence_games, :dependent=>:destroy
   has_many :artificial_intelligences, :through=>:artificial_intelligence_games

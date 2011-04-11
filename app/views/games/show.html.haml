@@ -1,19 +1,32 @@
-%h2= @game.map.name
+.content
+  %h2= @game.map.name
 
-#map{:style=>"width: 1024px; height: 800px; position: relative;"}
+  %ul#player-list
 
 #progress_bar_container
   #progress_bar
 
-#controls
-  %input#rewind{:type=>:submit, :value=>"<<"}
-  %input#back{:type=>:submit, :value=>"<"}
-  %input#play{:type=>:submit, :value=>"play"}
-  %input#pause{:type=>:submit, :value=>"pause"}
-  %input#next{:type=>:submit, :value=>">"}
-  %input#end{:type=>:submit, :value=>">>"}
+.content
+  #map
 
-#player-list
+  #controls
+    %input#rewind{:type=>:submit, :value=>"<<"}
+    %input#back{:type=>:submit, :value=>"<"}
+    %input#play{:type=>:submit, :value=>"play"}
+    %input#pause{:type=>:submit, :value=>"pause"}
+    %input#next{:type=>:submit, :value=>">"}
+    %input#end{:type=>:submit, :value=>">>"}
 
 :javascript
-  new TS.AIPlayback({"map": "map", "controls": "controls", player_list: "player-list", "progress_bar": "progress_bar"}, "#{map_path(@game.map, :format=>:json)}", "#{game_path(@game, :format=>:json)}");
+  document.observe("dom:loaded", function() {
+    new TS.AIPlayback(
+      {
+        "map": "map",
+        "controls": "controls",
+        "player_list": "player-list",
+        "progress_bar": "progress_bar"
+      },
+      "#{map_path(@game.map, :format=>:json)}",
+      "#{game_path(@game, :format=>:json)}"
+    );
+  });

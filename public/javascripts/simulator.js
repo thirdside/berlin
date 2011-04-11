@@ -522,21 +522,25 @@ TS.AIMap = Class.create(TS, {
 			}, this);
 		}
 		
-		Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
+		// Draw nodes only if necessary (1st time)		
+		if (drawableLayers.include('nodes'))
+		{
+			Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
+				var node = this.nodeGraph.nodes[nodeId];
 			
-			var node = this.nodeGraph.nodes[nodeId];
-			
-			// Draw nodes only if necessary (1st time)		
-			if (drawableLayers.include('nodes'))
-			{
 				var img = this.graphics.nodes[node.type];
 				// Draw Nodes
 				this.getLayer('nodes').image(img, node.position);
-			}
+			}, this);
+		}
+			
 			
 			// Draw paths only if necessary (1st time)
-			if (drawableLayers.include('paths'))
-			{
+		if (drawableLayers.include('paths'))
+		{
+			Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
+				var node = this.nodeGraph.nodes[nodeId];
+			
 				node.links.each(function(otherNodeId) {
 					var to = this.nodeGraph.nodes[otherNodeId];
 					
@@ -549,19 +553,26 @@ TS.AIMap = Class.create(TS, {
 						}
 					);
 				}, this);
-			}
-			
-			if (drawableLayers.include('players') && node.nbSoldiers || node.playerId != null)
-			{
-				this.getLayer('players').drawBox( 
-					node.position, 
-					node.nbSoldiers, 
-					{
-						fill_color: this.getPlayerColor(node.playerId)
-					}
-				);
-			}
-		}, this);
+			}, this);
+		}
+		
+		if (drawableLayers.include('players'))
+		{
+			Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
+				var node = this.nodeGraph.nodes[nodeId];
+				
+				if (node.nbSoldiers || node.playerId != null)
+				{
+					this.getLayer('players').drawBox( 
+						node.position, 
+						node.nbSoldiers, 
+						{
+							fill_color: this.getPlayerColor(node.playerId)
+						}
+					);
+				}
+			}, this);
+		}
 		
 		if (drawableLayers.include('players') && turn.spawns)
 		{
@@ -677,6 +688,10 @@ TS.AIPlayback = Class.create(TS, {
 			this[control].observe("click", this["on" + control.capitalize()].bindAsEventListener(this));
 		}, this);
 		
+		TS.Keyboard.registerCallback(" ", [], this.togglePlayPause.bind(this));
+		TS.Keyboard.registerCallback(Event.KEY_LEFT, [], this.onBack.bindAsEventListener(this));
+		TS.Keyboard.registerCallback(Event.KEY_RIGHT, [], this.onNext.bindAsEventListener(this));
+		
 		this.timer = new TS.Timer();
 		this.timer.observe("timer", this.onTimer.bind(this));
 		
@@ -688,6 +703,12 @@ TS.AIPlayback = Class.create(TS, {
 		new Ajax.Request( game_description_url, {method: 'get', onComplete: this.onGameDescriptionLoaded.bindAsEventListener(this)});
 	},
 	
+	togglePlayPause: function (e)
+	{
+		e.stop();
+		this.timer.isRunning()? this.onPause() : this.onPlay();
+	},
+	
 	onRewind: function (e)
 	{
 		this.onPause();
@@ -697,6 +718,7 @@ TS.AIPlayback = Class.create(TS, {
 	
 	onBack: function (e)
 	{
+		e.stop();
 		this.onPause();
 		this.turnNumber--;
 		this.drawCurrentTurn();
@@ -721,6 +743,7 @@ TS.AIPlayback = Class.create(TS, {
 	
 	onNext: function (e)
 	{
+		e.stop();
 		this.onPause();
 		this.turnNumber++;
 		this.drawCurrentTurn();
@@ -734,6 +757,8 @@ TS.AIPlayback = Class.create(TS, {
 	
 	drawCurrentTurn: function ()
 	{
+		if (this.turnNumber < 0) this.turnNumber = 0;
+		if (this.turnNumber > this.getMaxTurn()) this.turnNumber = this.getMaxTurn();
 		var mapTurn = this.getTurnAt(this.turnNumber);
 		
 		this.map.onTurn(mapTurn);
@@ -796,6 +821,7 @@ TS.AIPlayback = Class.create(TS, {
 		if (this.isReady())
 		{
 			this.enableControls();
+			this.drawCurrentTurn();
 		}
 	},
 	
@@ -864,5 +890,5 @@ TS.AIPlayback = Class.create(TS, {
 });
 
 Object.extend(TS.AIPlayback, {
-	RENDERING_STAGES: ['states', 'spawns', 'moves']
+	RENDERING_STAGES: ['states', 'moves', 'spawns']
 });

@@ -2,8 +2,12 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  common:
+    no_result: No result
+    
   titles:
     all_users: List of all users
+    all_maps: List of all maps
     all_artificial_intelligences: List of all artificial intelligences
     my_artificial_intelligences: My artificial intelligences
 
@@ -30,3 +34,14 @@ en:
       previous: "&laquo; "
       next: " &raquo;"
       truncate: "..."
+
+  artificial_intelligences:
+    new: New artificial intelligence
+    available: Available artificial intelligences
+    selected: Selected artificial intelligences
+
+  games:
+    new: New game
+    success: The game has started! The result should appears here within few seconds...
+    failure: There has been an error with the game you asked. We have been noticed of the error.
+    problem: There's a problem with the config you asked. Please check again.

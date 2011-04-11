@@ -36,12 +36,13 @@ end
 # params[:ais] : List of AI ids
 get '/fight' do
   begin
-    map = Map.find(params[:map])
-    ais = ArtificialIntelligence.find(params[:ais])
+    map = Map.find(params[:map_id])
+    ais = ArtificialIntelligence.find(params[:ais_id])
     run map, ais
-  rescue
-    log( "Error while fighting! No more info, find it yourself! ;-)" )
+  rescue Exception => e
+    log( e )
 
+    # return Forbidden HTTP Status
     return 403
   end
 
@@ -62,6 +63,6 @@ def log string
   open('errors.log', 'a') do |f|
     f.puts "#{DateTime.now} : #{request.path_info} #{params.inspect}"
     f.puts string
-    f.puts "---"
+    f.puts "--------------------------------------------------------"
   end
 end

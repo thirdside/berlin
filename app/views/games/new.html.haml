@@ -1,0 +1,30 @@
+.content
+  %h2= t('games.new')
+
+  - form_for @game do |f|
+    #hidden_fields
+    .field
+      = label :game, :map_id, Map.model_name.human
+      = select :game, :map_id, options_from_collection_for_select( Map.all, :id, :name, params[:map_id] )
+    .field
+      .label
+        = t('artificial_intelligences.available')
+      = t('artificial_intelligences.selected')
+    .field
+      .label
+        .data-container#available_ais
+          - ArtificialIntelligence.ordered.each do |ai|
+            .row{:id=>"artificial_intelligence_#{ai.id}"}
+              = ai.name
+      .data-container#selected_ais
+        - if @selected_ai
+          .row{:id=>"artificial_intelligence_#{@selected_ai.id}"}
+            = @selected_ai.name
+    .clear
+    .field.nolabel
+      = f.submit
+.content
+  #map
+
+:javascript
+  new TS.NewGameHelper('map', 'game_map_id', 'available_ais', 'selecte_ais', 'hidden_fields');

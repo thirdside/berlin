@@ -15,6 +15,7 @@ module BerlinWeb
 
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
+    config.autoload_paths += %W(#{config.root}/lib)
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -41,3 +42,12 @@ module BerlinWeb
     config.filter_parameters += [:password]
   end
 end
+
+BERLIN_SERVER = {
+  :protocol => 'http',
+  :url      => 'http://localhost:3010/fight',
+  :params   => {
+    :map => 'map_id',
+    :ais => 'ais_id'
+  }
+}
