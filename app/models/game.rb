@@ -9,7 +9,7 @@ class Game < ActiveRecord::Base
   after_initialize :build!
 
   def number_of_players
-    artificial_intelligences.count
+    artificial_intelligence_games.count
   end
 
   def winners
@@ -25,7 +25,7 @@ class Game < ActiveRecord::Base
     @moves  = Hash.new{ |h,k| h[k] = [] }
     @spawns = Hash.new{ |h,k| h[k] = [] }
     @states = {}
-    @turn   = 1
+    @turn   = 0
     @start  = Time.new
     @end    = nil
     @hydra  = Typhoeus::Hydra.new
@@ -101,6 +101,9 @@ class Game < ActiveRecord::Base
       # is there more than 1 alive player?
       break unless alive_players.size > 1
 
+      # next turn
+      @turn += 1
+
       p "#{@turn} - new turn!"
 
       # reset response and request
@@ -154,9 +157,6 @@ class Game < ActiveRecord::Base
       move!
       fight!
       spawn!
-
-      # next turn
-      @turn += 1
     end
 
     # calculate the new state of the map

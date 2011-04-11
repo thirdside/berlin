@@ -4,10 +4,10 @@
   %table
     %thead
       %tr
-        %th #
-        %th= Map.human_attribute_name( :name )
-        %th= Map.human_attribute_name( :version )
-        %th= Game.model_name.human.pluralize
+        %th= Map.human_attribute_name :id
+        %th= Map.human_attribute_name :name
+        %th= Map.human_attribute_name :version
+        %th= Map.human_attribute_name :games_count
         %th.icon
 
     %tbody

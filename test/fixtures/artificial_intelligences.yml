@@ -1,9 +1,13 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  player: 
-  url: MyString
+  player: 1
+  name: Test 1
+  url: http://localhost:4567/onturn
+  version: 1
 
 two:
-  player: 
-  url: MyString
+  player: 1
+  name: Test 2
+  url: http://localhost:4568/onturn
+  version: 1

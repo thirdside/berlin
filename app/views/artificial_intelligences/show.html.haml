@@ -7,15 +7,37 @@
   %table
     %thead
       %tr
-        %th Map
-        %th Number of players
-        %th Score
+        %th(colspan=2)= t('common.statistics')
+    %tbody
+      %tr
+        %td.label= ArtificialIntelligence.human_attribute_name :user
+        %td= link_to @artificial_intelligence.user.username, @artificial_intelligence.user
+      %tr
+        %td.label= ArtificialIntelligence.human_attribute_name :artificial_intelligence_games_count
+        %td= @artificial_intelligence.artificial_intelligence_games.count
+      %tr
+        %td.label= ArtificialIntelligence.human_attribute_name :score
+        %td= show_score( @artificial_intelligence.score )
+
+.content
+  %h2= t('titles.games_played')
+
+  %table
+    %thead
+      %tr
+        %th= Game.human_attribute_name :id
+        %th= Game.human_attribute_name :time_start
+        %th= Map.model_name.human
+        %th= Game.human_attribute_name :artificial_intelligence_games_count
+        %th= ArtificialIntelligence.human_attribute_name :score
         %th.icon
 
     %tbody
       - @artificial_intelligence.artificial_intelligence_games.each do |artificial_intelligence_game|
         %tr
-          %td= artificial_intelligence_game.game.map.name
+          %td= artificial_intelligence_game.game.id
+          %td= artificial_intelligence_game.game.time_start
+          %td= link_to artificial_intelligence_game.game.map.name, artificial_intelligence_game.game.map
           %td= artificial_intelligence_game.game.number_of_players
-          %td= artificial_intelligence_game.score.percentage_of( 1 )
+          %td= show_score artificial_intelligence_game.score
           %td.icon= link_to_show artificial_intelligence_game.game

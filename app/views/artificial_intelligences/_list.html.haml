@@ -7,8 +7,8 @@
       %tr
         %th= User.model_name.human
         %th= ArtificialIntelligence.human_attribute_name :name
-        %th= Game.model_name.human.pluralize
-        %th= Game.human_attribute_name( :victory ).pluralize
+        %th= ArtificialIntelligence.human_attribute_name :artificial_intelligence_games_count
+        %th= ArtificialIntelligence.human_attribute_name :score
         %th.icon
 
     %tbody
@@ -17,5 +17,5 @@
           %td= resource.user.username
           %td= resource.name
           %td.centered= resource.games.count
-          %td.centered= resource.score.to_f.percentage_of( resource.games.count ).to_decimals
+          %td.centered= show_score( resource.score )
           %td= link_to_show resource

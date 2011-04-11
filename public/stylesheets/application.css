@@ -90,6 +90,10 @@ div#user-info > ul > li {
     width: 60px;
 }
 
+div#user-info li:hover div.title, div#user-info li:hover div.info {
+    text-shadow: 0 0 8px #fff;
+}
+
 div#user-info > ul > li.data {
     width: auto;
     text-align: left;
@@ -111,7 +115,7 @@ div#footer {
     top: 0;
 }
 
-.right > * {
+.right > a {
     margin-left: 10px;
 }
 
@@ -125,10 +129,6 @@ div.content {
 
 div.content .right {
     top: 10px;
-}
-
-div.content .right input {
-    margin-left: 10px;
 }
 
 div.content h2 {
@@ -212,13 +212,14 @@ ul#menu li ul li a:hover {
 table {
     width: 100%;
     border-collapse: collapse;
-    color: #4F6B72;
+    color: #333333;
 }
 
 table thead th {
-    border-top: 1px solid #C1DAD7;
-    background-color: #dddddd;
+    border-top: 1px solid #cccccc;
+    background-color: #E1E1E1;
     font-weight: bold;
+    text-align: left;
 }
 
 table tbody tr:nth-child(odd) {
@@ -226,20 +227,25 @@ table tbody tr:nth-child(odd) {
 }
 
 table tbody tr:nth-child(even) {
-    background-color: #eeeeee;
+    background-color: #f2f2f2;
 }
 
 table tbody tr:hover td {
-    background-color: #b0bcff;
+    background-color: #333333;
+    color: #ffffff;
 }
 
 table th, table td {
-    border-bottom: 1px solid #C1DAD7;
+    border-bottom: 1px solid #cccccc;
     padding: 4px 6px;
 }
 
 table td {
-    border-right: 1px dotted #C1DAD7;
+    border-right: 1px dotted #cccccc;
+}
+
+table td.label {
+    width: 200px;
 }
 
 table td:last-child {
@@ -255,6 +261,7 @@ table th.icon, table td.icon {
 }
 
 #map {
+    position: relative;
     width: 960px;
     height: 500px;
 }
@@ -278,10 +285,6 @@ table th.icon, table td.icon {
     height: 5px;
 }
 
-#controls {
-    text-align: center;
-}
-
 form .field {
     margin-bottom: 5px;
     line-height: 28px;
@@ -293,7 +296,7 @@ form .field.nolabel {
     padding-left: 10px;
 }
 
-label, .label {
+label, form div.label {
     width: 50%;
     text-align: right;
     float: left;

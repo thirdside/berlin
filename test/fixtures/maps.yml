@@ -1,7 +1,5 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  path: MyString
-
-two:
-  path: MyString
+  name: Map 1
+  version: 1

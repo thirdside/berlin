@@ -1,3 +1,11 @@
+test:
+  adapter: mysql
+  database: berlin_test
+  username: root
+  password: password
+  pool: 5
+  timeout: 5000
+
 development:
   adapter: mysql
   database: berlin_development

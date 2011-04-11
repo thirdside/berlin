@@ -4,12 +4,15 @@
 en:
   common:
     no_result: No result
+    statistics: Statistics
     
   titles:
     all_users: List of all users
     all_maps: List of all maps
     all_artificial_intelligences: List of all artificial intelligences
     my_artificial_intelligences: My artificial intelligences
+    all_games: List of all games played
+    games_played: Games played
 
   controllers:
     artificial_intelligences:
@@ -25,9 +28,22 @@ en:
       user: User
       game: Game
       artificial_intelligence: Artificial Intelligence
+      map: Map
     attributes:
+      map:
+        id: "#"
+        games_count: Games played
       game:
+        id: "#"
         victory: Victory
+        time: Time
+        artificial_intelligence_games_count: Artificial intelligences
+        winner: Winner
+      artificial_intelligence:
+        id: "#"
+        user: User
+        artificial_intelligence_games_count: Games played
+        score: Score
 
   views:
     pagination:

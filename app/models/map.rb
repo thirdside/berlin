@@ -1,7 +1,7 @@
 class Map < ActiveRecord::Base
   attr_accessor :parsed, :types, :nodes, :number_of_players, :time_limit_per_turn, :players, :maximum_number_of_turns
 
-  has_many :games, :dependent=>:destroy
+  has_many :games, :dependent=>:destroy, :order=>"games.time_start DESC"
 
   after_initialize :build!
   
