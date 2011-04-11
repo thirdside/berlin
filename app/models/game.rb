@@ -115,7 +115,8 @@ class Game < ActiveRecord::Base
 
       # create and queue a http request for each alive player
       alive_players.each do |player_id, player|
-        requests[player_id] = Typhoeus::Request.new(player.url,
+        
+        requests[player_id] = Typhoeus::Request.new(player.url_on_turn,
             :method        => :post,
             :headers       => {:Accept => "application/json"},
             :timeout       => @map.time_limit_per_turn,
@@ -208,7 +209,7 @@ class Game < ActiveRecord::Base
       :map_id                   => @map.id,
       :turn                     => @turn,
       :maximum_number_of_turns  => @map.maximum_number_of_turns,
-      :players                  => @map.players.map{ |player_id, player| {:id=>player_id, :name=>player.url} }
+      :players                  => @map.players.map{ |player_id, player| {:id=>player_id, :name=>player.url_on_turn} }
     }
   end
 

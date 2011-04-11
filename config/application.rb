@@ -48,6 +48,6 @@ BERLIN_SERVER = {
   :url      => 'http://localhost:3010/fight',
   :params   => {
     :map => 'map_id',
-    :ais => 'ais_id'
+    :ais => 'ai_ids'
   }
 }
