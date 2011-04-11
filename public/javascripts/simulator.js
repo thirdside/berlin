@@ -522,21 +522,25 @@ TS.AIMap = Class.create(TS, {
 			}, this);
 		}
 		
-		Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
+		// Draw nodes only if necessary (1st time)		
+		if (drawableLayers.include('nodes'))
+		{
+			Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
+				var node = this.nodeGraph.nodes[nodeId];
 			
-			var node = this.nodeGraph.nodes[nodeId];
-			
-			// Draw nodes only if necessary (1st time)		
-			if (drawableLayers.include('nodes'))
-			{
 				var img = this.graphics.nodes[node.type];
 				// Draw Nodes
 				this.getLayer('nodes').image(img, node.position);
-			}
+			}, this);
+		}
+			
 			
 			// Draw paths only if necessary (1st time)
-			if (drawableLayers.include('paths'))
-			{
+		if (drawableLayers.include('paths'))
+		{
+			Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
+				var node = this.nodeGraph.nodes[nodeId];
+			
 				node.links.each(function(otherNodeId) {
 					var to = this.nodeGraph.nodes[otherNodeId];
 					
@@ -549,19 +553,26 @@ TS.AIMap = Class.create(TS, {
 						}
 					);
 				}, this);
-			}
-			
-			if (drawableLayers.include('players') && node.nbSoldiers || node.playerId != null)
-			{
-				this.getLayer('players').drawBox( 
-					node.position, 
-					node.nbSoldiers, 
-					{
-						fill_color: this.getPlayerColor(node.playerId)
-					}
-				);
-			}
-		}, this);
+			}, this);
+		}
+		
+		if (drawableLayers.include('players'))
+		{
+			Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
+				var node = this.nodeGraph.nodes[nodeId];
+				
+				if (node.nbSoldiers || node.playerId != null)
+				{
+					this.getLayer('players').drawBox( 
+						node.position, 
+						node.nbSoldiers, 
+						{
+							fill_color: this.getPlayerColor(node.playerId)
+						}
+					);
+				}
+			}, this);
+		}
 		
 		if (drawableLayers.include('players') && turn.spawns)
 		{
@@ -810,6 +821,7 @@ TS.AIPlayback = Class.create(TS, {
 		if (this.isReady())
 		{
 			this.enableControls();
+			this.drawCurrentTurn();
 		}
 	},
 	
