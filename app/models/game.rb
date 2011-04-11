@@ -13,8 +13,8 @@ class Game < ActiveRecord::Base
   end
 
   def winners
-    max = artificial_intelligence_games.map(&:score).max
-    artificial_intelligence_games.select{ |w| w.score == max }.map(&:artificial_intelligence)
+    max = artificial_intelligence_games.maximum(:score)
+    self.artificial_intelligence_games.where(["score = ?", max]).includes(:artificial_intelligence).map(&:artificial_intelligence)
   end
 
   def build!

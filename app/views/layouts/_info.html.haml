@@ -3,7 +3,7 @@
     %li.data
 
       %ul
-        %li= current_user.email
+        %li= link_to current_user.username, current_user
         %li= request.remote_addr
         %li= link_to 'Log out', destroy_user_session_path
 
@@ -21,4 +21,4 @@
       .title
         Score
       .info
-        = current_user.score( :percentage=>true )
+        = show_score current_user.score

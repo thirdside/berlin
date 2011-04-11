@@ -12,6 +12,11 @@
       %tr
         %td.label= Map.human_attribute_name :games_count
         %td= @map.games.count
+      %tr
+        %td.label= Map.human_attribute_name :best_artificial_intelligence
+        %td
+          - if best = @map.best_artificial_intelligence
+            = best.artificial_intelligence.name
 
 .content
   %h2= Map.model_name.human

@@ -242,6 +242,7 @@ table th, table td {
 
 table td {
     border-right: 1px dotted #cccccc;
+    line-height: 20px;
 }
 
 table td.label {

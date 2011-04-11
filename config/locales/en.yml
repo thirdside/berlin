@@ -10,7 +10,7 @@ en:
     all_users: List of all users
     all_maps: List of all maps
     all_artificial_intelligences: List of all artificial intelligences
-    my_artificial_intelligences: My artificial intelligences
+    artificial_intelligences: Artificial intelligences
     all_games: List of all games played
     games_played: Games played
 
@@ -30,6 +30,8 @@ en:
       artificial_intelligence: Artificial Intelligence
       map: Map
     attributes:
+      user:
+        artificial_intelligences_count: Artificial intelligences
       map:
         id: "#"
         games_count: Games played
@@ -43,6 +45,10 @@ en:
         id: "#"
         user: User
         artificial_intelligence_games_count: Games played
+        score: Average score
+        url_ready: Wakeup URL
+        url_on_turn: On turn URL
+      artificial_intelligence_score:
         score: Score
 
   views:

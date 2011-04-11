@@ -18,6 +18,9 @@
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :score
         %td= show_score( @artificial_intelligence.score )
+      %tr
+        %td.label= ArtificialIntelligence.human_attribute_name :created_at
+        %td= @artificial_intelligence.created_at
 
 .content
   %h2= t('titles.games_played')
