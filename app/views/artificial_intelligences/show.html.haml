@@ -23,6 +23,44 @@
         %td= @artificial_intelligence.created_at
 
 .content
+  %h2= t('common.history')
+
+  #graph{:style=>"height: 300px;"}
+
+  :javascript
+    window.onload = function () {
+      new Grafico.LineGraph(
+        // Graph ID
+        $('graph'),
+
+        // Data
+        {
+          ai1: [#{@artificial_intelligence.artificial_intelligence_games.map{|x|(x.score * 100).to_i}.join(',')}]
+        },
+
+        // Options
+        {
+          grid :                  true,
+          plot_padding :          0,
+          curve_amount :          0,
+          start_at_zero :         true,
+          stroke_width :          3,
+          label_rotation :        -30,
+          font_size :             11,
+          vertical_label_unit :   "",
+          colors :                {ai1: '#4b80b6'},
+          background_color :      "#fff",
+          label_color :           "#444",
+          grid_color :            "#ccf",
+          markers :               "value",
+          meanline :              { 'stroke-width': '2px', stroke: '#000' },
+          draw_axis :             false,
+          labels :                [#{@artificial_intelligence.game_ids.join(',')}],
+          hide_empty_label_grid : true
+        });
+    };
+
+.content
   %h2= t('titles.games_played')
 
   %table
@@ -32,11 +70,11 @@
         %th= Game.human_attribute_name :time_start
         %th= Map.model_name.human
         %th= Game.human_attribute_name :artificial_intelligence_games_count
-        %th= ArtificialIntelligence.human_attribute_name :score
+        %th= ArtificialIntelligenceGame.human_attribute_name :score
         %th.icon
 
     %tbody
-      - @artificial_intelligence.artificial_intelligence_games.each do |artificial_intelligence_game|
+      - @artificial_intelligence.artificial_intelligence_games.order("created_at DESC").each do |artificial_intelligence_game|
         %tr
           %td= artificial_intelligence_game.game.id
           %td= artificial_intelligence_game.game.time_start

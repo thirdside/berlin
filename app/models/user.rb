@@ -14,4 +14,8 @@ class User < ActiveRecord::Base
   def score
     self.artificial_intelligence_games.map(&:score).to_stat.average
   end
+
+  def game_ids
+    self.artificial_intelligence_games.map(&:game_id).uniq
+  end
 end
