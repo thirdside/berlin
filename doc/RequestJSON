@@ -1,0 +1,34 @@
+{
+	"infos": {
+		"number_of_players": INTEGER,
+		"time_limit_per_turn": INTEGER,
+		"maximum_number_of_turns": INTEGER,
+		"directed": BOOLEAN
+	},
+
+	"types": [
+		{
+			"name": STRING,
+			"soldiers_per_turn": INTEGER,
+			"points": INTEGER
+		}
+	],
+
+	"nodes": [
+		{
+			"id": INTEGER,
+			"type": STRING, ref.: types.name
+		}
+	],
+
+	"paths": [
+		{
+			"from": INTEGER, ref.: nodes.id
+			"to": INTEGER, ref.: nodes.id
+		}
+	],
+
+	"state": [
+		// TODO
+	]
+}
