@@ -2,6 +2,9 @@
   %h2= t('artificial_intelligences.new')
 
   - form_for @artificial_intelligence do |ai|
+
+    = errors_for @artificial_intelligence
+
     .field
       = ai.label :name
       = ai.text_field :name

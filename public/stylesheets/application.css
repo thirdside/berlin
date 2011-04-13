@@ -26,6 +26,8 @@ a:hover {
 .flash {
     padding: 10px;
     border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
 }
 
 .flash.notice {
@@ -36,6 +38,20 @@ a:hover {
 .flash.alert {
     background-color: #ffcccc;
     border: 1px solid #990000;
+}
+
+ul.errors {
+    padding: 10px;
+    margin: 0 20px 20px 20px;
+    background-color: #ffcccc;
+    border: 1px solid #990000;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+ul.errors li {
+    margin-left: 20px;
 }
 
 div#wrapper {
@@ -353,12 +369,17 @@ input[type='submit'], a.button {
 	text-decoration: none;
     text-shadow: 0 1px 1px rgba(0,0,0,.3);
     background: #f78d1d;
+    position: relative;
 }
 
 input[type='submit']:not([disabled]):hover, a.button:hover {
    -moz-box-shadow:inset 0 0 10px #c75d0d;
    -webkit-box-shadow:inset 0 0 10px #c75d0d;
    box-shadow:inset 0 0 10px #c75d0d;
+}
+
+input[type='submit']:active, a.button:active {
+    top: 1px;
 }
 
 input[type='submit'][disabled], a.button.disabled {

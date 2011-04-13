@@ -7,6 +7,8 @@ class ArtificialIntelligence < ActiveRecord::Base
 
   scope :ordered, :order=>"artificial_intelligences.name"
 
+  validates :name, :presence=>true, :uniqueness=>true, :length => { :minimum => 1 }
+
   # TODO Each AI need to be aware of their nodes and armies...
   def score
     self.artificial_intelligence_games.map(&:score).to_stat.average
