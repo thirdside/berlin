@@ -476,3 +476,11 @@ input[type='submit'][disabled], a.button.disabled {
 .text-align-right {
     text-align: right;
 }
+
+#footer #copyright {
+    float: left;
+}
+
+#footer #locales {
+    float: right;
+}

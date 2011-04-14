@@ -52,6 +52,10 @@ en:
       artificial_intelligence_score:
         score: Score
 
+  layout:
+    signin: Sign in
+    register: Register
+
   views:
     pagination:
       previous: "&laquo; "

@@ -10,6 +10,9 @@
       %td.label= ArtificialIntelligence.human_attribute_name :games_count
       %td= user.artificial_intelligence_games.count
     %tr
+      %td.label= ArtificialIntelligence.human_attribute_name :won_games
+      %td= user.artificial_intelligence_games.winners.count
+    %tr
       %td.label= ArtificialIntelligence.human_attribute_name :score
       %td= show_score user.score
     %tr

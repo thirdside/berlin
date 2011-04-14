@@ -3,6 +3,7 @@ class DeviseCreateUsers < ActiveRecord::Migration
     create_table :users  do |t|
       t.string :username
       t.string :email
+      t.string :locale
       t.integer :artificial_intelligences_count, :default=>0
       
       t.database_authenticatable :null => false

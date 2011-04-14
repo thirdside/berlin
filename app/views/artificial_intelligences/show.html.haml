@@ -13,6 +13,9 @@
         %td.label= ArtificialIntelligence.human_attribute_name :user
         %td= link_to @artificial_intelligence.user.username, @artificial_intelligence.user
       %tr
+        %td.label= ArtificialIntelligence.human_attribute_name :language
+        %td= @artificial_intelligence.language
+      %tr
         %td.label= ArtificialIntelligence.human_attribute_name :artificial_intelligence_games_count
         %td= @artificial_intelligence.artificial_intelligence_games.count
       %tr
@@ -56,7 +59,7 @@
           label_color :           "#444",
           grid_color :            "#ccf",
           markers :               "value",
-          meanline :              { 'stroke-width': '2px', stroke: '#000' },
+          meanline :              { 'stroke-width': '0px', stroke: '#000' },
           draw_axis :             false,
           labels :                [#{@artificial_intelligence.game_ids.join(',')}],
           hide_empty_label_grid : true

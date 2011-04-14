@@ -29,8 +29,8 @@
 
         - unless user_signed_in?
           .right
-            = link_to 'Sign in', new_session_path( :user )
-            = link_to 'Register', new_registration_path( :user )
+            = link_to t('layout.signin'), new_session_path( :user )
+            = link_to t('layout.register'), new_registration_path( :user )
 
       #main
 
@@ -40,4 +40,9 @@
         = yield
 
       #footer
-        2011 &copy Thirdside
+        #copyright
+          2011 &copy Thirdside
+
+        #locales
+          - I18n.available_locales.each do |locale|
+            = link_to locale, :locale=>locale

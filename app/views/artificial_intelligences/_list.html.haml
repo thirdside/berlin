@@ -9,7 +9,6 @@
         %th= User.model_name.human
         %th= ArtificialIntelligence.human_attribute_name :artificial_intelligence_games_count
         %th= ArtificialIntelligence.human_attribute_name :won_games
-        %th= ArtificialIntelligence.human_attribute_name :score
         %th.icon
 
     %tbody
@@ -19,5 +18,4 @@
           %td= resource.user.username
           %td.centered= resource.games.count
           %td.centered= resource.won_games
-          %td.centered= show_score( resource.score )
           %td= link_to_show resource
