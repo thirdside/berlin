@@ -55,7 +55,11 @@ def run map, ais
   game.map = map
 
   Thread.new do
-    game.run
+    begin
+      game.run
+    rescue Exception => e
+      log( e )
+    end
   end
 end
 

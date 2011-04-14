@@ -166,7 +166,7 @@ class Game < ActiveRecord::Base
   end
 
   def ranking
-    results = {}
+    results = Hash.new{ |h,k| h[k] = {} }
     points  = Hash.new{ |h,k| h[k] = 0.0 }
     total   = 0
 
@@ -177,8 +177,12 @@ class Game < ActiveRecord::Base
       end
     end
 
+    # Get max points to determine winners
+    max = points.values.max
+
     @map.players.keys.each do |player_id|
-      results[player_id] = points[player_id] == 0 ? 0.0 : (points[player_id] / total)
+      results[player_id][:score]  = points[player_id] == 0 ? 0.0 : (points[player_id] / total)
+      results[player_id][:winner] = points[player_id] == max
     end
 
     results
@@ -196,7 +200,7 @@ class Game < ActiveRecord::Base
 
     # save scores
     @map.players.each do |player_id, player|
-      self.artificial_intelligence_games.build( :artificial_intelligence=>player, :score=>results[player_id] )
+      self.artificial_intelligence_games.build( :artificial_intelligence=>player, :score=>results[player_id][:score], :winner=>results[player_id][:winner] )
     end
 
     self.save!
