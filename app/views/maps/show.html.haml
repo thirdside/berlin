@@ -29,7 +29,7 @@
       //map.draw(["nodes", "paths"]);
     });
 
-.content
+.content#games
   %h2= t('titles.games_played')
 
   %table
@@ -42,10 +42,12 @@
         %th.icon
 
     %tbody
-      - @map.games.each do |game|
+      - @games.each do |game|
         %tr
           %td= game.id
           %td= game.time_start
           %td= game.number_of_players
           %td= game.winners.map(&:name).to_sentence
           %td.icon= link_to_show game
+
+  = paginate @games, :params=>{:anchor=>'games'}

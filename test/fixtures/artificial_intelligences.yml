@@ -1,13 +1,15 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  player: 1
+  user_id: 1
   name: Test 1
-  url: http://localhost:4567/onturn
+  url_on_turn: http://localhost:4567/onturn
+  url_ready: http://localhost:4567/ready
   version: 1
 
 two:
-  player: 1
+  user_id: 1
   name: Test 2
-  url: http://localhost:4568/onturn
+  url_on_turn: http://localhost:4568/onturn
+  url_ready: http://localhost:4568/ready
   version: 1

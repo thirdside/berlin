@@ -70,7 +70,7 @@ class Node
   end
 
   def owned?
-    !owner.nil?
+    owner.present?
   end
 
   def link_to node

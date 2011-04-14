@@ -12,7 +12,7 @@ class Map < ActiveRecord::Base
 
   def build!
     # Fuuuuu Rails
-    return if defined? Rails.env
+    return unless Rails.env == "test" if defined? Rails.env
 
     @parsed   = self.json.present? ? JSON.parse( self.json ) : {}
     @players  = {}
@@ -42,6 +42,10 @@ class Map < ActiveRecord::Base
         @nodes[path['to']].link_to(@nodes[path['from']])
       end
     end
+  end
+
+  def node_ids
+    @nodes.keys
   end
 
   def init players

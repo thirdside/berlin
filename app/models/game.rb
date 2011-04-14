@@ -19,7 +19,7 @@ class Game < ActiveRecord::Base
 
   def build!
     # Fuuuuu Rails
-    return if defined? Rails.env
+    return unless Rails.env == "test" if defined? Rails.env
 
     @uuid   = UUIDTools::UUID.random_create.to_s
     @moves  = Hash.new{ |h,k| h[k] = [] }

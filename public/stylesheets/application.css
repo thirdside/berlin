@@ -446,6 +446,10 @@ input[type='submit'][disabled], a.button.disabled {
     margin: 0 2px 0 2px;
 }
 
+.pagination span.current {
+    color: #f78d1d;
+}
+
 .pagination a {
     color: #333333;
 }
