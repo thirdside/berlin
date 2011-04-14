@@ -1,5 +1,7 @@
 class ArtificialIntelligence < ActiveRecord::Base
 
+  LANGUAGES = %w(java php ruby python c c++ c# go)
+
   belongs_to :user, :counter_cache=>true
 
   has_many :artificial_intelligence_games, :dependent=>:destroy

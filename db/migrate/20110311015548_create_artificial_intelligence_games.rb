@@ -1,9 +1,10 @@
 class CreateArtificialIntelligenceGames < ActiveRecord::Migration
   def self.up
     create_table :artificial_intelligence_games do |t|
-      t.references :artificial_intelligence
-      t.references :game
-      t.float      :score
+      t.references  :artificial_intelligence
+      t.references  :game
+      t.boolean     :winner
+      t.float       :score
       t.timestamps
     end
     

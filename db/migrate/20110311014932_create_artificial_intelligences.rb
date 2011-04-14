@@ -4,6 +4,7 @@ class CreateArtificialIntelligences < ActiveRecord::Migration
       t.references :user, :null=>false
       t.string  :name, :null=>false
       t.string  :version
+      t.string  :language
       t.string  :url_ready, :null=>false
       t.string  :url_on_turn, :null=>false
       t.integer :artificial_intelligence_games_count, :default=>0
