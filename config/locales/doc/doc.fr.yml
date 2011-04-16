@@ -5,7 +5,43 @@ fr:
       sections:
         what_is_berling:
           title: Qu'est-ce que Berlin?
-          content: "Berlin se décrit comme étant un jeu stratégique multijoueurs d'intelligences artificielles tour par tour. Le principe est fort simple : vous inscrivez vos intelligences artificielles (IA) qui, dès lors, commencerons à compétitionner contre les autres dans une série de jeux similaires à RISK."
+          content: |
+            Berlin se décrit comme étant un jeu stratégique multijoueurs
+            d'intelligences artificielles tour par tour. Le principe est
+            fort simple : vous inscrivez vos intelligences artificielles
+            (IA) qui, dès lors, commencerons à compétitionner contre les
+            autres dans une série de jeux similaires à RISK.
+        how_to_play:
+          title: Comment on joue?
+          content: |
+            Tous les AIs sont lancées sur un plateau de jeu ou se trouvent
+            des chemins, des noeuds et des soldats. Un apperçu du plateau
+            vous est alors envoyé, accompagné des différentes règles
+            particulières à cette partie (voir plus loin). Vous êtes alors
+            invité à bouger vos soldats afin de conquérir un maximum de
+            noeuds pour un maximum de points. Tour après tour, Berlin vous
+            enverra un nouvel apperçu sur lequel vous verrez les mouvements
+            des autres joueurs, le résultat des combats, etc. S'en suit
+            alors une furieuse épopée qui ne se terminera qu'à la mort de
+            tous vos ennemis, ou encore jusqu'à ce que le temps alloué se
+            soit écoulé.
+        what_do_i_need:
+          title: De quoi ais-je besoin?
+          content: |
+            Berlin n'hébergeant aucun IA, chaque utilisateur se doit
+            d'offrir un hébergement pour chacune d'elle, nous donnant
+            au passage un URL afin d'établir le contact. Votre seule
+            préoccupation reste suite de vous assurer que votre serveur
+            demeure disponible, et vos IAs, fonctionnels.
+        programming_language:
+          title: Quel langage de programmation dois-je utilisé?
+          content: |
+            Puisque les communications s'effectuent via requêtes HTTP,
+            aucune restriction n'existe en ce qui concerne le langage
+            de programmation utilisé. Il vous suffit d'être en mesure de
+            créer un serveur, d'envoyer et de recevoir des requêtes HTTP
+            et de lire et écrire du contenu JSON.
+
     specifications:
       title: Spécifications
       sections:
@@ -14,6 +50,135 @@ fr:
           sections:
             maximum_number_of_turns:
               title: Nombre maximal de tours (maximum_number_of_turns)
-              content: "Il s'agit du nombre maximal de tours permis pour une partie donnée. Si, une fois ce nombre atteint, il reste toujours plusieurs IAs actives, les points sont alors réparties en fonctions des noeuds possédés par chacun."
+              content: |
+                Il s'agit du nombre maximal de tours permis pour une partie
+                donnée. Si, une fois ce nombre atteint, il reste toujours
+                plusieurs IAs actives, les points sont alors réparties en
+                fonctions des noeuds possédés par chacun.
+            directed_map:
+              title: Carte dirigée (directed)
+              content: |
+                Une carte dirigée signifie que tous ses chemins sont des
+                sens uniques. Ainsi, un chemin définissant un lien entre
+                le noeud #1 et le noeuf #2 ne signifie pas pour autant
+                qu'il soit possible de faire le trajet inverse, soit du
+                noeud #2 au noeud #1, à moins que ce trajet ne soit
+                explicitement spécifié. En revanche, une carte non dirigée
+                permet des allés-retours sans restriction.
+            time_limit_per_turn:
+              title: Temps maximum de réponse (time_limit_per_turn)
+              content: |
+                Il s'agit du temps maximum, en milisecondes, que vous
+                pouvez prendre pour répondre à nos différentes requêtes.
+                Une fois le délais écoulé, nous considérons que vous
+                préférez ne rien faire pour ce tour.
 
+      board:
+        title: Plateau de jeu
+        sections:
+          nodes:
+            title: Noeuds (noeud)
+            content: |
+              Les noeuds représentent le coeur du jeu. Il s'agit des intersections entre les différents chemins, et ce sont ces noeuds que vos
+              troupes doivent posséder afin de controller la partie et gagner des points. Chaque noeud se voit associé un type dont les
+              propriétés sont définies dans les règles propres à chaque partie. À titre d'exemple, il serait possible de définir un type de noeud
+              appelé "Château", valant 4 points et donnant 2 soldats par tour, ainsi qu'un autre, appelé "Croisée des chemins", ne valant
+              qu'un point tout en ne donnant aucun soldat. Les différents noeuds sont alors distribués sur le plateau, reliés entre eux par
+              des chemins. Il vous importe donc de déterminer quels sont les noeuds qui vous intéressent et de combattre pour en obtenir possession.
+            sections:
+              owner_id:
+                title: Possession (owner_id)
+                content: |
+                  Les noeuds peuvent être vacant ou encore occupé par un maximum d'un IA. Si plus d'un IAs se trouvent sur un même noeud au même moment,
+                  un combat éclate jusqu'à ce que l'une d'entre elle n'en ressorte vaincoeur.
+              soldiers_per_turn:
+                title:Recrutement (soldiers_per_turn)
+                  Chaque noeud possède un type lui conférant certaines propriétés, dont l'une est appellée recrutement. Cette propriété spécifie le nombre de nouveaux soldats
+                  auxquels le possesseur du noeud a droit à la fin d'un tour. Faites attention, car rien dans les règles n'interdit un recrutement négatif...
+              points:
+                title: Points (points)
+                content: |
+                  Chaque noeud peut valoir un nombre posifit ou négatif de points. Les points sont cumulés à la fin d'une partie, et chaque IA se voit attribué un score
+                  en fonction du nombre de points qu'elle possède sur le nombre total de points disponibles durant la partie.
+          paths:
+            title: Chemins (paths)
+            content: |
+              Les chemins sont ce qui vous permets de passer d'un noeud à l'autre. Ils partent d'un noeud (from) vers un autre (to). N'oubliez pas! Si les règles
+              spécifient que la carte est dirigée, il ne vous est possible que de vous rendre du noeud de départ au noeud d'arrivée, et non l'inverse.
+              En revanche, une carte non dirigée permet de faire des allés-retours, du noeud d'arrivée au noeud de départ, et vice-versa.
+
+          combats:
+            title: Combats
+            content: |
+              Un combat survient lorsque plus d'un IA se trouvent sur un même noeud à la fin d'un même tour. Les combats sont fort simple : Tous les IAs présents
+              perdent un soldat de manière simultanée jusqu'à ce qu'il ne reste qu'un seul vaincoeur, ou encore personne. La possession du noeud se vera attribuée
+              au vaincoeur s'il y en a un, ou restera entre les mains du dernier possesseur autrement.
+
+    communication:
+      title: Communications
+      sections:
+        ready_url:
+          title: Ready URL
+          sections:
+            what_it_is:
+              title: Qu'est-ce que c'est?
+              content: |
+                Pour chaque IA, vous devez nous fournir ce qu'on appelle le Ready URL. Nous envoyons une requête à cet URL avant chaque
+                partie afin de nous assurer que votre serveur est bel et bien fonctionnel. Votre seul objectif est de nous retourner
+                un statut 200 OK. Nous en profitons au passage pour vous envoyer un premier apperçu du plateau de jeu, ce qui vous permettera
+                dès lors de commencer à penser aux stratégies que vous utiliserez. Si pour une raison quelconque
+
+            details:
+              title: Détails de la requête envoyée
+              content: |
+                <dl>
+                  <dt>Type</dt><dd>Post</dd>
+                  <dt>Contenu</dt><dd>JSON</dd>
+                  <dt>Paramètres envoyés</dt>
+                  <dd>
+                    <dl>
+                      <dt>self</dt><dd>Entier représentant votre identifiant unique pour cette partie</dd>
+                      <dt>game</dt><dd>String représentant l'identifiant unique de la partie</dd>
+                      <dt>json</dt><dd>Voir annexe 1 : RequestJSON</dd>
+                    </dl>
+                  </dd>
+                  <dt>Réponse attendue</dt>
+                  <dd>
+                    <dl>
+                      <dt>Statut</dt><dd>200 OK</dd>
+                    </dl>
+                  </dd>
+                </dl>
+        on_turn_url:
+          title: onTurn URL
+          sections:
+            what_it_is:
+              title: Qu'est-ce que c'est?
+              content: |
+                Lors d'une partie, à chaque nouveau tour, Berlin vous enverra le nouvel état du jeu sur ce qu'on appelle le onTurn URL. Puisqu'à cette étape,
+                votre serveur est considéré comme actif, toute requête restant sans réponse ou dont le temps de réponse dépasserait le délais
+                permis dans les règles de la partie sera interpréter comme si vous n'aviez aucun ordre à donner pour ce tour. Les différents règles pour la
+                partie sont également réenvoyées afin de permettre l'existence de serveurs stateless.
+            details:
+              title: Détails de la requête envoyée
+              content: |
+                <dl>
+                  <dt>Type</dt><dd>Post</dd>
+                  <dt>Contenu</dt><dd>JSON</dd>
+                  <dt>Paramètres envoyés</dt>
+                  <dd>
+                    <dl>
+                      <dt>self<dt><dd>Entier représentant votre identifiant unique pour cette partie</dd>
+                      <dt>game<dt><dd>String représentant l'identifiant unique de la partie</dd>
+                      <dt>turn<dt><dd>Entier représentant le tour actuel</dd>
+                      <dt>json<dt><dd>Json représentant l'état actuel de la partie ainsi que ses paramètres. Voir annexe 1 : RequestJSON</dd>
+                    </dl>
+                  </dd>
+                  <dt>Réponse attendue</dt>
+                  <dd>
+                    <dl>
+                      <dt>Statut<dt><dd>200 OK</dd>
+                      <dt>Body<dt><dd>Json représentant vos différents ordres pour le tour précisé en paramètre. Voir annexe 2 : ResponseJSON</dd>
+                    </dl>
+                  </dd>
 

@@ -3,7 +3,6 @@ class CreateArtificialIntelligences < ActiveRecord::Migration
     create_table :artificial_intelligences do |t|
       t.references :user, :null=>false
       t.string  :name, :null=>false
-      t.string  :version
       t.string  :language
       t.string  :url_ready, :null=>false
       t.string  :url_on_turn, :null=>false

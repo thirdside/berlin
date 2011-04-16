@@ -1,5 +1,6 @@
 {
 	"infos": {
+	    "api_version": 1,
 		"number_of_players": INTEGER,
 		"time_limit_per_turn": INTEGER,
 		"maximum_number_of_turns": INTEGER,

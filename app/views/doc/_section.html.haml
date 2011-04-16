@@ -2,7 +2,7 @@
   %h3= section[:title]
 
   - if section[:content]
-    %p= section[:content]
+    %p=raw section[:content]
 
   - if section[:sections]
     %ul.padded

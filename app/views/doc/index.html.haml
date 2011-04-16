@@ -1,14 +1,15 @@
-.content
-  %h2= t('titles.table_of_content')
-
-  %ul.padded
-    - @doc.each do |key, section|
-      = render :partial => 'toc', :locals=>{:key=>key, :section=>section}
-
-- @doc.each do |key, section|
-  .content{:id=>key}
-    %h2= section[:title]
+- if @doc.is_a? Hash
+  .content
+    %h2= t('titles.table_of_content')
 
     %ul.padded
-      - section[:sections].each do |subkey, subsection|
-        = render :partial=>'section', :locals=>{:key=>"#{key}_#{subkey}", :section=>subsection}
+      - @doc.each do |key, section|
+        = render :partial => 'toc', :locals=>{:key=>key, :section=>section}
+
+  - @doc.each do |key, section|
+    .content{:id=>key}
+      %h2= section[:title]
+
+      %ul.padded
+        - section[:sections].each do |subkey, subsection|
+          = render :partial=>'section', :locals=>{:key=>"#{key}_#{subkey}", :section=>subsection}

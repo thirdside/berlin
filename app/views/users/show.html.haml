@@ -10,7 +10,6 @@
     %thead
       %tr
         %th= ArtificialIntelligence.human_attribute_name :name
-        %th= ArtificialIntelligence.human_attribute_name :version
         %th= ArtificialIntelligence.human_attribute_name :artificial_intelligence_games_count
         %th= ArtificialIntelligence.human_attribute_name :score
         %th.icon
@@ -19,7 +18,6 @@
       - @user.artificial_intelligences.each do |artificial_intelligence|
         %tr
           %td= artificial_intelligence.name
-          %td= artificial_intelligence.version
           %td= artificial_intelligence.artificial_intelligence_games.count
           %td= show_score artificial_intelligence.score
           %td.icon= link_to_show artificial_intelligence

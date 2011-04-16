@@ -40,6 +40,18 @@ a:hover {
     border: 1px solid #990000;
 }
 
+dl {
+    padding: 4px;
+}
+
+dl dt {
+    font-weight: bold;
+}
+
+dl dd {
+    padding: 0 0 0 10px;
+}
+
 ul.errors {
     padding: 10px;
     margin: 0 20px 20px 20px;

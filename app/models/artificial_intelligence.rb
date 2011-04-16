@@ -1,6 +1,6 @@
 class ArtificialIntelligence < ActiveRecord::Base
 
-  LANGUAGES = %w(Java PHP Ruby Python C C++ C# Go Other)
+  LANGUAGES = %w(Ruby PHP Python C/C++ Lua JavaScript C# Go Java Other)
 
   belongs_to :user, :counter_cache=>true
 
