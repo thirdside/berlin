@@ -9,5 +9,7 @@ BerlinWeb::Application.routes.draw do
 
   resources :users
 
+  match 'doc' => 'doc#index'
+
   root :to => "artificial_intelligences#index"
 end

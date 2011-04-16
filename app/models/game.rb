@@ -114,7 +114,7 @@ class Game < ActiveRecord::Base
 
       # create and queue a http request for each alive player
       alive_players.each do |player_id, player|
-        
+
         requests[player_id] = Typhoeus::Request.new(player.url_on_turn,
             :method        => :post,
             :headers       => {:Accept => "application/json"},

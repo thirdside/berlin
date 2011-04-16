@@ -1,0 +1,19 @@
+fr:
+  doc:
+    introduction:
+      title: Introduction
+      sections:
+        what_is_berling:
+          title: Qu'est-ce que Berlin?
+          content: "Berlin se décrit comme étant un jeu stratégique multijoueurs d'intelligences artificielles tour par tour. Le principe est fort simple : vous inscrivez vos intelligences artificielles (IA) qui, dès lors, commencerons à compétitionner contre les autres dans une série de jeux similaires à RISK."
+    specifications:
+      title: Spécifications
+      sections:
+        rules:
+          title: Règles
+          sections:
+            maximum_number_of_turns:
+              title: Nombre maximal de tours (maximum_number_of_turns)
+              content: "Il s'agit du nombre maximal de tours permis pour une partie donnée. Si, une fois ce nombre atteint, il reste toujours plusieurs IAs actives, les points sont alors réparties en fonctions des noeuds possédés par chacun."
+
+

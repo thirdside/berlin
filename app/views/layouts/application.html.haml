@@ -25,7 +25,7 @@
 
       %ul#menu
         - menu.each do |model, url|
-          %li{:class=>controller.controller_name == model.model_name.tableize ? 'active' : nil}= link_to model.model_name.human.pluralize, url
+          %li{:class=>controller.controller_name == model.tableize ? 'active' : nil}= link_to model.pluralize, url
 
         - unless user_signed_in?
           .right
@@ -45,4 +45,7 @@
 
         #locales
           - I18n.available_locales.each do |locale|
-            = link_to locale, :locale=>locale
+            - classes  = []
+            - classes << locale
+            - classes << 'active' if locale == I18n.locale
+            = link_to '', {:locale=>locale}, :class=>classes

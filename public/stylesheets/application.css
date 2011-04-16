@@ -447,6 +447,15 @@ input[type='submit'][disabled], a.button.disabled {
     margin-right: 10px;
 }
 
+ul.padded {
+    padding: 0 0 0 10px;
+    margin: 10px;
+}
+
+ul.padded li {
+    margin: 10px;
+}
+
 .pagination {
     padding: 10px 10px 0 10px;
     text-align: center;
@@ -484,3 +493,21 @@ input[type='submit'][disabled], a.button.disabled {
 #footer #locales {
     float: right;
 }
+
+#footer #locales a {
+    display: block;
+    float: left;
+    margin: 0 0 0 5px;
+    background-image: url(/images/flags.jpg);
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 11px;
+    opacity: 0.5;
+}
+
+#footer #locales a.active, #footer #locales a:hover {
+    opacity: 1;
+}
+
+#footer #locales a.fr {background-position: -172px -68px;}
+#footer #locales a.en {background-position: -25px -208px;}

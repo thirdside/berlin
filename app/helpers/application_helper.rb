@@ -1,10 +1,11 @@
 module ApplicationHelper
   def menu
     temp = {}
-    temp[ArtificialIntelligence]  = artificial_intelligences_path
-    temp[Game]                    = games_path
-    temp[Map]                     = maps_path
-    temp[User]                    = users_path
+    temp[ArtificialIntelligence.model_name.human]  = artificial_intelligences_path
+    temp[Game.model_name.human]                    = games_path
+    temp[Map.model_name.human]                     = maps_path
+    temp[User.model_name.human]                    = users_path
+    temp[Doc.model_name]                           = doc_path
     temp
   end
 
