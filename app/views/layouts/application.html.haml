@@ -8,6 +8,7 @@
     = stylesheet_link_tag :all, :cache=>true
     = javascript_include_tag  :defaults,
                               'raphael',
+                              'graphico',
                               'thirdside',
                               'simulator/drawable',
                               'simulator/animated',
@@ -33,12 +34,12 @@
 
       %ul#menu
         - menu.each do |model, url|
-          %li{:class=>controller.controller_name == model.model_name.tableize ? 'active' : nil}= link_to model.model_name.human.pluralize, url
+          %li{:class=>controller.controller_name == model.tableize ? 'active' : nil}= link_to model.pluralize, url
 
         - unless user_signed_in?
           .right
-            = link_to 'Sign in', new_session_path( :user )
-            = link_to 'Register', new_registration_path( :user )
+            = link_to t('layout.signin'), new_session_path( :user )
+            = link_to t('layout.register'), new_registration_path( :user )
 
       #main
 
@@ -48,4 +49,12 @@
         = yield
 
       #footer
-        2011 &copy Thirdside
+        #copyright
+          2011 &copy Thirdside
+
+        #locales
+          - I18n.available_locales.each do |locale|
+            - classes  = []
+            - classes << locale
+            - classes << 'active' if locale == I18n.locale
+            = link_to '', {:locale=>locale}, :class=>classes

@@ -1,0 +1,9 @@
+{
+	"moves": [
+		{
+			"from": INTEGER, ref.: RequestJSON.nodes.id
+			"to": INTEGER, ref.: RequestJSON.nodes.id
+			"number_of_soldiers": INTEGER
+		}
+	]
+}

@@ -7,15 +7,17 @@
   #progress_bar
 
 .content
-  #map
-
-  #controls
+  .right#controls
     %input#rewind{:type=>:submit, :value=>"<<"}
     %input#back{:type=>:submit, :value=>"<"}
     %input#play{:type=>:submit, :value=>"play"}
     %input#pause{:type=>:submit, :value=>"pause"}
     %input#next{:type=>:submit, :value=>">"}
     %input#end{:type=>:submit, :value=>">>"}
+
+  %h2#turns= "0/10"
+
+  #map
 
 :javascript
   document.observe("dom:loaded", function() {

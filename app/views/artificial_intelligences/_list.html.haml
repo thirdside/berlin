@@ -1,21 +1,21 @@
-- if resources.empty?
+- unless resources.present?
   = t('common.no_result')
   
 - else
   %table
     %thead
       %tr
-        %th= User.model_name.human
         %th= ArtificialIntelligence.human_attribute_name :name
-        %th= Game.model_name.human.pluralize
-        %th= Game.human_attribute_name( :victory ).pluralize
+        %th= User.model_name.human
+        %th= ArtificialIntelligence.human_attribute_name :artificial_intelligence_games_count
+        %th= ArtificialIntelligence.human_attribute_name :won_games
         %th.icon
 
     %tbody
       - resources.each do |resource|
         %tr
-          %td= resource.user.username
           %td= resource.name
+          %td= resource.user.username
           %td.centered= resource.games.count
-          %td.centered= resource.score.to_f.percentage_of( resource.games.count ).to_decimals
+          %td.centered= resource.won_games
           %td= link_to_show resource

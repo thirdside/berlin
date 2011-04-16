@@ -9,23 +9,22 @@ class Game < ActiveRecord::Base
   after_initialize :build!
 
   def number_of_players
-    artificial_intelligences.count
+    artificial_intelligence_games.count
   end
 
   def winners
-    max = artificial_intelligence_games.map(&:score).max
-    artificial_intelligence_games.select{ |w| w.score == max }.map(&:artificial_intelligence)
+    self.artificial_intelligence_games.winners.includes(:artificial_intelligence).map(&:artificial_intelligence)
   end
 
   def build!
     # Fuuuuu Rails
-    return if defined? Rails.env
+    return unless Rails.env == "test" if defined? Rails.env
 
     @uuid   = UUIDTools::UUID.random_create.to_s
     @moves  = Hash.new{ |h,k| h[k] = [] }
     @spawns = Hash.new{ |h,k| h[k] = [] }
     @states = {}
-    @turn   = 1
+    @turn   = 0
     @start  = Time.new
     @end    = nil
     @hydra  = Typhoeus::Hydra.new
@@ -101,6 +100,9 @@ class Game < ActiveRecord::Base
       # is there more than 1 alive player?
       break unless alive_players.size > 1
 
+      # next turn
+      @turn += 1
+
       p "#{@turn} - new turn!"
 
       # reset response and request
@@ -112,7 +114,8 @@ class Game < ActiveRecord::Base
 
       # create and queue a http request for each alive player
       alive_players.each do |player_id, player|
-        requests[player_id] = Typhoeus::Request.new(player.url,
+
+        requests[player_id] = Typhoeus::Request.new(player.url_on_turn,
             :method        => :post,
             :headers       => {:Accept => "application/json"},
             :timeout       => @map.time_limit_per_turn,
@@ -154,9 +157,6 @@ class Game < ActiveRecord::Base
       move!
       fight!
       spawn!
-
-      # next turn
-      @turn += 1
     end
 
     # calculate the new state of the map
@@ -166,7 +166,7 @@ class Game < ActiveRecord::Base
   end
 
   def ranking
-    results = {}
+    results = Hash.new{ |h,k| h[k] = {} }
     points  = Hash.new{ |h,k| h[k] = 0.0 }
     total   = 0
 
@@ -177,8 +177,12 @@ class Game < ActiveRecord::Base
       end
     end
 
+    # Get max points to determine winners
+    max = points.values.max
+
     @map.players.keys.each do |player_id|
-      results[player_id] = points[player_id] == 0 ? 0.0 : (points[player_id] / total)
+      results[player_id][:score]  = points[player_id] == 0 ? 0.0 : (points[player_id] / total)
+      results[player_id][:winner] = points[player_id] == max
     end
 
     results
@@ -196,7 +200,7 @@ class Game < ActiveRecord::Base
 
     # save scores
     @map.players.each do |player_id, player|
-      self.artificial_intelligence_games.build( :artificial_intelligence=>player, :score=>results[player_id] )
+      self.artificial_intelligence_games.build( :artificial_intelligence=>player, :score=>results[player_id][:score], :winner=>results[player_id][:winner] )
     end
 
     self.save!
@@ -208,7 +212,7 @@ class Game < ActiveRecord::Base
       :map_id                   => @map.id,
       :turn                     => @turn,
       :maximum_number_of_turns  => @map.maximum_number_of_turns,
-      :players                  => @map.players.map{ |player_id, player| {:id=>player_id, :name=>player.url} }
+      :players                  => @map.players.map{ |player_id, player| {:id=>player_id, :name=>player.name} }
     }
   end
 

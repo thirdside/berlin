@@ -1,13 +1,18 @@
 class Map < ActiveRecord::Base
   attr_accessor :parsed, :types, :nodes, :number_of_players, :time_limit_per_turn, :players, :maximum_number_of_turns
 
-  has_many :games, :dependent=>:destroy
+  has_many :games, :dependent=>:destroy, :order=>"games.time_start DESC"
+  has_many :artificial_intelligence_games, :through=>:games
 
   after_initialize :build!
-  
+
+  def best_artificial_intelligence
+    self.artificial_intelligence_games.group("artificial_intelligence_id").select("SUM(artificial_intelligence_games.score) / COUNT(artificial_intelligence_games.id) AS ratio").order("ratio DESC").first
+  end
+
   def build!
     # Fuuuuu Rails
-    return if defined? Rails.env
+    return unless Rails.env == "test" if defined? Rails.env
 
     @parsed   = self.json.present? ? JSON.parse( self.json ) : {}
     @players  = {}
@@ -37,6 +42,10 @@ class Map < ActiveRecord::Base
         @nodes[path['to']].link_to(@nodes[path['from']])
       end
     end
+  end
+
+  def node_ids
+    @nodes.keys
   end
 
   def init players

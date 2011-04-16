@@ -32,12 +32,12 @@ get '/random' do
 end
 
 # start a fight for map X with ais Y, Z, ...
-# params[:map] : Map ID
-# params[:ais] : List of AI ids
+# params[:map_id] : Map ID
+# params[:ai_ids] : List of AI ids
 get '/fight' do
   begin
     map = Map.find(params[:map_id])
-    ais = ArtificialIntelligence.find(params[:ais_id])
+    ais = ArtificialIntelligence.find(params[:ai_ids])
     run map, ais
   rescue Exception => e
     log( e )
@@ -55,7 +55,11 @@ def run map, ais
   game.map = map
 
   Thread.new do
-    game.run
+    begin
+      game.run
+    rescue Exception => e
+      log( e )
+    end
   end
 end
 

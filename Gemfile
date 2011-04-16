@@ -13,4 +13,8 @@ gem 'has_scope'
 gem 'utilities', "0.0.7"
 gem 'kaminari'
 
-
+group :test do
+  gem "typhoeus"
+  gem "uuidtools"
+  gem "yajl-ruby"
+end

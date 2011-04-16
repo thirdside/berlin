@@ -3,14 +3,15 @@
     .right
       = link_to t('games.new'), new_game_path, :class=>:button
 
-  %h2 Listing games
+  %h2= t('titles.all_games')
 
   %table
     %thead
       %tr
-        %th #
+        %th= Game.human_attribute_name :id
+        %th= Game.human_attribute_name :time_start
         %th= Map.model_name.human
-        %th= ArtificialIntelligence.model_name.human.pluralize
+        %th= Game.human_attribute_name :artificial_intelligence_games_count
         %th= Game.human_attribute_name :winner
         %th.icon
 
@@ -18,8 +19,9 @@
       - @games.each do |game|
         %tr
           %td= game.id
-          %td= game.map.name
-          %td.centered= game.number_of_players
+          %td= game.time_start
+          %td= link_to game.map.name, game.map
+          %td= game.number_of_players
           %td= game.winners.map(&:name).to_sentence
           %td= link_to_show game
 

@@ -37,7 +37,7 @@ class GamesController < InheritedResources::Base
 
       case BERLIN_SERVER[:protocol]
         when 'http'
-          # Format : /fight?map_id=X&ais_id[]=Y&ais_id[]=Z
+          # Format : /fight?map_id=X&ai_ids[]=Y&ai_ids[]=Z
           url  = BERLIN_SERVER[:url].dup
           url += "?#{BERLIN_SERVER[:params][:map]}=#{map.id}"
           url += ais.map{ |ai| "&#{BERLIN_SERVER[:params][:ais]}[]=#{ai.id}" }.join

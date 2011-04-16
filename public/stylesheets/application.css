@@ -26,6 +26,8 @@ a:hover {
 .flash {
     padding: 10px;
     border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
 }
 
 .flash.notice {
@@ -36,6 +38,32 @@ a:hover {
 .flash.alert {
     background-color: #ffcccc;
     border: 1px solid #990000;
+}
+
+dl {
+    padding: 4px;
+}
+
+dl dt {
+    font-weight: bold;
+}
+
+dl dd {
+    padding: 0 0 0 10px;
+}
+
+ul.errors {
+    padding: 10px;
+    margin: 0 20px 20px 20px;
+    background-color: #ffcccc;
+    border: 1px solid #990000;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+ul.errors li {
+    margin-left: 20px;
 }
 
 div#wrapper {
@@ -49,6 +77,8 @@ div#main {
     padding: 15px 20px 15px 20px;
     background-image: url(/images/transparent.png);
     border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
 }
 
 div#header {
@@ -76,6 +106,8 @@ div#user-info {
     top: 20px;
     background-image: url(/images/transparent.png);
     border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
     padding: 15px;
 }
 
@@ -88,6 +120,10 @@ div#user-info > ul > li {
     text-align: center;
     color: #ffffff;
     width: 60px;
+}
+
+div#user-info li:hover div.title, div#user-info li:hover div.info {
+    text-shadow: 0 0 8px #fff;
 }
 
 div#user-info > ul > li.data {
@@ -111,7 +147,7 @@ div#footer {
     top: 0;
 }
 
-.right > * {
+.right > a {
     margin-left: 10px;
 }
 
@@ -120,15 +156,13 @@ div.content {
     padding: 10px;
     margin: 5px 0 5px 0;
     border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
     position: relative;
 }
 
 div.content .right {
     top: 10px;
-}
-
-div.content .right input {
-    margin-left: 10px;
 }
 
 div.content h2 {
@@ -212,13 +246,14 @@ ul#menu li ul li a:hover {
 table {
     width: 100%;
     border-collapse: collapse;
-    color: #4F6B72;
+    color: #333333;
 }
 
 table thead th {
-    border-top: 1px solid #C1DAD7;
-    background-color: #dddddd;
+    border-top: 1px solid #cccccc;
+    background-color: #E1E1E1;
     font-weight: bold;
+    text-align: left;
 }
 
 table tbody tr:nth-child(odd) {
@@ -226,20 +261,26 @@ table tbody tr:nth-child(odd) {
 }
 
 table tbody tr:nth-child(even) {
-    background-color: #eeeeee;
+    background-color: #f2f2f2;
 }
 
 table tbody tr:hover td {
-    background-color: #b0bcff;
+    background-color: #333333;
+    color: #ffffff;
 }
 
 table th, table td {
-    border-bottom: 1px solid #C1DAD7;
+    border-bottom: 1px solid #cccccc;
     padding: 4px 6px;
 }
 
 table td {
-    border-right: 1px dotted #C1DAD7;
+    border-right: 1px dotted #cccccc;
+    line-height: 20px;
+}
+
+table td.label {
+    width: 200px;
 }
 
 table td:last-child {
@@ -255,6 +296,7 @@ table th.icon, table td.icon {
 }
 
 #map {
+    position: relative;
     width: 960px;
     height: 500px;
 }
@@ -273,13 +315,11 @@ table th.icon, table td.icon {
 
 #progress_bar_container #progress_bar {
     border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
     background: #f78d1d;
     width: 0;
     height: 5px;
-}
-
-#controls {
-    text-align: center;
 }
 
 form .field {
@@ -293,7 +333,7 @@ form .field.nolabel {
     padding-left: 10px;
 }
 
-label, .label {
+label, form div.label {
     width: 50%;
     text-align: right;
     float: left;
@@ -325,6 +365,7 @@ input[type='checkbox'] {
 }
 
 select {
+    width: 212px;
     padding: 3px 4px 3px 4px;
 }
 
@@ -336,8 +377,8 @@ input[type='submit'], a.button {
     display: inline-block;
     padding: 2px 10px;
     border-radius: 6px;
-    -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
     border: none;
     outline: none;
     color: #ffffff;
@@ -349,12 +390,17 @@ input[type='submit'], a.button {
 	text-decoration: none;
     text-shadow: 0 1px 1px rgba(0,0,0,.3);
     background: #f78d1d;
+    position: relative;
 }
 
 input[type='submit']:not([disabled]):hover, a.button:hover {
    -moz-box-shadow:inset 0 0 10px #c75d0d;
    -webkit-box-shadow:inset 0 0 10px #c75d0d;
    box-shadow:inset 0 0 10px #c75d0d;
+}
+
+input[type='submit']:active, a.button:active {
+    top: 1px;
 }
 
 input[type='submit'][disabled], a.button.disabled {
@@ -370,6 +416,8 @@ input[type='submit'][disabled], a.button.disabled {
     padding: 10px;
     border: 2px solid #cccccc;
     border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
     height: 200px;
     width: 200px;
     position: relative;
@@ -411,6 +459,15 @@ input[type='submit'][disabled], a.button.disabled {
     margin-right: 10px;
 }
 
+ul.padded {
+    padding: 0 0 0 10px;
+    margin: 10px;
+}
+
+ul.padded li {
+    margin: 10px;
+}
+
 .pagination {
     padding: 10px 10px 0 10px;
     text-align: center;
@@ -419,6 +476,10 @@ input[type='submit'][disabled], a.button.disabled {
 
 .pagination span {
     margin: 0 2px 0 2px;
+}
+
+.pagination span.current {
+    color: #f78d1d;
 }
 
 .pagination a {
@@ -436,3 +497,29 @@ input[type='submit'][disabled], a.button.disabled {
 .text-align-right {
     text-align: right;
 }
+
+#footer #copyright {
+    float: left;
+}
+
+#footer #locales {
+    float: right;
+}
+
+#footer #locales a {
+    display: block;
+    float: left;
+    margin: 0 0 0 5px;
+    background-image: url(/images/flags.jpg);
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 11px;
+    opacity: 0.5;
+}
+
+#footer #locales a.active, #footer #locales a:hover {
+    opacity: 1;
+}
+
+#footer #locales a.fr {background-position: -172px -68px;}
+#footer #locales a.en {background-position: -25px -208px;}

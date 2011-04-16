@@ -1,0 +1,7 @@
+%li
+  = link_to section[:title], "##{key}"
+
+  - if section[:sections]
+    %ul.padded
+      - section[:sections].each do |subkey, subsection|
+        = render :partial=>'toc', :locals=>{:key=>"#{key}_#{subkey}", :section=>subsection}

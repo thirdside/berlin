@@ -5,3 +5,10 @@
 #
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
+
+DIR = File.expand_path( File.dirname( __FILE__ ) )
+
+Map.create(:name=>"DefaultMap", :version=>1, :json=>File.open( DIR + '/../public/maps/1.map' ).readlines.join)
+
+ArtificialIntelligence.create(:user_id=>1, :name=>"AI1", :language=>'Java', :version=>1, :url_ready=>"http://localhost:4567/ready", :url_on_turn=>"http://localhost:4567/onturn")
+ArtificialIntelligence.create(:user_id=>1, :name=>"AI2", :language=>'PHP', :version=>1, :url_ready=>"http://localhost:4568/ready", :url_on_turn=>"http://localhost:4568/onturn")

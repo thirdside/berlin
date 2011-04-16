@@ -1,0 +1,10 @@
+%li{:id=>key}
+  %h3= section[:title]
+
+  - if section[:content]
+    %p=raw section[:content]
+
+  - if section[:sections]
+    %ul.padded
+      - section[:sections].each do |subkey, subsection|
+        = render :partial=>'section', :locals=>{:key=>"#{key}_#{subkey}", :section=>subsection}

@@ -1,8 +1,53 @@
 .content
+  %h2= @map.name
+
+  %table
+    %thead
+      %tr
+        %th(colspan=2)= t('common.statistics')
+    %tbody
+      %tr
+        %td.label= Map.human_attribute_name :version
+        %td= @map.version
+      %tr
+        %td.label= Map.human_attribute_name :games_count
+        %td= @map.games.count
+      %tr
+        %td.label= Map.human_attribute_name :best_artificial_intelligence
+        %td
+          - if best = @map.best_artificial_intelligence
+            = best.artificial_intelligence.name
+
+.content
+  %h2= Map.model_name.human
+
   #map
 
-:javascript
-  document.observe("dom:loaded", function() {
-    var map = new TS.AIMap("map", "#{map_path(@map, :format=>:json)}");
-    //map.draw(["nodes", "paths"]);
-  });
+  :javascript
+    document.observe("dom:loaded", function() {
+      var map = new TS.AIMap("map", "#{map_path(@map, :format=>:json)}");
+      //map.draw(["nodes", "paths"]);
+    });
+
+.content#games
+  %h2= t('titles.games_played')
+
+  %table
+    %thead
+      %tr
+        %th= Game.human_attribute_name :id
+        %th= Game.human_attribute_name :time_start
+        %th= Game.human_attribute_name :artificial_intelligence_games_count
+        %th= Game.human_attribute_name :winner
+        %th.icon
+
+    %tbody
+      - @games.each do |game|
+        %tr
+          %td= game.id
+          %td= game.time_start
+          %td= game.number_of_players
+          %td= game.winners.map(&:name).to_sentence
+          %td.icon= link_to_show game
+
+  = paginate @games, :params=>{:anchor=>'games'}
