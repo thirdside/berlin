@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me
 
-  validates :username, :presence=>true, :uniqueness=>true, :length => { :minimum => 6, :maximum => 100 }
+  validates :username, :presence=>true, :uniqueness=>true, :length => { :minimum => 4, :maximum => 100 }
 
   def score
     self.artificial_intelligence_games.map(&:score).to_stat.average
