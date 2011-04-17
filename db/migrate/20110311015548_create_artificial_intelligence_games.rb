@@ -3,6 +3,7 @@ class CreateArtificialIntelligenceGames < ActiveRecord::Migration
     create_table :artificial_intelligence_games do |t|
       t.references  :artificial_intelligence
       t.references  :game
+      t.integer     :player_id
       t.boolean     :winner
       t.float       :score
       t.timestamps

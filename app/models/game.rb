@@ -201,7 +201,7 @@ class Game < ActiveRecord::Base
 
     # save scores
     @map.players.each do |player_id, player|
-      self.artificial_intelligence_games.build( :artificial_intelligence=>player, :score=>results[player_id][:score], :winner=>results[player_id][:winner] )
+      self.artificial_intelligence_games.build( :artificial_intelligence=>player, :player_id=>player_id, :score=>results[player_id][:score], :winner=>results[player_id][:winner] )
     end
 
     self.save!
@@ -213,6 +213,7 @@ class Game < ActiveRecord::Base
       :map_id                   => @map.id,
       :turn                     => @turn,
       :maximum_number_of_turns  => @map.maximum_number_of_turns,
+      :number_of_players        => @map.players.keys.count,
       :players                  => @map.players.map{ |player_id, player| {:id=>player_id, :name=>player.name} }
     }
   end

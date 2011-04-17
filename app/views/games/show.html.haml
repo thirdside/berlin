@@ -10,12 +10,12 @@
       %tr
         %th(colspan=4)= t('common.statistics')
     %tbody
-      - @game.artificial_intelligences.each do |artificial_intelligence|
-        %tr
-          %td.color{:id=>"artificial_intelligence_color_#{artificial_intelligence.id}"}
-          %td.soldiers{:id=>"artificial_intelligence_soldiers_#{artificial_intelligence.id}"}
-          %td.points{:id=>"artificial_intelligence_points_#{artificial_intelligence.id}"}
-          %td= artificial_intelligence.name
+      - @game.artificial_intelligence_games.each do |artificial_intelligence_game|
+        %tr{:id=>"info_player_#{artificial_intelligence_game.player_id}"}
+          %td.color
+          %td.soldiers
+          %td.points
+          %td= artificial_intelligence_game.artificial_intelligence.name
 
 #progress_bar_container
   #progress_bar

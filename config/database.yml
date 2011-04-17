@@ -1,5 +1,5 @@
 test:
-  adapter: mysql
+  adapter: mysql2
   database: berlin_test
   username: root
   password: password
@@ -7,7 +7,9 @@ test:
   timeout: 5000
 
 development:
-  adapter: sqlite3
-  database: db/berlin_development.sqlite3
+  adapter: mysql2
+  database: berlin_development
+  username: root
+  password: password
   pool: 5
   timeout: 5000
