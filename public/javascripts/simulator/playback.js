@@ -11,6 +11,8 @@ TS.AIPlayback = Class.create(TS, {
 	{
 		$super();
 		
+		this.game_description_url = game_description_url;
+		
 		// create the template
 		this.template = '<li><div class="color-box" style="background-color: #{color};"></div><span>#{name}: #{city}, #{soldiers}</span></li>';
 		
@@ -46,36 +48,31 @@ TS.AIPlayback = Class.create(TS, {
 		
 		this.enableControls();
 		this.playbackDescription = null;
-		
-		// request the game description
-		new Ajax.Request( game_description_url, {method: 'get', onComplete: this.onGameDescriptionLoaded.bindAsEventListener(this)});
 	},
 	
 	/*
 	 * Called when the game description is fetched from the server
 	 */
 	onGameDescriptionLoaded: function (request)
-	{
-		this.ready.self = true;
-		
+	{	
 		// parse the answer
-		this.gameDescription = request.responseText.evalJSON();
-		
-		// create the playback description
-		this.playbackDescription = new TS.PlaybackDescription(
-			this.map.config,
-			this.map.nodeGraph,
-			this.gameDescription,
-			this.map.layers['background'],
-			this.map.graphics);
-		
-		
-		// enable playback control
-		this.enableControls();
+		this.gameDescription = request.responseText.evalJSON();		
+	
+		this.ready.self = true;	
 		
 		// draw the first turn (setup)
-		if (this.isReady())
+		if (this.isReady()) {
+			// create the playback description
+			this.playbackDescription = new TS.PlaybackDescription(
+				this.map.config,
+				this.map.nodeGraph,
+				this.gameDescription,
+				this.map.layers['background'],
+				this.map.graphics);			
+			
+			this.enableControls();
 			this.drawCurrentTurn();
+		}
 	},	
 	
 	/*
@@ -217,11 +214,8 @@ TS.AIPlayback = Class.create(TS, {
 	{
 		this.ready.map = true;
 		
-		if (this.isReady())
-		{
-			this.enableControls();
-			this.drawCurrentTurn();
-		}
+		// request the game description
+		new Ajax.Request( this.game_description_url, {method: 'get', onComplete: this.onGameDescriptionLoaded.bindAsEventListener(this)});
 	},
 	
 	/*
