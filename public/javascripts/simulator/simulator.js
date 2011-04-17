@@ -94,9 +94,9 @@ TS.AIMap = Class.create(TS, {
 		// if a turnBefore exists, we must play the departure animations
 		if (turnBefore)
 		{
-			Object.keys(turnBefore).each(function(layerName) {
+			Object.keys(turnBefore.layers).each(function(layerName) {
 				var layer = this.layers[layerName];
-				var data = turnBefore[layerName];
+				var data = turnBefore.layers[layerName];
 				
 				// clear the layer
 				layer.clear();
@@ -117,9 +117,9 @@ TS.AIMap = Class.create(TS, {
 		}
 		
 		
-		Object.keys(turnNow).each(function(layerName) {
+		Object.keys(turnNow.layers).each(function(layerName) {
 			var layer = this.layers[layerName];
-			var data = turnNow[layerName];
+			var data = turnNow.layers[layerName];
 			
 			// clear the layer
 			layer.clear();
