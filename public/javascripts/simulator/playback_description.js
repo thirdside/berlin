@@ -27,9 +27,9 @@
 		Object.keys(gameDescription.turns).each(function(turnId) {
 			var turn = gameDescription.turns[turnId];
 			
-			this._syncMap(turn.states);
+			this._syncMap(turn.states_pre);
 			
-			this.players = turn.players = this._getPlayersStates(this.gameDescription.infos.players);
+			this.players = turn.players = this._getPlayersStates(this.gameDescription.infos.number_of_players);
 			
 			this._processStates(turn.states_pre);
 			this._processMoves(turn.moves);
@@ -724,14 +724,13 @@
 	/*
 	 * Get the state of the players
 	 */
-	_getPlayersStates: function (playersInit)
+	_getPlayersStates: function (nbPlayers)
 	{
 		// create the players
 		var players = {};
 		
-		$A(playersInit).each(function(player) {
-			players[player.id] = new TS.Player(player.id, player.name, this._getPlayerColor(player.id));
-		}, this);
+		for (var i = 0; i < nbPlayers; i++)
+			players[i] = new TS.Player(i, this._getPlayerColor(i));
 				
 		// synchronize the players with the map
 		Object.keys(players).each(function(playerId) {
