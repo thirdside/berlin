@@ -16,21 +16,24 @@
 		this.graphics = graphics;
 		
 		this.color = new TS.Color();
-		this.players = this._initPlayers(this.gameDescription.infos.players);
 		
 		this.turns = new Array();
 		this.currentTurn = 0;
 		this.direction = 'forward';
+		
+		this.players = null;
 		
 		// process each turn of the game description
 		Object.keys(gameDescription.turns).each(function(turnId) {
 			var turn = gameDescription.turns[turnId];
 			
 			this._syncMap(turn.states);
-			this._syncPlayers();
 			
-			this._processStates(turn.states);
+			this.players = turn.players = this._getPlayersStates(this.gameDescription.infos.players);
+			
+			this._processStates(turn.states_pre);
 			this._processMoves(turn.moves);
+			this._processStates(turn.states_post);
 			this._processSpawns(turn.spawns);
 		}, this);
 	},
@@ -285,7 +288,7 @@
 					'opacity': 1
 				},
 				
-				'length': 500
+				'length': 250
 			},
 			
 			'forward_departure':
@@ -309,7 +312,7 @@
 					'opacity': 0
 				},
 				
-				'length': 500
+				'length': 250
 			},
 			
 			'backward_arrival':
@@ -333,7 +336,7 @@
 					'opacity': 1
 				},
 				
-				'length': 500
+				'length': 250
 			},
 			
 			'backward_departure':
@@ -357,7 +360,7 @@
 					'opacity': 0
 				},
 				
-				'length': 500
+				'length': 250
 			}			
 		};
 
@@ -409,31 +412,46 @@
 		{
 			'forward_arrival':
 			{
-				'start': {},
-				'end': {},
-				'length': 0
+				'start': {
+					'opacity': 0
+				},
+				'end': {
+					'opacity': 1
+				},
+				'length': 250
 			},
 			
 			'forward_departure':
 			{
-				'start': {},
-				'end': {},
-				'length': 0
+				'start': {
+					'opacity': 1
+				},
+				'end': {
+					'opacity': 0
+				},
+				'length': 250
 			},
 			
 			'backward_arrival':
 			{
-				'start': {},
-				'end': {},
-				'length': 0
+				'start': {
+					'opacity': 0
+				},
+				'end': {
+					'opacity': 1
+				},
+				'length': 250
 			},
 			
 			'backward_departure':
-
 			{
-				'start': {},
-				'end': {},
-				'length': 0
+				'start': {
+					'opacity': 1
+				},
+				'end': {
+					'opacity': 0
+				},
+				'length': 250
 			}			
 		};
 
@@ -704,6 +722,28 @@
 	},
 	
 	/*
+	 * Get the state of the players
+	 */
+	_getPlayersStates: function (playersInit)
+	{
+		// create the players
+		var players = {};
+		
+		$A(playersInit).each(function(player) {
+			players[player.id] = new TS.Player(player.id, player.name, this._getPlayerColor(player.id));
+		}, this);
+				
+		// synchronize the players with the map
+		Object.keys(players).each(function(playerId) {
+			var player = players[playerId];
+			
+			player.sync(this.map);
+		}, this);
+		
+		return players;
+	},
+	
+	/*
 	 * Synchronize the state of the players
 	 */
 	_syncPlayers: function ()
@@ -711,7 +751,7 @@
 		Object.keys(this.players).each(function(playerId) {
 			var player = this.players[playerId];
 			
-			player.syncNbSoldiers(this.map);
+			player.sync(this.map);
 		}, this);
 	}
 });

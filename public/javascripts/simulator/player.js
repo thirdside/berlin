@@ -14,18 +14,24 @@ TS.Player = Class.create(TS, {
 		this.color = color;
 		
 		this.soldiers = 0;
+		this.cities = 0;
 	},
 	
 	
-	syncNbSoldiers: function (map)
+	sync: function (map)
 	{
 		this.soldiers = 0;
+		this.cities = 0;
 		
 		Object.keys(map.nodes).each(function(nodeId) {
 			var node = map.nodes[nodeId];
 		
-			if (this.id == node.playerId)
+			if (this.id == node.playerId) {
 				this.soldiers += node.nbSoldiers;
+				
+				if (this.type == 'city')
+					this.cities += 1;
+			}
 		}, this);
 	}	
 });

@@ -237,8 +237,8 @@
 		// find starting and ending points of the curve
 		var data =
 		{
-		    from: object.backPointer ? object.to : object.from,
-			to: object.backPointer ? object.from : object.to,
+		    from: object.backPointer ? Object.clone(object.to) : Object.clone(object.from),
+			to: object.backPointer ? Object.clone(object.from) : Object.clone(object.to),
 		};
 		
 		data.from.x += this.raphael.width; //todo: Point object
@@ -270,7 +270,8 @@
 		straightPath.attr({
 			'stroke': 			object.color,
 			'stroke-width': 	3,
-			'stroke-linejoin': 	'round'
+			'stroke-linejoin': 	'round',
+			'opacity': attrs.opacity
 		});
 		
 		// format and data of the arrow
@@ -295,7 +296,8 @@
 		arrowPath.attr({
 			'stroke': 			object.color,
 			'stroke-width': 	3,
-			'stroke-linejoin': 	'round'
+			'stroke-linejoin': 	'round',
+			'opacity': attrs.opacity
 		});
 		
 		// draw soldier count
@@ -305,6 +307,7 @@
 		var textAttrs = object.countAttrs;
 		textAttrs.x = data.from.x;
 		textAttrs.y = data.from.y;
+		textAttrs.opacity = attrs.opacity;
 
 		var set = this._createSoldiersObject(object.count, textAttrs);
 		
