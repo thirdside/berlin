@@ -702,7 +702,7 @@
 		var players = {};
 		
 		$A(playersInit).each(function(player) {
-			players[player.id] = new TS.Player(player.id, player.name, this._getPlayerColor(player.id));
+			players[player.id] = new TS.Player(player.id, this._getPlayerColor(player.id));
 		}, this);
 		
 		return players;

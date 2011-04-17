@@ -7,10 +7,9 @@
  */
 
 TS.Player = Class.create(TS, {
-	initialize: function ($super, id, name, color)
+	initialize: function ($super, id, color)
 	{
 		this.id = id;
-		this.name = name;
 		this.color = color;
 		
 		this.soldiers = 0;
