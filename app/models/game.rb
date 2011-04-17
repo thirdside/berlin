@@ -20,14 +20,15 @@ class Game < ActiveRecord::Base
     # Fuuuuu Rails
     return unless Rails.env == "test" if defined? Rails.env
 
-    @uuid   = UUIDTools::UUID.random_create.to_s
-    @moves  = Hash.new{ |h,k| h[k] = [] }
-    @spawns = Hash.new{ |h,k| h[k] = [] }
-    @states = {}
-    @turn   = 0
-    @start  = Time.new
-    @end    = nil
-    @hydra  = Typhoeus::Hydra.new
+    @uuid         = UUIDTools::UUID.random_create.to_s
+    @moves        = Hash.new{ |h,k| h[k] = [] }
+    @spawns       = Hash.new{ |h,k| h[k] = [] }
+    @states_pre   = {}
+    @states_post  = {}
+    @turn         = 0
+    @start        = Time.new
+    @end          = nil
+    @hydra        = Typhoeus::Hydra.new
   end
 
   # register moves for a player
@@ -93,7 +94,7 @@ class Game < ActiveRecord::Base
   def run
     raise "Heugh? With what map?" if @map.nil?
 
-    while @turn <= @map.maximum_number_of_turns
+    while @turn < @map.maximum_number_of_turns
       # check for alive players
       alive_players = @map.alive_players
 
@@ -110,11 +111,11 @@ class Game < ActiveRecord::Base
       requests  = {}
 
       # calculate the new state of the map
-      @states[@turn] = @map.states
+      @states_pre[@turn] = @map.states
 
       # create and queue a http request for each alive player
       alive_players.each do |player_id, player|
-
+        
         requests[player_id] = Typhoeus::Request.new(player.url_on_turn,
             :method        => :post,
             :headers       => {:Accept => "application/json"},
@@ -156,11 +157,11 @@ class Game < ActiveRecord::Base
 
       move!
       fight!
+      
+      @states_post[@turn] = @map.states
+
       spawn!
     end
-
-    # calculate the new state of the map
-    @states[@turn] = @map.states
 
     self.end_of_game
   end
@@ -223,7 +224,7 @@ class Game < ActiveRecord::Base
     temp[:infos]  = self.infos
     temp[:nodes]  = @map.parsed['nodes']
     temp[:paths]  = @map.parsed['paths']
-    temp[:states] = @states[@turn]
+    temp[:states] = @states_pre[@turn]
 
     temp.to_json
   end
@@ -236,9 +237,10 @@ class Game < ActiveRecord::Base
     temp[:turns] = Hash.new{ |h,k| h[k] = {} }
 
     (1..@turn).each do |turn|
-      temp[:turns][turn][:moves]  = @moves[turn]
-      temp[:turns][turn][:states] = @states[turn]
-      temp[:turns][turn][:spawns] = @spawns[turn]
+      temp[:turns][turn][:states_pre]   = @states_pre[turn]
+      temp[:turns][turn][:moves]        = @moves[turn]
+      temp[:turns][turn][:states_post]  = @states_post[turn]
+      temp[:turns][turn][:spawns]       = @spawns[turn]
     end
 
     temp.to_json

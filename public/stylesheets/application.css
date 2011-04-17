@@ -291,6 +291,11 @@ table th.icon, table td.icon {
     width: 16px;
 }
 
+table th.icon a, table td.icon a {
+    position: relative;
+    top: 2px;
+}
+
 .centered {
     text-align: center;
 }
