@@ -29,8 +29,6 @@
 			
 			this._syncMap(turn.states_pre);
 			
-			this.players = turn.players = this._getPlayersStates(this.gameDescription.infos.number_of_players);
-			
 			this._processStates(turn.states_pre);
 			this._processMoves(turn.moves);
 			this._processStates(turn.states_post);
@@ -49,16 +47,20 @@
 		
 		var turn = this._createTurn(['moves']);
 		
+		this.players = turn.players;
+		
 		$A(moves).each(function(data) {
 			var arrowObject = this._createArrowObject(nextId, data.from, data.to, data.player_id, data.number_of_soldiers);
-			turn['moves'].objects.push(arrowObject);
+			var layer = turn.layers['moves'];
+			
+			layer.objects.push(arrowObject);
 			
 			var arrowAnimations = this._createArrowAnimations(arrowObject);
 			
-			turn['moves'].forward_arrival[arrowObject.id] = arrowAnimations['forward_arrival'];
-			turn['moves'].forward_departure[arrowObject.id] = arrowAnimations['forward_departure'];
-			turn['moves'].backward_arrival[arrowObject.id] = arrowAnimations['backward_arrival'];
-			turn['moves'].backward_departure[arrowObject.id] = arrowAnimations['backward_departure'];
+			layer.forward_arrival[arrowObject.id] = arrowAnimations['forward_arrival'];
+			layer.forward_departure[arrowObject.id] = arrowAnimations['forward_departure'];
+			layer.backward_arrival[arrowObject.id] = arrowAnimations['backward_arrival'];
+			layer.backward_departure[arrowObject.id] = arrowAnimations['backward_departure'];
 			
 			nextId++;	
 		}, this);
@@ -70,6 +72,8 @@
 	{
 		var turn = this._createTurn(['nodes', 'soldiers']);
         var nextId;
+		
+		this.players = turn.players;
 		
 		// prepare the nodes and cities
 		nextId = 0;
@@ -89,13 +93,15 @@
 				nodeObject = this._createCityObject(nextId, node);
 				nodeAnimations = this._createCityAnimations(nodeObject, node);
 			}
-			
-			turn['nodes'].objects.push(nodeObject);
 
-			turn['nodes'].forward_arrival[nodeObject.id] = nodeAnimations['forward_arrival'];
-			turn['nodes'].forward_departure[nodeObject.id] = nodeAnimations['forward_departure'];
-			turn['nodes'].backward_arrival[nodeObject.id] = nodeAnimations['backward_arrival'];
-			turn['nodes'].backward_departure[nodeObject.id] = nodeAnimations['backward_departure'];
+			var layer = turn.layers['nodes'];
+			
+			layer.objects.push(nodeObject);
+
+			layer.forward_arrival[nodeObject.id] = nodeAnimations['forward_arrival'];
+			layer.forward_departure[nodeObject.id] = nodeAnimations['forward_departure'];
+			layer.backward_arrival[nodeObject.id] = nodeAnimations['backward_arrival'];
+			layer.backward_departure[nodeObject.id] = nodeAnimations['backward_departure'];
 			
 			nextId++;	
 		}, this);
@@ -107,14 +113,17 @@
 		$A(states).each(function(data) {
 			if (data.number_of_soldiers != 0) {
 				var soldiersObject = this._createSoldiersObject(nextId++, data.node_id, data.number_of_soldiers);
-				turn['soldiers'].objects.push(soldiersObject);
+				
+				var layer = turn.layers['soldiers'];
+				
+				layer.objects.push(soldiersObject);
 				
 				var soldiersAnimations = this._createSoldiersAnimations(soldiersObject);
 				
-				turn['soldiers'].forward_arrival[soldiersObject.id] = soldiersAnimations['forward_arrival'];
-				turn['soldiers'].forward_departure[soldiersObject.id] = soldiersAnimations['forward_departure'];
-				turn['soldiers'].backward_arrival[soldiersObject.id] = soldiersAnimations['backward_arrival'];
-				turn['soldiers'].backward_departure[soldiersObject.id] = soldiersAnimations['backward_departure'];
+				layer.forward_arrival[soldiersObject.id] = soldiersAnimations['forward_arrival'];
+				layer.forward_departure[soldiersObject.id] = soldiersAnimations['forward_departure'];
+				layer.backward_arrival[soldiersObject.id] = soldiersAnimations['backward_arrival'];
+				layer.backward_departure[soldiersObject.id] = soldiersAnimations['backward_departure'];
 				
 				nextId++;
 			}		
@@ -129,16 +138,21 @@
 		
 		var turn = this._createTurn(['spawns']);
 		
+		this.players = turn.players;
+		
 		$A(spawns).each(function(data) {
 			var spawnObject = this._createSpawnObject(nextId, data.node_id, data.number_of_soldiers);
-			turn['spawns'].objects.push(spawnObject);
+			
+			var layer = turn.layers['spawns'];
+				
+			layer.objects.push(spawnObject);
 			
 			var spawnAnimations = this._createSpawnAnimations(spawnObject);
 			
-			turn['spawns'].forward_arrival[spawnObject.id] = spawnAnimations['forward_arrival'];
-			turn['spawns'].forward_departure[spawnObject.id] = spawnAnimations['forward_departure'];
-			turn['spawns'].backward_arrival[spawnObject.id] = spawnAnimations['backward_arrival'];
-			turn['spawns'].backward_departure[spawnObject.id] = spawnAnimations['backward_departure'];
+			layer.forward_arrival[spawnObject.id] = spawnAnimations['forward_arrival'];
+			layer.forward_departure[spawnObject.id] = spawnAnimations['forward_departure'];
+			layer.backward_arrival[spawnObject.id] = spawnAnimations['backward_arrival'];
+			layer.backward_departure[spawnObject.id] = spawnAnimations['backward_departure'];
 			
 			nextId++;
 		}, this);
@@ -671,10 +685,13 @@
 	 */
 	_createTurn: function (layers)
 	{
-		var turn = {};
+		var turn = {
+			'players': this._getPlayersStates(this.gameDescription.infos.number_of_players),
+			'layers': {}
+		};
 		
 		$A(layers).each(function(layer) {
-			turn[layer] = {
+			turn.layers[layer] = {
 				objects: new Array(),
 				forward_arrival: {},
 				forward_departure: {},

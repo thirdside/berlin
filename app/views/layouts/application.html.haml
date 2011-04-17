@@ -34,7 +34,7 @@
 
       %ul#menu
         - menu.each do |model, url|
-          %li{:class=>controller.controller_name == model.tableize ? 'active' : nil}= link_to model.pluralize, url
+          %li{:class=>controller.controller_name == model.tableize ? 'active' : nil}= link_to model.human.pluralize, url
 
         - unless user_signed_in?
           .right
