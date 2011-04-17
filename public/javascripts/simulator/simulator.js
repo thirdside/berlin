@@ -61,8 +61,6 @@ TS.AIMap = Class.create(TS, {
 		// Preload the background
 		this.background.onload = this.onImageLoaded.bindAsEventListener(this, 'background');
 		this.background.src = this.config.infos.background;
-		
-		this.fire("ready");
 	},
 	
 	/*
@@ -83,6 +81,8 @@ TS.AIMap = Class.create(TS, {
 		if (this.imagesToLoad == 0) {
 			this.layers['background'].background(this.background);
 			this.drawPaths();
+			
+			this.fire("ready");
 		}
 	},
 	
