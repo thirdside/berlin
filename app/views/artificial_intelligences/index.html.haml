@@ -1,6 +1,7 @@
 .content
-  .right
-    = link_to t('artificial_intelligences.new'), new_artificial_intelligence_path, :class=>:button
+  - if user_signed_in?
+    .right
+      = link_to t('artificial_intelligences.new'), new_artificial_intelligence_path, :class=>:button
   
   %h2= t('titles.all_artificial_intelligences')
 
