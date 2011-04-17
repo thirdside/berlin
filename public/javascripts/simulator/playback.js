@@ -68,7 +68,8 @@ TS.AIPlayback = Class.create(TS, {
 				this.map.nodeGraph,
 				this.gameDescription,
 				this.map.layers['background'],
-				this.map.graphics);			
+				this.map.graphics);
+			this.playbackDescription.initializeTurns();		
 			
 			this.enableControls();
 			this.drawCurrentTurn();

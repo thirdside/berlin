@@ -69,7 +69,10 @@ TS.AIMap = Class.create(TS, {
 	onImageLoaded: function (event, type)
 	{
 		// keep track of nodes types		
-		if (type != 'background') {
+		if (type == 'background') {
+			this.graphics.background = event.findElement();
+		}
+		else {
 			this.graphics.nodes = this.graphics.nodes || {};
 			this.graphics.nodes[type] = event.findElement();
 		}
@@ -78,12 +81,8 @@ TS.AIMap = Class.create(TS, {
 		this.imagesToLoad--;
 		
 		// when all the images are loaded, prepare the static layers
-		if (this.imagesToLoad == 0) {
-			this.layers['background'].background(this.background);
-			this.drawPaths();
-			
+		if (this.imagesToLoad == 0)		
 			this.fire("ready");
-		}
 	},
 	
 	/*
@@ -247,18 +246,4 @@ TS.AIMap = Class.create(TS, {
 //			}, this);
 //		}
 //	},
-
-    drawPaths: function()
-	{
-		Object.keys(this.nodeGraph.nodes).each(function(nodeId) {
-			var node = this.nodeGraph.nodes[nodeId];
-		
-			node.links.each(function(link) {
-				var to = this.nodeGraph.nodes[link.toId];
-				
-				this.layers['paths'].path(node.position, to.position, {'controlRatio': link.controlRatio});
-				
-			}, this);
-		}, this);		
-	}
 });

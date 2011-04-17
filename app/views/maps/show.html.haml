@@ -26,7 +26,14 @@
   :javascript
     document.observe("dom:loaded", function() {
       var map = new TS.AIMap("map", "#{map_path(@map, :format=>:json)}");
-      //map.draw(["nodes", "paths"]);
+      
+      map.observe("ready", function() {
+        var desc = new TS.PlaybackDescription(map.config, map.nodeGraph, null, map.layers['background'], map.graphics);
+        
+        desc.initializePreview();
+        
+        map.doTurn(null, desc.preview, true);
+      });
     });
 
 .content#games

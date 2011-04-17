@@ -34,6 +34,10 @@
 			this.objects[object.id] = this._createNodeObject(attrs);
 		else if (object.type == 'arrow')
 			this.objects[object.id] = this._createArrowObject(object, attrs);
+		else if (object.type == 'background')
+			this.objects[object.id] = this._createBackgroundObject(object.img);
+		else if (object.type == 'path')
+			this.objects[object.id] = this._createPathObject(object.from, object.to, object.controlRatio);					
 	},
 	
 	addAnimation: function (id, attrs, length)
@@ -46,7 +50,7 @@
 		}
 	},
 	
-	background: function (img, options)
+	_createBackgroundObject: function (img)
 	{
 		for (var i = 0; i < 6; i++) //todo: don't haaaaaaardcode.
 			this.raphael.image(
@@ -58,46 +62,48 @@
 			);
 	},
 	
-	path: function (from, to, options)
+	_createPathObject: function (from, to, controlRatio)
 	{
-		options = Object.extend({
+		options = {
 			color: "#000000",
 			blurryColor: '#636363',
-			controlRatio: 0.5,
 			strokeWidth: 3,
-			lineJoin: 'round',
-			backPointer: false
-		}, options || {});
+			lineJoin: 'round'
+		};
 		
 		// format and data of the path
 		var pathFormat = "M #{from.x} #{from.y} Q #{control.x} #{control.y} #{to.x} #{to.y}";
 		
 		var data =
 		{
-		    from: this.getAbsolutePosition(options.backPointer ? to : from),
-			to: this.getAbsolutePosition(options.backPointer ? from : to),
+		    'from': from,
+			'to': to,
+			'control': this.getQuadraticCurvePoint(from, to, controlRatio)
 		};
-		
-		data.control = this.getQuadraticCurvePoint(data.from, data.to, options.controlRatio);
 
 		var pathData = pathFormat.interpolate(data);
 		
 		// draw the blurry path
-		var path = this.raphael.path(pathData);
-		path.attr({
+		var blurryPath = this.raphael.path(pathData);
+		blurryPath.attr({
 			'stroke': 			options.blurryColor,
 			'stroke-width': 	options.strokeWidth + 3,
 			'stroke-linejoin': 	options.lineJoin
 		});		
-		path.blur(1);
+		blurryPath.blur(1);
 		
 		// draw the path
-		path = this.raphael.path(pathData);
+		var path = this.raphael.path(pathData);
 		path.attr({
-			stroke: 			options.color,
+			'stroke': 			options.color,
 			'stroke-width': 	options.strokeWidth,
 			'stroke-linejoin': 	options.lineJoin
 		});
+		
+		var set = this.raphael.set();
+		set.push(blurryPath, path);
+		
+		return set;
 	},
 
 	_createSoldiersObject: function (count, attrs)
@@ -189,14 +195,14 @@
 			);
 			
 			//colorize
-			var circlePosition = {
-				x: realPosition.x + attrs.width / 2,
-				y: realPosition.y + attrs.height / 2
+			var rectPosition = {
+				x: realPosition.x + 5,
+				y: realPosition.y + 5
 			};
 			
-			var circle = this.raphael.circle(circlePosition.x, circlePosition.y, attrs.radius + 1);
-			circle.attr({'opacity': 0.5, 'fill': attrs.color, 'stroke': 'none'});
-			city.push(circle);
+			var rect = this.raphael.rect(rectPosition.x, rectPosition.y, attrs.width - 10, attrs.height - 10);
+			rect.attr({'opacity': 0.8, 'fill': attrs.color, 'stroke': 'none'});
+			city.push(rect);
 			
 		}, this);
 		
@@ -220,7 +226,7 @@
 		};		
 		
 		var circle = this.raphael.circle(circlePosition.x, circlePosition.y, attrs.radius + 1);
-		circle.attr({'opacity': 0.5, 'fill': attrs.color, 'stroke': 'none'});
+		circle.attr({'opacity': 0.8, 'fill': attrs.color, 'stroke': 'none'});
 		
 		var node = this.raphael.set();
 		node.push(image, circle);
