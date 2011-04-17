@@ -42,7 +42,7 @@
             = link_to t('layout.register'), new_registration_path( :user )
 
       #main
-
+        
         - flash.each do |flash, message|
           .flash{:class=>flash}= message
 
