@@ -5,6 +5,9 @@ require 'yajl/json_gem'
 require 'active_record'
 require 'uuidtools'
 
+# default port
+set :port, 3010
+
 # options
 options = Hash[*ARGV]
 
