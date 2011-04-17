@@ -13,8 +13,8 @@ TS.AIPlayback = Class.create(TS, {
 		
 		this.game_description_url = game_description_url;
 		
-		// create the template
-		this.template = '<li><div class="color-box" style="background-color: #{color};"></div><span>#{name}: #{city}, #{soldiers}</span></li>';
+		// info table row name template
+		this.playerInfoName = 'info_player_#{id}';
 		
 		// create the visualizer
 		this.map = new TS.AIMap(containers.map, map_url);
@@ -187,14 +187,12 @@ TS.AIPlayback = Class.create(TS, {
 	 */
 	updatePlayerList: function ()
 	{
-//		this.playerList.update();
-//		var playerInfos = this.gameDescription.infos.players.collect(function(player) {
-//			return this.map.getPlayerInfo(player.id);
-//		}, this).sortBy(function(infos){
-//			return infos.cities;
-//		}).reverse().each(function(infos){
-//			this.playerList.insert(this.template.interpolate(infos));
-//		}, this);
+		Object.values(this.playbackDescription.turns[this.turnNumber].players).each(function(player){
+			var row = $(this.playerInfoName.interpolate(player));
+			row.down('.color').setStyle({"background-color": player.color});
+			row.down('.cities').update(player.cities);
+			row.down('.soldiers').update(player.soldiers)
+		}, this);
 	},
 	
 	/*
