@@ -38,8 +38,8 @@
 
         - unless user_signed_in?
           .right
-            = link_to t('layout.signin'), new_session_path( :user )
-            = link_to t('layout.register'), new_registration_path( :user )
+            = link_to t('devise.keywords.sign_in'), new_session_path( :user )
+            = link_to t('devise.keywords.register'), new_registration_path( :user )
 
       #main
         

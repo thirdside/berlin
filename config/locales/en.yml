@@ -6,7 +6,16 @@ en:
     no_result: No result
     statistics: Statistics
     history: History
-    
+
+  helpers:
+    submit:
+      create: "Create %{model}"
+      update: "Confirm changes to %{model}"
+  
+  controls:
+    play: Play
+    pause: Pause
+
   titles:
     all_users: List of all users
     all_maps: List of all maps
@@ -15,15 +24,6 @@ en:
     all_games: List of all games played
     games_played: Games played
     table_of_content: Table of content
-
-  controllers:
-    artificial_intelligences:
-      actions:
-        index: List
-        new: New
-    games:
-      actions:
-        index: List
 
   activerecord:
     models:
@@ -34,29 +34,39 @@ en:
       map: Map
     attributes:
       user:
+        login: Username or email
+        username: Username
+        email: Email
+        remember_me: Remember me
+        password: Password
+        password_confirmation: Password confirmation
         artificial_intelligences_count: Artificial intelligences
+        created_at: Created at
       map:
         id: "#"
+        name: Name
         games_count: Games played
+        best_artificial_intelligence: Best artificial intelligence
       game:
         id: "#"
         victory: Victory
-        time: Time
+        time_start: Time
         artificial_intelligence_games_count: Artificial intelligences
         winner: Winner
       artificial_intelligence:
+        short_model_name: IA
         id: "#"
+        name: Name
         user: User
         artificial_intelligence_games_count: Games played
+        language: Language
         score: Average score
+        won_games: Won games
         url_ready: Wakeup URL
         url_on_turn: On turn URL
-      artificial_intelligence_score:
+        created_at: Created at
+      artificial_intelligence_game:
         score: Score
-
-  layout:
-    signin: Sign in
-    register: Register
 
   views:
     pagination:
@@ -74,4 +84,4 @@ en:
     new: New game
     success: The game has started! The result should appears here within few seconds...
     failure: There has been an error with the game you asked. We have been noticed of the error.
-    problem: There's a problem with the config you asked. Please check again.
+    problem: "There's a problem with the config you asked. Please check again."

@@ -5,20 +5,20 @@
       %ul
         %li= link_to current_user.username, current_user
         %li= request.remote_addr
-        %li= link_to 'Log out', destroy_user_session_path
+        %li= link_to t('devise.keywords.log_out'), destroy_user_session_path
 
     %li
       .title
-        AI
+        = ArtificialIntelligence.human_attribute_name :short_model_name
       .info
         = current_user.artificial_intelligences.count
     %li
       .title
-        Games
+        = Game.human_name.pluralize
       .info
         = current_user.artificial_intelligence_games.count
     %li
       .title
-        Score
+        = ArtificialIntelligenceGame.human_attribute_name :score
       .info
         = show_score current_user.score

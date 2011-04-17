@@ -11,4 +11,5 @@
 
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular 'doc', 'doc'
+  inflect.irregular 'intelligence artificielle', 'intelligences artificielles'
 end

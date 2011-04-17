@@ -7,7 +7,7 @@ class Map < ActiveRecord::Base
   after_initialize :build!
 
   def best_artificial_intelligence
-    self.artificial_intelligence_games.group("artificial_intelligence_id").select("SUM(artificial_intelligence_games.score) / COUNT(artificial_intelligence_games.id) AS ratio").order("ratio DESC").first
+    self.artificial_intelligence_games.group("artificial_intelligence_id").select("SUM(artificial_intelligence_games.score) / COUNT(artificial_intelligence_games.id) AS ratio").order("ratio DESC").first.try(:artificial_intelligence)
   end
 
   def build!

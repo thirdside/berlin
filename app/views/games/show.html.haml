@@ -8,14 +8,14 @@
   %table
     %thead
       %tr
-        %th(colspan=4)= t('common.statistics')
+        %th(colspan=4)= ArtificialIntelligence.model_name.human.pluralize
     %tbody
       - @game.artificial_intelligence_games.each do |artificial_intelligence_game|
         %tr{:id=>"info_player_#{artificial_intelligence_game.player_id}"}
           %td.color
           %td.soldiers
           %td.cities
-          %td= artificial_intelligence_game.artificial_intelligence.name
+          %td= link_to artificial_intelligence_game.artificial_intelligence.name, artificial_intelligence_game.artificial_intelligence
 
 #progress_bar_container
   #progress_bar
@@ -24,8 +24,8 @@
   .right#controls
     %input#rewind{:type=>:submit, :value=>"<<"}
     %input#back{:type=>:submit, :value=>"<"}
-    %input#play{:type=>:submit, :value=>"play"}
-    %input#pause{:type=>:submit, :value=>"pause"}
+    %input#play{:type=>:submit, :value=>t('controls.play')}
+    %input#pause{:type=>:submit, :value=>t('controls.pause')}
     %input#next{:type=>:submit, :value=>">"}
     %input#end{:type=>:submit, :value=>">>"}
 

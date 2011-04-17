@@ -3,60 +3,70 @@
 
 fr:
   common:
-    no_result: No result
-    statistics: Statistics
-    history: History
+    no_result: Aucun résultat
+    statistics: Statistiques
+    history: Historique
+  
+  helpers:
+    submit:
+      create: Créer
+      update: Confirmer les changements
+  
+  controls:
+    play: Jouer
+    pause: Pause
 
   titles:
-    all_users: List of all users
-    all_maps: List of all maps
-    all_artificial_intelligences: List of all artificial intelligences
-    artificial_intelligences: Artificial intelligences
-    all_games: List of all games played
-    games_played: Games played
-    table_of_content: Table of content
-
-  controllers:
-    artificial_intelligences:
-      actions:
-        index: List
-        new: New
-    games:
-      actions:
-        index: List
+    all_users: Liste des utilisateurs
+    all_maps: Liste des cartes
+    all_artificial_intelligences: Listes des intelligences artificielles
+    artificial_intelligences: Intelligences artificielles
+    all_games: Liste des parties jouées
+    games_played: Parties jouées
+    table_of_content: Table des matières
 
   activerecord:
     models:
-      user: User
-      game: Game
-      artificial_intelligence: Artificial Intelligence
+      user: Utilisateur
+      game: Partie
+      artificial_intelligence: Intelligence artificielle
       doc: Doc
-      map: Map
+      map: Carte
     attributes:
       user:
-        artificial_intelligences_count: Artificial intelligences
+        login: Nom d'utilisateur ou courriel
+        username: Nom d'utilisateur
+        email: Courriel
+        remember_me: Se souvenir
+        password: Mot de passe
+        password_confirmation: Confirmation du mot de passe
+        artificial_intelligences_count: Intelligences artificielles
+        created_at: Membre depuis
       map:
         id: "#"
-        games_count: Games played
+        name: Nom
+        games_count: Parties jouées
+        best_artificial_intelligence: Meilleure intelligence artificielle
       game:
         id: "#"
-        victory: Victory
-        time: Time
-        artificial_intelligence_games_count: Artificial intelligences
-        winner: Winner
+        victory: Victoire
+        time_start: Début
+        artificial_intelligence_games_count: Intelligences artificielles
+        winner: Gagnant
       artificial_intelligence:
+        short_model_name: AI
         id: "#"
-        user: User
-        artificial_intelligence_games_count: Games played
-        score: Average score
-        url_ready: Wakeup URL
-        url_on_turn: On turn URL
-      artificial_intelligence_score:
-        score: Score
-
-  layout:
-    signin: Sign in
-    register: Register
+        name: Nom
+        user: Utilisateur
+        artificial_intelligence_games_count: Parties jouées
+        language: Langage
+        score: Pointage moyen
+        won_games: Parties gagnées
+        url_ready: URL - début
+        url_on_turn: URL - tour
+        created_at: Créé le
+      artificial_intelligence_game:
+        score: Pointage
 
   views:
     pagination:
@@ -65,12 +75,13 @@ fr:
       truncate: "..."
 
   artificial_intelligences:
-    new: New artificial intelligence
-    available: Available artificial intelligences
-    selected: Selected artificial intelligences
+    new: Nouvelle intelligence artificielle
+    available: Intelligences artificielles disponibles
+    selected: Intelligences artificielles sélectionnées
 
   games:
-    new: New game
-    success: The game has started! The result should appears here within few seconds...
-    failure: There has been an error with the game you asked. We have been noticed of the error.
-    problem: There's a problem with the config you asked. Please check again.
+    rematch: Rejoué
+    new: Nouvelle partie
+    success: La partie a débuté! Les résultats devraient apparaître ici dans quelques instants...
+    failure: Il y a eu une erreur avec la partie demandée... Nous en avons été avisé.
+    problem: Il y a un problème avec la configuration de la partie demandée. Merci de revérifier.

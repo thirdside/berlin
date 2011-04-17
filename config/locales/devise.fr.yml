@@ -1,4 +1,4 @@
-en:
+fr:
   errors:
     messages:
       not_found: "non trouvé"
@@ -6,18 +6,24 @@ en:
       not_locked: "n'était pas bloqué"
 
   devise:
+    keywords:
+      sign_in: Connexion
+      register: Enregistrement
+      register_now: S'enregistrer
+      log_out: Déconnexion
     failure:
       unauthenticated: 'Vous devez vous connecter avant de continuer.'
       unconfirmed: 'Vous devez confirmer votre compte avant de continuer.'
       locked: 'Votre compte est bloqué.'
-      invalid: 'Courriel ou mot de passe invalide.'
+      invalid: "Nom d'utilisateur, courriel ou mot de passe invalide."
       invalid_token: "Jeton d'authentification invalide."
       timeout: 'Votre session est expirée. Merci de vous reconnecter.'
       inactive: "Votre compte n'est toujours pas activé."
     sessions:
-      signed_in: 'Signed in successfully.'
-      signed_out: 'Signed out successfully.'
+      signed_in: 'Connexion effectuée avec succès.'
+      signed_out: 'Déconnexion effectuée avec succès.'
     passwords:
+      forgot: 'Oublié votre mot de passe?'
       send_instructions: 'You will receive an email with instructions about how to reset your password in a few minutes.'
       updated: 'Your password was changed successfully. You are now signed in.'
     confirmations:
@@ -32,8 +38,8 @@ en:
       unlocked: 'Your account was successfully unlocked. You are now signed in.'
     mailer:
       confirmation_instructions:
-        subject: 'Confirmation instructions'
+        subject: 'Instructions de confirmation'
       reset_password_instructions:
-        subject: 'Reset password instructions'
+        subject: 'Instructions pour mot de passe oublié'
       unlock_instructions:
-        subject: 'Unlock Instructions'
+        subject: 'Instructions pour débloquer un compte'

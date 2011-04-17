@@ -6,11 +6,16 @@ en:
       not_locked: "was not locked"
 
   devise:
+    keywords:
+      sign_in: Sign in
+      register: Register
+      register_now: Sign up
+      log_out: Log out
     failure:
       unauthenticated: 'You need to sign in or sign up before continuing.'
       unconfirmed: 'You have to confirm your account before continuing.'
       locked: 'Your account is locked.'
-      invalid: 'Invalid email or password.'
+      invalid: 'Invalid username, email or password.'
       invalid_token: 'Invalid authentication token.'
       timeout: 'Your session expired, please sign in again to continue.'
       inactive: 'Your account was not activated yet.'
@@ -18,6 +23,7 @@ en:
       signed_in: 'Signed in successfully.'
       signed_out: 'Signed out successfully.'
     passwords:
+      forgot: Forgot your password?
       send_instructions: 'You will receive an email with instructions about how to reset your password in a few minutes.'
       updated: 'Your password was changed successfully. You are now signed in.'
     confirmations:
