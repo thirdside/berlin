@@ -6,12 +6,14 @@
 		"time_limit_per_turn": 5000,
 		"maximum_number_of_turns": 10,
 		"directed": false,
-		"path_color": "#cccccc"
+		"path_color": "#cccccc",
+		"background": "/images/simulator/background.png",
+		"translate": {"x": 0, "y": 0}
 	},
 
 	"types": [
-		{"name": "city", "image": "/images/80/castle.png", "soldiers_per_turn": 1, "points": 1},
-		{"name": "node", "image": "/images/80/node.gif", "soldiers_per_turn": 0, "points": 1}
+		{"name": "city", "image": "/images/simulator/city.png", "soldiers_per_turn": 1, "points": 1},
+		{"name": "node", "image": "/images/simulator/node.png", "soldiers_per_turn": 0, "points": 1}
 	],
 
 	"nodes": [

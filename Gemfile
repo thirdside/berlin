@@ -1,11 +1,11 @@
 source 'http://rubygems.org'
 
 gem 'rails'
-gem 'mysql'
+gem 'sqlite3'
 gem 'haml'
 gem 'inherited_resources'
 gem 'has_scope'
-gem 'devise'
+gem 'devise', "1.2.1"
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'
 gem 'yajl-ruby'
 gem 'haml'
