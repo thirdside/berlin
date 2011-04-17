@@ -28,7 +28,7 @@ TS.Player = Class.create(TS, {
 			if (this.id == node.playerId) {
 				this.soldiers += node.nbSoldiers;
 				
-				if (this.type == 'city')
+				if (node.type == 'city')
 					this.cities += 1;
 			}
 		}, this);
