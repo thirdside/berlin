@@ -211,10 +211,8 @@ class Game < ActiveRecord::Base
     {
       :game_id                  => self.uuid,
       :map_id                   => @map.id,
-      :turn                     => @turn,
       :maximum_number_of_turns  => @map.maximum_number_of_turns,
-      :number_of_players        => @map.players.keys.count,
-      :players                  => @map.players.map{ |player_id, player| {:id=>player_id, :name=>player.name} }
+      :number_of_players        => @map.players.keys.count
     }
   end
 
