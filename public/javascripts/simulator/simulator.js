@@ -115,27 +115,26 @@ TS.AIMap = Class.create(TS, {
 			}, this);
 		}
 		
-		
-		Object.keys(turnNow.layers).each(function(layerName) {
-			var layer = this.layers[layerName];
-			var data = turnNow.layers[layerName];
-			
-			// clear the layer
-			layer.clear();
-			
-			// add the objects
-			data.objects.each(function (object) {
-				layer.addObject(
-					object,
-					data[forward ? 'forward_arrival' : 'backward_arrival'][object.id].start);
-			}, this);			
-
-			// add the animations			
-			Object.keys(data[forward ? 'forward_arrival' : 'backward_arrival']).each(function (animationId) {
-				var animation = data[forward ? 'forward_arrival' : 'backward_arrival'][animationId];
-				layer.addAnimation(animationId, animation.end, animation.length);
+		if (turnNow) {
+			Object.keys(turnNow.layers).each(function(layerName){
+				var layer = this.layers[layerName];
+				var data = turnNow.layers[layerName];
+				
+				// clear the layer
+				layer.clear();
+				
+				// add the objects
+				data.objects.each(function(object){
+					layer.addObject(object, data[forward ? 'forward_arrival' : 'backward_arrival'][object.id].start);
+				}, this);
+				
+				// add the animations			
+				Object.keys(data[forward ? 'forward_arrival' : 'backward_arrival']).each(function(animationId){
+					var animation = data[forward ? 'forward_arrival' : 'backward_arrival'][animationId];
+					layer.addAnimation(animationId, animation.end, animation.length);
+				}, this);
 			}, this);
-		}, this);
+		}
 	},
 	
 	// Draws the layers to the screen

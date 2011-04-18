@@ -156,13 +156,6 @@ TS.AIPlayback = Class.create(TS, {
 	 */	
 	drawCurrentTurn: function ()
 	{
-		// clamp turnNumber between 0 and MaxTurn
-		if (this.turnNumber < 0)
-			this.turnNumber = 0;
-		
-		if (this.turnNumber > this.getMaxTurn())
-			this.turnNumber = this.getMaxTurn();
-
 		// draw the current frame
 		this.map.doTurn(
 			this.playbackDescription.turns[this.turnNumber + (this.forward? -1 : 1)],
@@ -188,7 +181,7 @@ TS.AIPlayback = Class.create(TS, {
 	 */
 	updatePlayerList: function ()
 	{
-		Object.values(this.playbackDescription.turns[this.turnNumber].players).each(function(player){
+		Object.values(this.playbackDescription.turns[Math.min(this.turnNumber, this.getMaxTurn() - 1)].players).each(function(player){
 			var row = $(this.playerInfoName.interpolate(player));
 			row.down('.color').setStyle({"background-color": player.color});
 			row.down('.cities').update(player.cities);
@@ -271,13 +264,15 @@ TS.AIPlayback = Class.create(TS, {
 	onTimer: function ()
 	{
 		this.forward = true;
+		
+		if (this.timer.isRunning())
+			this.turnNumber++;
+		
 		this.drawCurrentTurn();
 		
-		if (this.timer.isRunning() && this.getMaxTurn() >= this.turnNumber)
-			this.turnNumber++;
-		else
+		if (this.turnNumber >= this.getMaxTurn()) {
 			this.timer.stop();
-
-		this.enableControls();
+			return;
+		}		
 	}
 });
