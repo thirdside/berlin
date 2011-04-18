@@ -45,6 +45,7 @@ TS.AIPlayback = Class.create(TS, {
 		// other shit
 		this.playerList = $(containers.player_list);
 		this.progressBar = $(containers.progress_bar);
+		this.progressTurns = $(containers.turns);
 		
 		this.enableControls();
 		this.playbackDescription = null;
@@ -166,6 +167,7 @@ TS.AIPlayback = Class.create(TS, {
 		this.enableControls();
 		this.updatePlayerList();
 		this.updateProgress();
+		this.updateProgressTurns();
 	},
 	
 	/*
@@ -174,6 +176,22 @@ TS.AIPlayback = Class.create(TS, {
 	updateProgress: function ()
 	{
 		this.progressBar.setStyle("width: #{percent}%".interpolate({percent: this.turnNumber/this.getMaxTurn() * 100}));
+	},
+	
+	/*
+	 * Update the current turn #
+	 */
+	updateProgressTurns: function ()
+	{
+		var format = "#{currentTurn}/#{nbTurns}";
+		
+		var data =
+		{
+			currentTurn: this.turnNumber / 4 | 0,
+			nbTurns: this.getMaxTurn() / 4 | 0
+		};
+		
+		this.progressTurns.update(format.interpolate(data));
 	},
 	
 	/*
@@ -191,7 +209,7 @@ TS.AIPlayback = Class.create(TS, {
 	
 	/*
 	 * Get the number of simulation turns.
-	 * A simulation turn is 1/3 of a game turn.
+	 * A simulation turn is 1/4 of a game turn.
 	 */
 	getMaxTurn: function ()
 	{
