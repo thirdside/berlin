@@ -106,6 +106,10 @@
 		}, this);
 		
 		turn.layers['paths'] = layer;
+		
+		// clean the rest
+		turn.layers['moves'] = this._createLayer();
+		turn.layers['spawns'] = this._createLayer();
 	},
 	
 	/*
