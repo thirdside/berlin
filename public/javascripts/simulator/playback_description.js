@@ -122,9 +122,7 @@
 	},
 	
 	/*
-	 * Process the moves of a turn. Each move should output
-	 * - an arrow followed by the number of soldiers moved
-	 * - an animation of the arrow along the link path
+	 * Process the moves of a turn
 	 */
 	_processMoves: function (moves, previousTurn)
 	{
@@ -138,17 +136,21 @@
 		this.players = turn.players;
 		
 		$A(moves).each(function(data) {
-			var arrowObject = this._createArrowObject(nextId, data.from, data.to, data.player_id, data.number_of_soldiers);
+			var moveObject = this._createMoveObject(nextId, data.from, data.to, data.player_id, data.number_of_soldiers);
+			
 			var layer = turn.layers['moves'];
 			
-			layer.objects.push(arrowObject);
+			layer.objects.push(moveObject);
 			
-			var arrowAnimations = this._createArrowAnimations(arrowObject);
+			var moveAnimations = this._createMoveAnimations(moveObject);
 			
-			layer.forward_arrival[arrowObject.id] = arrowAnimations['forward_arrival'];
-			layer.forward_departure[arrowObject.id] = arrowAnimations['forward_departure'];
-			layer.backward_arrival[arrowObject.id] = arrowAnimations['backward_arrival'];
-			layer.backward_departure[arrowObject.id] = arrowAnimations['backward_departure'];
+			layer.forward_arrival[moveObject.id] = moveAnimations['forward_arrival'];
+			layer.forward_departure[moveObject.id] = moveAnimations['forward_departure'];
+			layer.backward_arrival[moveObject.id] = moveAnimations['backward_arrival'];
+			layer.backward_departure[moveObject.id] = moveAnimations['backward_departure'];
+			
+			//decrement the number of soldiers on the starting node
+			//turn.layers['soldiers'].
 			
 			nextId++;	
 		}, this);
@@ -291,7 +293,8 @@
 					'fontWeight': 'bold',
 					'fontSize': 20,
 					'fill': '#000000',
-					'blurColor': '#FFFFFF'
+					'blurColor': '#FFFFFF',
+					'count': soldierObject.count
 				},
 				
 				'end': {},
@@ -308,7 +311,8 @@
 					'fontWeight': 'bold',
 					'fontSize': 20,
 					'fill': '#000000',
-					'blurColor': '#FFFFFF'
+					'blurColor': '#FFFFFF',
+					'count': soldierObject.count
 				},
 				
 				'end': {},
@@ -325,7 +329,8 @@
 					'fontWeight': 'bold',
 					'fontSize': 20,
 					'fill': '#000000',
-					'blurColor': '#FFFFFF'
+					'blurColor': '#FFFFFF',
+					'count': soldierObject.count
 				},
 				
 				'end': {},
@@ -343,7 +348,8 @@
 					'fontWeight': 'bold',
 					'fontSize': 20,
 					'fill': '#000000',
-					'blurColor': '#FFFFFF'
+					'blurColor': '#FFFFFF',
+					'count': soldierObject.count
 				},
 				
 				'end': {},
@@ -399,7 +405,7 @@
 					'opacity': 1
 				},
 				
-				'length': 250
+				'length': 500
 			},
 			
 			'forward_departure':
@@ -423,7 +429,7 @@
 					'opacity': 0
 				},
 				
-				'length': 250
+				'length': 500
 			},
 			
 			'backward_arrival':
@@ -447,7 +453,7 @@
 					'opacity': 1
 				},
 				
-				'length': 250
+				'length': 500
 			},
 			
 			'backward_departure':
@@ -471,7 +477,7 @@
 					'opacity': 0
 				},
 				
-				'length': 250
+				'length': 500
 			}			
 		};
 
@@ -479,14 +485,14 @@
 	},
 	
 	/*
-	 * Create an arrow object
+	 * Create a move object
 	 */
-	_createArrowObject: function (id, from, to, playerId, count)
+	_createMoveObject: function (id, from, to, playerId, count)
 	{
 		var object =
 		{
 			'id': id,
-			'type': 'arrow',
+			'type': 'move',
 			'count': count,
 			'countAttrs': {
 				'font': 'Lucida Console',
@@ -495,79 +501,128 @@
 				'fill': '#000000',
 				'blurColor': '#FFFFFF'
 			},
+			'color': this.players[playerId].color,
+			'radius': 20,
 			'from': this._getNodePosition(from),
-			'to': this._getNodePosition(to),
-			'backPointer': false,
-			'color': this.players[playerId].color
+			'to': this._getNodePosition(to)
 		};
 		
 		var link = this.map.nodes[from].getLink(to);
+		var backPointer = false;
 		
 		if (link == null) {
 			link = this.map.nodes[to].getLink(from);
-			object['backPointer'] = true;
+			backPointer = true;
+			//object['from'] = this._getNodePosition(from);
+			//object['to'] = this._getNodePosition(to);		
 		}
 		
-		object['controlRatio'] = link.controlRatio;
+		else {
+			//object['from'] = this._getNodePosition(from);
+			//object['to'] = this._getNodePosition(to);
+		}
+		
+		object['controlRatio'] = this._getQuadraticCurvePoint(
+			backPointer? object.to : object.from,
+			backPointer? object.from: object.to,
+			link.controlRatio);	
 		
 		return object;
 	},
 	
 	/*
-	 * Create arrow animations
+	 * Create move animations
 	 */
-	_createArrowAnimations: function (arrow)
-	{
+	_createMoveAnimations: function (moveObject)
+	{	
 		var animations =
 	
 		{
 			'forward_arrival':
 			{
 				'start': {
-					'opacity': 0
+					'opacity': 0,
+					'x': moveObject.from.x,
+					'y': moveObject.from.y
 				},
 				'end': {
-					'opacity': 1
+					'opacity': 1,
+					'animateAlong': {
+						'start': 0,
+						'end': 0.4,
+						'path': "M #{from.x} #{from.y} Q #{controlRatio.x} #{controlRatio.y} #{to.x} #{to.y}".interpolate(moveObject),
+						'rotate': false
+					}
 				},
-				'length': 250
+				'length': 500
 			},
 			
 			'forward_departure':
 			{
 				'start': {
-					'opacity': 1
+					'opacity': 1,
+					'setPositionFromPath': {
+						'at': 0.4,
+						'path': "M #{from.x} #{from.y} Q #{controlRatio.x} #{controlRatio.y} #{to.x} #{to.y}".interpolate(moveObject)
+					}
 				},
 				'end': {
-					'opacity': 0
+					'opacity': 0,
+					'animateAlong': {
+						'start': 0.4,
+						'end': 1,
+						'path': "M #{from.x} #{from.y} Q #{controlRatio.x} #{controlRatio.y} #{to.x} #{to.y}".interpolate(moveObject),
+						'rotate': false
+					}
 				},
-				'length': 250
+				'length': 500
 			},
 			
 			'backward_arrival':
 			{
 				'start': {
-					'opacity': 0
+					'opacity': 0,
+					'setPositionFromPath': {
+						'at': 1,
+						'path': "M #{from.x} #{from.y} Q #{controlRatio.x} #{controlRatio.y} #{to.x} #{to.y}".interpolate(moveObject)
+					}					
 				},
 				'end': {
-					'opacity': 1
+					'opacity': 1,
+					'animateAlong': {
+						'start': 1,
+						'end': 0.6,
+						'path': "M #{to.x} #{to.y} Q #{controlRatio.x} #{controlRatio.y} #{from.x} #{from.y}".interpolate(moveObject),
+						'rotate': false
+					}					
 				},
-				'length': 250
+				'length': 500
 			},
 			
 			'backward_departure':
 			{
 				'start': {
-					'opacity': 1
+					'opacity': 1,
+					'setPositionFromPath': {
+						'at': 0.4,
+						'path': "M #{from.x} #{from.y} Q #{controlRatio.x} #{controlRatio.y} #{to.x} #{to.y}".interpolate(moveObject)
+					}	
 				},
 				'end': {
-					'opacity': 0
+					'opacity': 0,
+					'animateAlong': {
+						'start': 0.6,
+						'end': 1,
+						'path': "M #{to.x} #{to.y} Q #{controlRatio.x} #{controlRatio.y} #{from.x} #{from.y}".interpolate(moveObject),
+						'rotate': false
+					}	
 				},
-				'length': 250
+				'length': 500
 			}			
 		};
 
 		return animations;
-	},
+	},	
 	
 	/*
 	 * Create a node object
@@ -840,7 +895,7 @@
 		
 		var link = this.map.nodes[from].getLink(to) || this.map.nodes[to].getLink(from);
 		
-		object['controlRatio'] = link.controlRatio;
+		object['controlRatio'] = this._getQuadraticCurvePoint(object.from, object.to, link.controlRatio);
 		
 		return object;
 	},	
@@ -1000,5 +1055,19 @@
 			
 			player.sync(this.map);
 		}, this);
+	},
+	
+	/*
+	 * Get the quadratic curve point
+	 */
+	_getQuadraticCurvePoint: function (from, to, ratio)
+	{
+		var data =
+		{
+			x: (from.x + (to.x - from.x) / 2 + (to.y - from.y) * ratio),
+			y: (from.y + (to.y - from.y) / 2 + (to.x - from.x) * ratio * -1)
+		};
+		
+		return data;
 	}
 });

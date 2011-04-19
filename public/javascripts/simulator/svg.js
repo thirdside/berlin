@@ -27,17 +27,17 @@
 		if (object.type == 'spawn')
 			this.objects[object.id] = this._createSpawnObject(object.count, attrs);
 		else if (object.type == 'soldiers')
-			this.objects[object.id] = this._createSoldiersObject(object.count, attrs);
+			this.objects[object.id] = this._createSoldiersObject(attrs);
 		else if (object.type == 'city')
 			this.objects[object.id] = this._createCityObject(attrs);
 		else if (object.type == 'node')
 			this.objects[object.id] = this._createNodeObject(attrs);
-		else if (object.type == 'arrow')
-			this.objects[object.id] = this._createArrowObject(object, attrs);
 		else if (object.type == 'background')
-			this.objects[object.id] = this._createBackgroundObject(object.img);
+			this.objects[object.id] = this._createBackgroundObject(object.img, object.tile);
 		else if (object.type == 'path')
-			this.objects[object.id] = this._createPathObject(object.from, object.to, object.controlRatio);					
+			this.objects[object.id] = this._createPathObject(object.from, object.to, object.controlRatio);
+		else if (object.type == 'move')
+			this.objects[object.id] = this._createMoveObject(object, attrs);
 	},
 	
 	addAnimation: function (id, attrs, length)
@@ -45,6 +45,10 @@
 		if (Object.keys(attrs).length != 0) {
 			if (attrs.start)
 				attrs.start = null;
+			
+			if (attrs['animateAlong'])
+				this._animateAlong(this.objects[id], attrs['animateAlong'], length);
+				//this.objects[id].animateAlong(attrs['path'], length, attrs['rotate']);
 			
 			this.objects[id].animate(attrs, length);
 		}
@@ -84,7 +88,7 @@
 		{
 		    'from': from,
 			'to': to,
-			'control': this.getQuadraticCurvePoint(from, to, controlRatio)
+			'control': controlRatio
 		};
 
 		var pathData = pathFormat.interpolate(data);
@@ -112,10 +116,10 @@
 		return set;
 	},
 
-	_createSoldiersObject: function (count, attrs)
+	_createSoldiersObject: function (attrs)
 	{
 		// draw blurry back
-		var blurryText = this.raphael.text(attrs.x, attrs.y, count);
+		var blurryText = this.raphael.text(attrs.x, attrs.y, attrs.count);
 		
 		blurryText.attr({
 			'font': attrs.font,
@@ -129,7 +133,7 @@
 		
 		
 		// draw text
-		var text = this.raphael.text(attrs.x, attrs.y, count);
+		var text = this.raphael.text(attrs.x, attrs.y, attrs.count);
 		
 		text.attr({
 			'font': attrs.font,
@@ -240,92 +244,59 @@
 		return node;
 	},
 	
-	_createArrowObject: function (object, attrs)
+	_createMoveObject: function (object, attrs)
 	{
-		// format and data of the path
-		var pathFormat = "M #{from.x} #{from.y} Q #{control.x} #{control.y} #{to.x} #{to.y}";
-		var pathFormatStraight = "M #{from.x} #{from.y} L #{to.x} #{to.y}";
-		
-		// find starting and ending points of the curve
-		var data =
-		{
-		    from: object.backPointer ? Object.clone(object.to) : Object.clone(object.from),
-			to: object.backPointer ? Object.clone(object.from) : Object.clone(object.to),
+		// get the position
+		var position = (attrs['setPositionFromPath']) ? this._getPositionFromPath(attrs['setPositionFromPath']) : {
+			x: object.from.x,
+			y: object.from.y
 		};
 		
-		data.from.x += this.raphael.width; //todo: Point object
-		data.from.y += this.raphael.height;
-		data.to.x += this.raphael.width;
-		data.to.y += this.raphael.height;
-		
-		data.control = this.getQuadraticCurvePoint(data.from, data.to, object.controlRatio);
-		
-		var pathData = pathFormat.interpolate(data);
-		
-		var path = this.raphael.path(pathData);
-		
-		var pathLength = path.getTotalLength();
-		data.from = path.getPointAtLength(pathLength * (object.backPointer ? 0.95 : 0.05));
-		data.to = path.getPointAtLength(pathLength * (object.backPointer ? 0.85 : 0.15));
-		
-		data.from.x -= this.raphael.width; //todo: Point object
-		data.from.y -= this.raphael.height;
-		data.to.x -= this.raphael.width;
-		data.to.y -= this.raphael.height;
-		data.control.x -= this.raphael.width;
-		data.control.y -= this.raphael.height;		
-		
-		// draw the path
-		pathData = pathFormatStraight.interpolate(data);
-		
-		var straightPath = this.raphael.path(pathData);
-		straightPath.attr({
-			'stroke': 			object.color,
-			'stroke-width': 	3,
-			'stroke-linejoin': 	'round',
-			'opacity': attrs.opacity
-		});
-		
-		// format and data of the arrow
-		var arrowFormat = "M #{to.x} #{to.y} L #{arrow1.x} #{arrow1.y} M #{to.x} #{to.y} L #{arrow2.x} #{arrow2.y}";
+		// create the background circle
+		var circle = this.raphael.circle(position.x, position.y, object.radius);
+		circle.attr({'opacity': attrs['opacity'], 'fill': object['color'], 'stroke': 'none'});
 
-
-		pathLength = straightPath.getTotalLength();
-		var positionBeforeEnd = straightPath.getPointAtLength(pathLength * (object.backPointer ? 0.02 : 0.98));
-
-		var angle = Math.atan2(data.to.y - positionBeforeEnd.y, data.to.x - positionBeforeEnd.x);
-		var angle1 = angle + Math.PI / 8;
-		var angle2 = angle - Math.PI / 8;
-		var data = Object.extend(data, {
-			arrow1: {'x': Math.round(data.to.x - Math.cos(angle1) * 15), 'y': Math.round(data.to.y - Math.sin(angle1) * 15)},
-			arrow2: {'x': Math.round(data.to.x - Math.cos(angle2) * 15), 'y': Math.round(data.to.y - Math.sin(angle2) * 15)}
-		});
-		
-		pathData = arrowFormat.interpolate(data);
-		
-		// draw the arrow		
-		var arrowPath = this.raphael.path(pathData);
-		arrowPath.attr({
-			'stroke': 			object.color,
-			'stroke-width': 	3,
-			'stroke-linejoin': 	'round',
-			'opacity': attrs.opacity
-		});
-		
-		// draw soldier count
-		positionBeforeEnd = straightPath.getPointAtLength(pathLength * (object.backPointer ? 0.20 : 0.80));
-		positionBeforeEnd = this.getRelativePosition(positionBeforeEnd);
-
+        // create the soldiers count
 		var textAttrs = object.countAttrs;
-		textAttrs.x = data.from.x;
-		textAttrs.y = data.from.y;
-		textAttrs.opacity = attrs.opacity;
+		textAttrs.x = position.x;
+		textAttrs.y = position.y;		
+		textAttrs.opacity = attrs['opacity'];
+		textAttrs.count = object.count;
+		
+		var set = this._createSoldiersObject(textAttrs);
 
-		var set = this._createSoldiersObject(object.count, textAttrs);
-		
-		set.push(straightPath);
-		set.push(arrowPath);
-		
+		set.push(circle);		
 		return set;
-	}	
+	},
+	
+	_animateAlong: function (object, attrs, length)
+	{
+		// get the full path
+		var path = this.raphael.path(attrs['path']);
+		
+		// prepare the partial path
+		var pathLength = path.getTotalLength();
+		var sub = path.getSubpath(attrs['start'] * pathLength, attrs['end'] * pathLength);
+		
+		// remove the full path
+		path.remove();
+		
+		// animate along the partial path
+		object.animateAlong(sub, length, attrs['rotate']);
+	},
+	
+	_getPositionFromPath: function (data)
+	{
+		// get the full path
+		var path = this.raphael.path(data['path']);
+		
+		// prepare the partial path
+		var pathLength = path.getTotalLength();
+		var position = path.getPointAtLength(path.getTotalLength() * data['at']);
+		
+		// remove the full path
+		path.remove();
+		
+		return position;
+	}
 });
