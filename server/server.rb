@@ -5,6 +5,8 @@ require 'yajl/json_gem'
 require 'active_record'
 require 'uuidtools'
 
+ROOT = File.expand_path( File.dirname( __FILE__ ) )
+
 # default port
 set :port, 3010
 
@@ -14,15 +16,25 @@ options = Hash[*ARGV]
 # config
 default_env = ENV['RAILS_ENV'] ? ENV['RAILS_ENV'] : 'development'
 environment = options['-e'] ? options['-e'] : default_env
-config_path = File.expand_path( File.dirname( __FILE__ ) ) + "/../config/database.yml"
+config_path = ROOT + "/../config/database.yml"
 config_yaml = YAML::load( File.open( config_path ) )
 
 # db connexion
 ActiveRecord::Base.establish_connection( config_yaml[ environment ] )
 
+# lib
+%w( achievable ).each do |model|
+  require ROOT + "/../lib/#{model}"
+end
+
 # models
 %w( game map node_type node artificial_intelligence artificial_intelligence_game ).each do |model|
-  require File.expand_path( File.dirname( __FILE__ ) ) + "/../app/models/#{model}"
+  require ROOT + "/../app/models/#{model}"
+end
+
+# achievements
+%w( achievement games_played_achievement ).each do |model|
+  require ROOT + "/../app/models/achievements/#{model}"
 end
 
 # start a random fight, on a random map with random (2!) ais

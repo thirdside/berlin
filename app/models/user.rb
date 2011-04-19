@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :artificial_intelligences
   has_many :artificial_intelligence_games, :through=>:artificial_intelligences
+  has_many :achievements, :through=>:artificial_intelligences
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, :lockable and :timeoutable

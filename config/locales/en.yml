@@ -32,6 +32,8 @@ en:
       artificial_intelligence: Artificial Intelligence
       doc: Doc
       map: Map
+      achievement: Achievement
+      first_game: Test
     attributes:
       user:
         login: Username or email

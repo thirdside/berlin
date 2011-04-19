@@ -2,6 +2,8 @@ class ArtificialIntelligence < ActiveRecord::Base
 
   LANGUAGES = %w(Ruby PHP Python C/C++ Lua JavaScript C# Go Java Other)
 
+  include Achievable
+
   belongs_to :user, :counter_cache=>true
 
   has_many :artificial_intelligence_games, :dependent=>:destroy
@@ -20,4 +22,5 @@ class ArtificialIntelligence < ActiveRecord::Base
   def won_games
     self.artificial_intelligence_games.winners.count
   end
+
 end

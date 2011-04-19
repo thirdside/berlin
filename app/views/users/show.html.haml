@@ -4,6 +4,18 @@
   = render :partial => '/users/info', :locals=>{:user=>@user}
 
 .content
+  %h2= Achievement.model_name.human.pluralize
+
+  %table
+    %thead
+      %tr
+        %th Test
+    %tbody
+      - @user.achievements.each do |achievement|
+        %tr
+          %td= achievement.class.model_name.human
+
+.content
   %h2= t('titles.artificial_intelligences')
 
   %table
@@ -17,7 +29,7 @@
     %tbody
       - @user.artificial_intelligences.each do |artificial_intelligence|
         %tr
-          %td= artificial_intelligence.name
+          %td= link_to artificial_intelligence.name, artificial_intelligence
           %td= artificial_intelligence.artificial_intelligence_games.count
           %td= show_score artificial_intelligence.score
           %td.icon= link_to_show artificial_intelligence
