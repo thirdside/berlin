@@ -8,6 +8,7 @@
 		"directed": false,
 		"path_color": "#cccccc",
 		"background": "/images/simulator/background.png",
+		"tile_background": false,
 		"translate": {"x": 0, "y": 0}
 	},
 

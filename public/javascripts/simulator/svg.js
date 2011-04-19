@@ -50,8 +50,14 @@
 		}
 	},
 	
-	_createBackgroundObject: function (img)
+	_createBackgroundObject: function (img, tile)
 	{
+		if (!tile)
+		{
+			this.raphael.image(img.src, 0, 0, img.width, img.height);
+			return;
+		}
+		
 		for (var i = 0; i < 6; i++) //todo: don't haaaaaaardcode.
 			this.raphael.image(
 				img.src,

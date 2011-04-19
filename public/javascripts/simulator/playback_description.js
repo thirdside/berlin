@@ -82,7 +82,7 @@
 		// setup the background
 		layer = this._createLayer();
 		
-		object = this._createBackgroundObject(nextId, true);
+		object = this._createBackgroundObject(nextId, this.mapDescription.infos['tile_background'] || true);
 		animations = this._createBackgroundAnimations(object);
 		layer.objects.push(object);
 		layer.forward_arrival[nextId] = animations['forward_arrival'];
