@@ -20,11 +20,11 @@
 		this.nbSoldiers	= 0;
 	},
 	
-	linkTo: function (otherNode)
+	linkTo: function (otherNode, controlRatio)
 	{
 		this.links.push({
 			'toId': otherNode.id,
-			'controlRatio': (Math.random() * 30 | 0) / 100
+			'controlRatio': controlRatio ? controlRatio : ((Math.random() * 30 | 0) / 100)
 		});
 	},
 	
@@ -70,7 +70,7 @@ TS.NodeGraph = Class.create(TS, {
 		
 		// Add paths between the nodes
 		this.map.paths.each(function(path){
-			this.nodes[path.from].linkTo(this.nodes[path.to]);
+			this.nodes[path.from].linkTo(this.nodes[path.to], path.control_ratio);
 			//if (!this.directed)
 			//	this.nodes[path.to].linkTo(this.nodes[path.from]);
 		}, this);

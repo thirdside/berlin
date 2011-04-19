@@ -45,6 +45,7 @@ TS.AIPlayback = Class.create(TS, {
 		// other shit
 		this.playerList = $(containers.player_list);
 		this.progressBar = $(containers.progress_bar);
+		this.progressTurns = $(containers.turns);
 		
 		this.enableControls();
 		this.playbackDescription = null;
@@ -68,7 +69,8 @@ TS.AIPlayback = Class.create(TS, {
 				this.map.nodeGraph,
 				this.gameDescription,
 				this.map.layers['background'],
-				this.map.graphics);			
+				this.map.graphics);
+			this.playbackDescription.initializeTurns();		
 			
 			this.enableControls();
 			this.drawCurrentTurn();
@@ -155,13 +157,6 @@ TS.AIPlayback = Class.create(TS, {
 	 */	
 	drawCurrentTurn: function ()
 	{
-		// clamp turnNumber between 0 and MaxTurn
-		if (this.turnNumber < 0)
-			this.turnNumber = 0;
-		
-		if (this.turnNumber > this.getMaxTurn())
-			this.turnNumber = this.getMaxTurn();
-
 		// draw the current frame
 		this.map.doTurn(
 			this.playbackDescription.turns[this.turnNumber + (this.forward? -1 : 1)],
@@ -172,6 +167,7 @@ TS.AIPlayback = Class.create(TS, {
 		this.enableControls();
 		this.updatePlayerList();
 		this.updateProgress();
+		this.updateProgressTurns();
 	},
 	
 	/*
@@ -183,11 +179,27 @@ TS.AIPlayback = Class.create(TS, {
 	},
 	
 	/*
+	 * Update the current turn #
+	 */
+	updateProgressTurns: function ()
+	{
+		var format = "#{currentTurn}/#{nbTurns}";
+		
+		var data =
+		{
+			currentTurn: this.turnNumber / 4 | 0,
+			nbTurns: this.getMaxTurn() / 4 | 0
+		};
+		
+		this.progressTurns.update(format.interpolate(data));
+	},
+	
+	/*
 	 * Upgrade the player infos
 	 */
 	updatePlayerList: function ()
 	{
-		Object.values(this.playbackDescription.turns[this.turnNumber].players).each(function(player){
+		Object.values(this.playbackDescription.turns[Math.min(this.turnNumber, this.getMaxTurn() - 1)].players).each(function(player){
 			var row = $(this.playerInfoName.interpolate(player));
 			row.down('.color').setStyle({"background-color": player.color});
 			row.down('.cities').update(player.cities);
@@ -197,7 +209,7 @@ TS.AIPlayback = Class.create(TS, {
 	
 	/*
 	 * Get the number of simulation turns.
-	 * A simulation turn is 1/3 of a game turn.
+	 * A simulation turn is 1/4 of a game turn.
 	 */
 	getMaxTurn: function ()
 	{
@@ -270,13 +282,15 @@ TS.AIPlayback = Class.create(TS, {
 	onTimer: function ()
 	{
 		this.forward = true;
+		
+		if (this.timer.isRunning())
+			this.turnNumber++;
+		
 		this.drawCurrentTurn();
 		
-		if (this.timer.isRunning() && this.getMaxTurn() >= this.turnNumber)
-			this.turnNumber++;
-		else
+		if (this.turnNumber >= this.getMaxTurn()) {
 			this.timer.stop();
-
-		this.enableControls();
+			return;
+		}		
 	}
 });
