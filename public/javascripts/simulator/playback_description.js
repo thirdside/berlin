@@ -34,13 +34,22 @@
 		// process each turn of the game description
 		Object.keys(this.gameDescription.turns).each(function(turnId) {
 			var turn = this.gameDescription.turns[turnId];
+			var result = null;
 			
 			this._syncMap(turn.states_pre);
 			
-			this._processStates(turn.states_pre);
-			this._processMoves(turn.moves);
-			this._processStates(turn.states_post);
-			this._processSpawns(turn.spawns);
+			result = this._processStates(turn.states_pre);
+			this._processMoves(turn.moves, result);
+			
+			
+			this._syncMap(turn.states_post);
+			
+			result = this._processStates(turn.states_post);
+			this._processSpawns(turn.spawns, result);
+			
+			this.turns[this.turns.length - 1].layers['nodes'] = this.turns[this.turns.length - 2].layers['nodes'];
+			this.turns[this.turns.length - 1].layers['soldiers'] = this.turns[this.turns.length - 2].layers['soldiers'];
+						
 		}, this);
 		
 		// prepare first turn
@@ -117,12 +126,15 @@
 	 * - an arrow followed by the number of soldiers moved
 	 * - an animation of the arrow along the link path
 	 */
-	_processMoves: function (moves)
+	_processMoves: function (moves, previousTurn)
 	{
 		var nextId = 0;
 		
 		var turn = this._createTurn(['moves']);
 		
+		turn.layers['nodes'] = previousTurn.layers['nodes'];
+		turn.layers['soldiers'] = previousTurn.layers['soldiers'];
+
 		this.players = turn.players;
 		
 		$A(moves).each(function(data) {
@@ -175,7 +187,9 @@
 			}		
 		}, this);
 		
-		this.turns.push(turn);		
+		this.turns.push(turn);
+		
+		return turn;	
 	},
 
 	/*
@@ -211,11 +225,15 @@
 		}, this);
 	},
 	
-	_processSpawns: function (spawns)
+	_processSpawns: function (spawns, previousTurn)
 	{
 		var nextId = 0;
 		
 		var turn = this._createTurn(['spawns']);
+
+		turn.layers['nodes'] = previousTurn.layers['nodes'];
+		turn.layers['soldiers'] = previousTurn.layers['soldiers'];
+
 		
 		this.players = turn.players;
 		
