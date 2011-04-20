@@ -23,7 +23,7 @@ config_yaml = YAML::load( File.open( config_path ) )
 ActiveRecord::Base.establish_connection( config_yaml[ environment ] )
 
 # lib
-%w( achievable ).each do |model|
+%w( awardable ).each do |model|
   require ROOT + "/../lib/#{model}"
 end
 
@@ -33,7 +33,7 @@ end
 end
 
 # achievements
-%w( achievement games_played_achievement ).each do |model|
+%w( achievement games_played_achievement victories_achievement ).each do |model|
   require ROOT + "/../app/models/achievements/#{model}"
 end
 

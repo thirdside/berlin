@@ -4,16 +4,16 @@
   = render :partial => '/users/info', :locals=>{:user=>@user}
 
 .content
-  %h2= Achievement.model_name.human.pluralize
+  %h2= Award.model_name.human.pluralize
 
   %table
     %thead
       %tr
-        %th Test
+        %th testitestou
     %tbody
-      - @user.achievements.each do |achievement|
+      - @user.awards.each do |award|
         %tr
-          %td= achievement.class.model_name.human
+          %td= award.achievement.class.model_name.human
 
 .content
   %h2= t('titles.artificial_intelligences')

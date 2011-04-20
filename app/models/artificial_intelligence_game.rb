@@ -14,5 +14,6 @@ class ArtificialIntelligenceGame < ActiveRecord::Base
   protected
     def check_for_achievements
       GamesPlayedAchievement.check_conditions_for( self.artificial_intelligence )
+      VictoriesAchievement.check_conditions_for( self.artificial_intelligence )
     end
 end

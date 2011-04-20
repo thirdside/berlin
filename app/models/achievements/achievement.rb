@@ -1,3 +1,5 @@
 class Achievement < ActiveRecord::Base
-  belongs_to :achievable, :polymorphic => true
+  has_many :awards, :dependent=>:destroy
+
+  scope :of_type, lambda { |type| where("type = ?", type) }
 end

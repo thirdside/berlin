@@ -1,33 +1,13 @@
 class GamesPlayedAchievement < Achievement
 
-  class FirstGame < GamesPlayedAchievement
-    def self.requirement; 1; end
-  end
-
-  class TenGames < GamesPlayedAchievement
-    def self.requirement; 10; end;
-  end
-
-  class FiftyGames < GamesPlayedAchievement
-    def self.requirement; 50; end;
-  end
-
-  class HundredGames < GamesPlayedAchievement
-    def self.requirement; 100; end;
-  end
-
-  class FiveHundredGames < GamesPlayedAchievement
-    def self.requirement; 500; end;
-  end
-
-  class ThousandGames < GamesPlayedAchievement
-    def self.requirement; 1000; end;
+  def reached? games_played
+    games_played >= self.read_attribute( :condition_1 )
   end
 
   def self.check_conditions_for resource
-    self.subclasses.each do |award|
-      if !resource.awarded?( award ) and resource.artificial_intelligence_games.size > award.requirement
-        resource.award( award )
+    self.all.each do |achievement|
+      if !resource.awarded?( achievement ) && achievement.reached?( resource.artificial_intelligence_games.size )
+        resource.award( achievement )
       end
     end
   end

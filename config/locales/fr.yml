@@ -32,13 +32,8 @@ fr:
       artificial_intelligence: Intelligence artificielle
       doc: Doc
       map: Carte
-      achievement: Trophée
-      games_played_achievement/first_game: 1ere partie!
-      games_played_achievement/ten_games: 10e partie!
-      games_played_achievement/fifty_games: 50e partie!
-      games_played_achievement/hundred_games: 100e partie!
-      games_played_achievement/five_hundred_games: 500e partie!
-      games_played_achievement/thousand_games: 1000e partie!
+      achievement: Accomplissement
+      award: Trophée
     attributes:
       user:
         login: Nom d'utilisateur ou courriel

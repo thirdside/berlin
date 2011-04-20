@@ -2,7 +2,7 @@ class ArtificialIntelligence < ActiveRecord::Base
 
   LANGUAGES = %w(Ruby PHP Python C/C++ Lua JavaScript C# Go Java Other)
 
-  include Achievable
+  include Awardable
 
   belongs_to :user, :counter_cache=>true
 
@@ -14,7 +14,6 @@ class ArtificialIntelligence < ActiveRecord::Base
   validates :name, :presence=>true, :uniqueness=>true, :length => { :minimum => 1 }
   validates :language, :presence=>true, :inclusion=>LANGUAGES
 
-  # TODO Each AI need to be aware of their nodes and armies...
   def score
     self.artificial_intelligence_games.map(&:score).to_stat.average
   end

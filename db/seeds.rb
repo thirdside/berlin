@@ -15,3 +15,11 @@ User.create(:username=>"admin", :locale=>"fr", :email=>"admin@berlin.net", :pass
 
 ArtificialIntelligence.create(:user_id=>1, :name=>"AI1", :language=>'Java', :url_ready=>"http://localhost:4567/ready", :url_on_turn=>"http://localhost:4567/onturn")
 ArtificialIntelligence.create(:user_id=>1, :name=>"AI2", :language=>'PHP', :url_ready=>"http://localhost:4568/ready", :url_on_turn=>"http://localhost:4568/onturn")
+
+GamesPlayedAchievement.create(:condition_1=>1)
+GamesPlayedAchievement.create(:condition_1=>10)
+GamesPlayedAchievement.create(:condition_1=>25)
+
+VictoriesAchievement.create(:condition_1=>1)
+VictoriesAchievement.create(:condition_1=>10)
+VictoriesAchievement.create(:condition_1=>25)

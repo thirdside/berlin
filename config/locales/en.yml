@@ -33,7 +33,7 @@ en:
       doc: Doc
       map: Map
       achievement: Achievement
-      first_game: Test
+      award: Award
     attributes:
       user:
         login: Username or email

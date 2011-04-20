@@ -1,5 +1,4 @@
 module Subclasses
-  # return a list of the subclasses of a class
   def subclasses direct = false
     classes = []
 
@@ -16,5 +15,3 @@ module Subclasses
     classes
   end
 end
-
-Object.send(:include, Subclasses)
