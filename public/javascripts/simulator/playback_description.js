@@ -38,18 +38,13 @@
 			
 			this._syncMap(turn.states_pre);
 			
-			result = this._processStates(turn.states_pre);
-			this._processMoves(turn.moves, result);
-			
+			this.turns.push(this._processStates(turn.states_pre));
+			this._processMoves(turn.moves, turn.states_pre);
 			
 			this._syncMap(turn.states_post);
 			
-			result = this._processStates(turn.states_post);
-			this._processSpawns(turn.spawns, result);
-			
-			this.turns[this.turns.length - 1].layers['nodes'] = this.turns[this.turns.length - 2].layers['nodes'];
-			this.turns[this.turns.length - 1].layers['soldiers'] = this.turns[this.turns.length - 2].layers['soldiers'];
-						
+			this.turns.push(this._processStates(turn.states_post));
+			this._processSpawns(turn.spawns, turn.states_post);
 		}, this);
 		
 		// prepare first turn
@@ -117,21 +112,22 @@
 		turn.layers['paths'] = layer;
 		
 		// clean the rest
-		turn.layers['moves'] = this._createLayer();
-		turn.layers['spawns'] = this._createLayer();
+		//turn.layers['moves'] = this._createLayer();
+		//turn.layers['spawns'] = this._createLayer();
 	},
 	
 	/*
 	 * Process the moves of a turn
 	 */
-	_processMoves: function (moves, previousTurn)
+	_processMoves: function (moves, preStates)
 	{
 		var nextId = 0;
 		
 		var turn = this._createTurn(['moves']);
 		
-		turn.layers['nodes'] = previousTurn.layers['nodes'];
-		turn.layers['soldiers'] = previousTurn.layers['soldiers'];
+		var result = this._processStates(preStates);
+		turn.layers['nodes'] = result.layers['nodes'];
+		turn.layers['soldiers'] = result.layers['soldiers'];
 
 		this.players = turn.players;
 		
@@ -150,7 +146,12 @@
 			layer.backward_departure[moveObject.id] = moveAnimations['backward_departure'];
 			
 			//decrement the number of soldiers on the starting node
-			//turn.layers['soldiers'].
+			$A(turn.layers['soldiers'].objects).each(function(soldier) {
+				if (soldier.node == data.from) {
+					turn.layers['soldiers'].forward_arrival[soldier.id].start.count -= data.number_of_soldiers;
+					turn.layers['soldiers'].backward_arrival[soldier.id].start.count = turn.layers['soldiers'].forward_arrival[soldier.id].start.count;
+				}
+			}, this);
 			
 			nextId++;	
 		}, this);
@@ -171,7 +172,7 @@
 		var nextId = 0;
 
 		$A(states).each(function(data) {
-			if (data.number_of_soldiers != 0) {
+			if (data.player_id != null) {
 				var soldiersObject = this._createSoldiersObject(nextId++, data.node_id, data.number_of_soldiers);
 				
 				var layer = turn.layers['soldiers'];
@@ -188,8 +189,6 @@
 				nextId++;
 			}		
 		}, this);
-		
-		this.turns.push(turn);
 		
 		return turn;	
 	},
@@ -227,15 +226,15 @@
 		}, this);
 	},
 	
-	_processSpawns: function (spawns, previousTurn)
+	_processSpawns: function (spawns, preStates)
 	{
 		var nextId = 0;
 		
 		var turn = this._createTurn(['spawns']);
 
-		turn.layers['nodes'] = previousTurn.layers['nodes'];
-		turn.layers['soldiers'] = previousTurn.layers['soldiers'];
-
+		var result = this._processStates(preStates);
+		turn.layers['nodes'] = result.layers['nodes'];
+		turn.layers['soldiers'] = result.layers['soldiers'];
 		
 		this.players = turn.players;
 		
@@ -268,6 +267,7 @@
 		{
 			'id': id,
 			'type': 'soldiers',
+			'node': node,
 			'position': this._getNodePosition(node),
 			'count': count
 		};
