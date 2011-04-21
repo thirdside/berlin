@@ -1,5 +1,7 @@
 class MapsController < InheritedResources::Base
 
+  actions :index, :show, :new, :create
+
   include Pageable
 
   def show

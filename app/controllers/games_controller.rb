@@ -3,6 +3,8 @@ require 'uri'
 
 class GamesController < InheritedResources::Base
 
+  actions :index, :show, :new, :create
+
   before_filter :authenticate_user!, :only=>[:new, :create]
 
   include Pageable
