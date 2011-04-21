@@ -7,6 +7,7 @@
 		"maximum_number_of_turns": 10,
 		"directed": false,
 		"background": "/images/simulator/background.png",
+		"tile_background": false,
 		"translate": {"x": 0, "y": 0}
 	},
 

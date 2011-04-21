@@ -273,7 +273,7 @@ TS.AIPlayback = Class.create(TS, {
 	 */
 	start: function ()
 	{
-		this.timer.start(500, -1);
+		this.timer.start(1000, -1);
 	},
 	
 	/*
