@@ -2,20 +2,21 @@ class Move
 
   attr_accessor :from, :to, :number_of_soldiers  
 
-  def self.parse json
+  def self.parse artificial_intelligence, json
     json = JSON.parse( json )
 
     from                = json['from']
     to                  = json['to']
     number_of_soldiers  = json['number_of_soldiers']
 
-    Move.new from, to, number_of_soldiers
+    Move.new artificial_intelligence, from, to, number_of_soldiers
   end
 
-  def initialize from, to, number_of_soldiers
-    @from               = Node.find from.to_i
-    @to                 = Node.find to.to_i
-    @number_of_soldiers = number_of_soldiers.to_i
+  def initialize artificial_intelligence, from, to, number_of_soldiers
+    @artificial_intelligence  = artificial_intelligence
+    @from                     = Node.find from.to_i
+    @to                       = Node.find to.to_i
+    @number_of_soldiers       = number_of_soldiers.to_i
   end
 
   def valid?
@@ -31,7 +32,7 @@ class Move
     true
   end
 
-  def to_json
-    {:from=>@from.id, :to=>@to.id, :number_of_soldiers=>@number_of_soldiers}
+  def to_hash
+    {:artificial_intelligence_id=>@artificial_intelligence.id, :from=>@from.id, :to=>@to.id, :number_of_soldiers=>@number_of_soldiers}
   end
 end

@@ -20,4 +20,8 @@ class Path
     @to   = Node.find to
   end
 
+  def to_hash
+    {:from=>@from.id, :to=>@to.id}
+  end
+
 end

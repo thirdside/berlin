@@ -1,4 +1,5 @@
 require 'yajl/json_gem'
+require 'utilities'
 
 %w( map move node node_type path game artificial_intelligence ).each do |file|
   require File.expand_path( File.dirname( __FILE__ ) ) + "/../#{file}"
@@ -78,6 +79,10 @@ describe Map, "#paths<<" do
   end
 end
 
+describe Map, "#armies<<" do
+  
+end
+
 # PATH
 describe Path, "#parse" do
   it "returns a Path as parsed from the json map" do    
@@ -93,6 +98,13 @@ describe Path, "#parse" do
 
     path.from.should == node1
     path.to.should == node2
+  end
+end
+
+describe Path, "#to_hash" do
+  it "returns a json-ready formatted Path" do
+    path = Path.new 1, 2
+    path.to_hash.should == {:from=>1, :to=>2}
   end
 end
 
@@ -113,6 +125,13 @@ describe NodeType, "#parse" do
   end
 end
 
+describe NodeType, "#to_hash" do
+  it "returns a json-ready formatted NodeType" do
+    node_type = NodeType.new "Test", 1, 10
+    node_type.to_hash.should == {:name=>"Test", :points=>1, :soldiers_per_turn=>10}
+  end
+end
+
 # NODE
 describe Node, "#adjacents<<" do
   it "should register an adjacent node" do
@@ -121,6 +140,14 @@ describe Node, "#adjacents<<" do
 
     node1.adjacents << node2
     node1.adjacents.should == [node2]
+  end
+end
+
+describe Node, "#to_hash" do
+  it "returns a json-ready formatted Node" do
+    type = NodeType.new "Test", 1, 10
+    node = Node.new 1, "Test"
+    node.to_hash.should == {:id=>1, :type=>type.name}
   end
 end
 
@@ -144,10 +171,10 @@ describe Move, "#parse" do
   end
 end
 
-describe Move, "#to_json" do
-  it "returns a json formatted move" do
+describe Move, "#to_hash" do
+  it "returns a json-ready formatted move" do
     move = Move.new 1, 2, 10
-    move.to_json.should == {:from=>1, :to=>2, :number_of_soldiers=>10}
+    move.to_hash.should == {:from=>1, :to=>2, :number_of_soldiers=>10}
   end
 end
 
