@@ -2,7 +2,6 @@ source 'http://rubygems.org'
 
 gem 'rails'
 gem 'mysql2'
-gem 'sqlite3'
 gem 'haml'
 gem 'inherited_resources'
 gem 'has_scope'
