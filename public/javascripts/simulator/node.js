@@ -6,13 +6,14 @@
  * date: 12/04/2011
  */
 
+/*
+ * A general node
+ */
  TS.Node = Class.create(TS, {
 	initialize: function ($super, id, type, x, y)
 	{
 		$super();
 		this.position	= {x: x, y: y};
-		this.velocity	= {x: 0, y: 0};
-		this.mass		= 3;
 		this.id			= id;
 		this.type		= type;
 		this.links		= new Array();
@@ -44,6 +45,9 @@
 	}
 });
 
+/*
+ * A city node
+ */
 TS.City = Class.create(TS.Node, {
 	initialize: function ($super, id, x, y)
 	{
@@ -52,6 +56,9 @@ TS.City = Class.create(TS.Node, {
 	},
 });
 
+/*
+ * The graph holding all the nodes and related infos.
+ */
 TS.NodeGraph = Class.create(TS, {
 	initialize: function ($super, map)
 	{

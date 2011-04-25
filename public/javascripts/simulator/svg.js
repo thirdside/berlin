@@ -38,6 +38,8 @@
 			this.objects[object.id] = this._createPathObject(object.from, object.to, object.controlRatio);
 		else if (object.type == 'move')
 			this.objects[object.id] = this._createMoveObject(object, attrs);
+		else if (object.type == 'combat')
+			this.objects[object.id] = this._createCombatObject(object, attrs);			
 	},
 	
 	addAnimation: function (id, attrs, length)
@@ -75,10 +77,13 @@
 	_createPathObject: function (from, to, controlRatio)
 	{
 		options = {
-			color: "#000000",
-			blurryColor: '#636363',
+			color: "#ffffff",
+			blurryColor: '#ffffff',
 			strokeWidth: 3,
-			lineJoin: 'round'
+			lineJoin: 'round',
+			blurryOpacity: 0.3,
+			opacity: 0.1,
+			dashes: '5,5'
 		};
 		
 		// format and data of the path
@@ -97,23 +102,14 @@
 		var blurryPath = this.raphael.path(pathData);
 		blurryPath.attr({
 			'stroke': 			options.blurryColor,
-			'stroke-width': 	options.strokeWidth + 3,
-			'stroke-linejoin': 	options.lineJoin
+			'stroke-width': 	options.strokeWidth,
+			'stroke-linejoin': 	options.lineJoin,
+			'stroke-dasharray': options.dashes,
+			'opacity':			options.blurryOpacity
 		});		
 		blurryPath.blur(1);
 		
-		// draw the path
-		var path = this.raphael.path(pathData);
-		path.attr({
-			'stroke': 			options.color,
-			'stroke-width': 	options.strokeWidth,
-			'stroke-linejoin': 	options.lineJoin
-		});
-		
-		var set = this.raphael.set();
-		set.push(blurryPath, path);
-		
-		return set;
+		return blurryPath;
 	},
 
 	_createSoldiersObject: function (attrs)
@@ -184,43 +180,16 @@
 	
 	_createCityObject: function (attrs)
 	{
-		var city = this.raphael.set();
+		// colorize
+		var circlePosition = {
+			x: attrs.x + attrs.width / 2,
+			y: attrs.y + attrs.height / 2
+		};		
 		
-		$A(TS.cities[attrs.layout]).each(function(position)
-		{
-			var realPosition =
-			{
-				x: attrs.x + (position.x * attrs.radius * attrs.spacing) + (position.x * 3),
-				y: attrs.y + (position.y * attrs.radius * attrs.spacing) + (position.y * 3)
-			};
-			
-			city.push(
-				this.raphael.image(
-					attrs.img.src,
-					realPosition.x,
-					realPosition.y,
-					attrs.width,
-					attrs.height
-				)
-			);
-			
-			//colorize
-			var rectPosition = {
-				x: realPosition.x + 5,
-				y: realPosition.y + 5
-			};
-			
-			var rect = this.raphael.rect(rectPosition.x, rectPosition.y, attrs.width - 10, attrs.height - 10);
-			rect.attr({'opacity': 0.8, 'fill': attrs.color, 'stroke': 'none'});
-			city.push(rect);
-			
-		}, this);
+		var circle = this.raphael.circle(circlePosition.x, circlePosition.y, attrs.radius + 20);
+		circle.attr({'opacity': 1, 'fill': attrs.color, 'stroke': 'none'});
 		
-		return city;
-	},
-	
-	_createNodeObject: function (attrs)
-	{
+		// draw the city
 		var image = this.raphael.image(
 			attrs.img.src,
 			attrs.x,
@@ -229,14 +198,42 @@
 			attrs.height
 		);
 		
+		if (attrs.color == '#FFFFFF')
+		{
+			circle.remove();
+			return image;
+		}
+		
+		var city = this.raphael.set();
+		city.push(image, circle);
+		
+		return city;
+	},
+	
+	_createNodeObject: function (attrs)
+	{
 		// colorize
 		var circlePosition = {
 			x: attrs.x + attrs.width / 2,
 			y: attrs.y + attrs.height / 2
 		};		
 		
-		var circle = this.raphael.circle(circlePosition.x, circlePosition.y, attrs.radius + 1);
-		circle.attr({'opacity': 0.8, 'fill': attrs.color, 'stroke': 'none'});
+		var circle = this.raphael.circle(circlePosition.x, circlePosition.y, attrs.radius + 10);
+		circle.attr({'opacity': 1, 'fill': attrs.color, 'stroke': 'none'});
+		
+		var image = this.raphael.image(
+			attrs.img.src,
+			attrs.x,
+			attrs.y,
+			attrs.width,
+			attrs.height
+		);
+		
+		if (attrs.color == '#FFFFFF')
+		{
+			circle.remove();
+			return image;
+		}
 		
 		var node = this.raphael.set();
 		node.push(image, circle);
@@ -256,6 +253,19 @@
 		var circle = this.raphael.circle(position.x, position.y, object.radius);
 		circle.attr({'opacity': attrs['opacity'], 'fill': object['color'], 'stroke': 'none'});
 
+		// create the army graphic
+		var army = this.raphael.image(
+			attrs.img.src,
+			position.x - attrs.img.width / 2,
+			position.y - attrs.img.height / 2,
+			attrs.img.width,
+			attrs.img.height);
+			
+		army.attr({
+			'opacity': attrs['opacity'],
+			'rotation': 180
+		});
+
         // create the soldiers count
 		var textAttrs = object.countAttrs;
 		textAttrs.x = position.x;
@@ -265,9 +275,35 @@
 		
 		var set = this._createSoldiersObject(textAttrs);
 
-		set.push(circle);		
+		set.push(circle);
+		set.push(army);	
 		return set;
 	},
+	
+	_createCombatObject: function (object, attrs)
+	{
+		// create the combat graphic
+		var image = this.raphael.image(
+			attrs.img.src,
+			attrs.x - attrs.img.width / 2,
+			attrs.y - attrs.img.height / 2,
+			attrs.img.width,
+			attrs.img.height);
+		
+		image.attr({
+			'scale': attrs['scale'],
+			'opacity': attrs['opacity']
+			});
+			
+		// create the combat quote
+		var text = this.raphael.text(attrs.x, attrs.y, object.text);
+		text.attr(object.textAttrs);
+
+		var combat = this.raphael.set();
+		combat.push(image, text);
+
+		return combat;
+	},	
 	
 	_animateAlong: function (object, attrs, length)
 	{
@@ -281,8 +317,18 @@
 		// remove the full path
 		path.remove();
 		
+		// get the starting angle
+		//var rotationStart = this._getRotationFromPath(sub, 1, true);
+		//var tmp = this.raphael.path(sub);
+		//var rotationStart = tmp.getPointAtLength(1).alpha;
+		//var rotationEnd = rotationStart; //tmp.getPointAtLength(tmp.getTotalLength() * 0.999).alpha;
+		//tmp.remove();
+		
 		// animate along the partial path
-		object.animateAlong(sub, length, attrs['rotate']);
+		//object.attr({'rotation': 180});
+		object.animateAlong(sub, length, true, function() {
+			//object.attr({'rotation': 0});
+		});
 	},
 	
 	_getPositionFromPath: function (data)
@@ -298,5 +344,28 @@
 		path.remove();
 		
 		return position;
+	},
+	
+	_getRotationFromPath: function (pathData, positionPourc, reverse)
+	{
+		// prepare the path
+		var path = this.raphael.path(pathData);
+		var length = path.getTotalLength();
+		var positionBegin = path.getPointAtLength(length * positionPourc);
+		var positionEnd = path.getPointAtLength(length * (reverse? Math.max(0, positionPourc - 0.001) : Math.min(100, positionPourc + 0.001)));
+
+		// remove the path
+		path.remove();
+
+		// compute the angle
+		var vector =
+		{
+			x: positionEnd.x - positionBegin.x,
+			y: positionEnd.y - positionBegin.y
+		}
+		
+		var angleRad = Math.atan2(vector.y, vector.x);
+		
+		return angleRad * (180 / Math.PI);
 	}
 });
