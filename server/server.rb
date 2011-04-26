@@ -28,7 +28,7 @@ ActiveRecord::Base.establish_connection( config_yaml[ environment ] )
 end
 
 # models
-%w( game map node_type node artificial_intelligence artificial_intelligence_game ).each do |model|
+%w( game map node_type node artificial_intelligence artificial_intelligence_game award ).each do |model|
   require ROOT + "/../app/models/#{model}"
 end
 
