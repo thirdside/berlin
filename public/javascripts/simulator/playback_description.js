@@ -38,13 +38,14 @@
 			var turn = this.gameDescription.turns[turnId];
 			var result = null;
 			
-			this._syncMap(turn.states_pre);
+			this.map.syncStates(turn.states_pre);
+			this.map.syncCombats(turn.moves);
 			
 			this.turns.push(this._processStates(turn.states_pre));
 			this.turns.push(this._processMoves(turn.moves, turn.states_pre));
 			this.turns.push(this._processCombats(turn.moves, turn.states_pre));
 			
-			this._syncMap(turn.states_post);
+			this.map.syncStates(turn.states_post);
 			
 			this.turns.push(this._processStates(turn.states_post));
 			
@@ -183,27 +184,30 @@
 			var fromNode = this.map.nodes[data.from];
 			var toNode = this.map.nodes[data.to];
 			
-			if (fromNode.playerId != toNode.playerId) {
-				var combatObject = this._createCombatObject(nextId, data.from, data.to, data.number_of_soldiers);
-				
-				//todo: flag now but set later when we now which nodes are in combat
-				if (this.map.nodes[data.to].nbSoldiers == 0)
-					combatObject.text = "captured!"; //todo: only if another player is not also moving to this node
-					combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);
-					
-				//todo: vs: two or more players are moving to a node
-
-				layer.objects.push(combatObject);
-				
-				var combatAnimations = this._createCombatAnimations(combatObject);
-				
-				layer.forward_arrival[combatObject.id] = combatAnimations['forward_arrival'];
-				layer.forward_departure[combatObject.id] = combatAnimations['forward_departure'];
-				layer.backward_arrival[combatObject.id] = combatAnimations['backward_arrival'];
-				layer.backward_departure[combatObject.id] = combatAnimations['backward_departure'];
-				
-				nextId++;
+			var combatObject = this._createCombatObject(nextId, data.from, data.to, data.number_of_soldiers);
+			
+			// add a commentary on the move
+			if (this.map.getNodeCaptured(data.to)) {
+				combatObject.text = "captured!";
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);
+			} else if (this.map.getNodeReinforced(data.to)) {
+				combatObject.text = "reinforced!";
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);					
+			} else if (this.map.getNodeSuicide(data.to)) {
+				combatObject.text = "suicide!";
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);										
 			}
+
+			layer.objects.push(combatObject);
+			
+			var combatAnimations = this._createCombatAnimations(combatObject);
+			
+			layer.forward_arrival[combatObject.id] = combatAnimations['forward_arrival'];
+			layer.forward_departure[combatObject.id] = combatAnimations['forward_departure'];
+			layer.backward_arrival[combatObject.id] = combatAnimations['backward_arrival'];
+			layer.backward_departure[combatObject.id] = combatAnimations['backward_departure'];
+			
+			nextId++;
 			
 			//- decrement the number of soldiers on the starting node
 			//- increment the number of soldiers on the ending node (if the same player or no player)
@@ -1211,20 +1215,7 @@
 		
 		return players;
 	},
-	
-	/*
-	 * Synchronize the state of the map
-	 */
-	_syncMap: function (states)
-	{
-		states.each(function(nodeState) {
-			var node = this.map.nodes[nodeState.node_id];
-			
-			node.setSoldiers(nodeState.player_id, nodeState.number_of_soldiers);
-		}, this);
-	
-	},
-	
+
 	/*
 	 * Get the state of the players
 	 */
