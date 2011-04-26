@@ -23,6 +23,8 @@
 		this.direction = 'forward';
 		
 		this.players = null;
+		
+		this.simulatioGameRatio = 5;
 	},
 	
 	/*
@@ -36,14 +38,17 @@
 			var turn = this.gameDescription.turns[turnId];
 			var result = null;
 			
-			this._syncMap(turn.states_pre);
+			this.map.syncStates(turn.states_pre);
+			this.map.syncCombats(turn.moves);
 			
 			this.turns.push(this._processStates(turn.states_pre));
-			this._processMoves(turn.moves, turn.states_pre);
+			this.turns.push(this._processMoves(turn.moves, turn.states_pre));
+			this.turns.push(this._processCombats(turn.moves, turn.states_pre));
 			
-			this._syncMap(turn.states_post);
+			this.map.syncStates(turn.states_post);
 			
 			this.turns.push(this._processStates(turn.states_post));
+			
 			this._processSpawns(turn.spawns, turn.states_post);
 		}, this);
 		
@@ -110,10 +115,8 @@
 		}, this);
 		
 		turn.layers['paths'] = layer;
-		
-		// clean the rest
-		//turn.layers['moves'] = this._createLayer();
-		//turn.layers['spawns'] = this._createLayer();
+		turn.layers['spawns'] = this._createLayer();
+		turn.layers['combats'] = this._createLayer();
 	},
 	
 	/*
@@ -156,8 +159,83 @@
 			nextId++;	
 		}, this);
 		
-		this.turns.push(turn);
+		return turn;
 	},
+	
+	
+	/*
+	 * Process the combats of a turn
+	 */
+	_processCombats: function (moves, preStates)
+	{
+		var nextId = 0;
+		
+		var turn = this._createTurn(['combats']);
+		
+		var result = this._processStates(preStates);
+		turn.layers['nodes'] = result.layers['nodes'];
+		turn.layers['soldiers'] = result.layers['soldiers'];
+
+		this.players = turn.players;
+		
+		var layer = turn.layers['combats'];
+		
+		$A(moves).each(function(data) {
+			var fromNode = this.map.nodes[data.from];
+			var toNode = this.map.nodes[data.to];
+			
+			var combatObject = this._createCombatObject(nextId, data.from, data.to, data.number_of_soldiers);
+			
+			// add a commentary on the move
+			if (this.map.getNodeCaptured(data.to)) {
+				combatObject.text = "captured!";
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);
+			} else if (this.map.getNodeReinforced(data.to)) {
+				combatObject.text = "reinforced!";
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);					
+			} else if (this.map.getNodeSuicide(data.to)) {
+				combatObject.text = "suicide!";
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);										
+			}
+
+			layer.objects.push(combatObject);
+			
+			var combatAnimations = this._createCombatAnimations(combatObject);
+			
+			layer.forward_arrival[combatObject.id] = combatAnimations['forward_arrival'];
+			layer.forward_departure[combatObject.id] = combatAnimations['forward_departure'];
+			layer.backward_arrival[combatObject.id] = combatAnimations['backward_arrival'];
+			layer.backward_departure[combatObject.id] = combatAnimations['backward_departure'];
+			
+			nextId++;
+			
+			//- decrement the number of soldiers on the starting node
+			//- increment the number of soldiers on the ending node (if the same player or no player)
+			$A(turn.layers['soldiers'].objects).each(function(soldier) {
+				if (soldier.node == data.from) {
+					turn.layers['soldiers'].forward_arrival[soldier.id].start.count -= data.number_of_soldiers;
+					turn.layers['soldiers'].backward_arrival[soldier.id].start.count = turn.layers['soldiers'].forward_arrival[soldier.id].start.count;
+				}
+				
+				if ((soldier.node == data.to && this.map.nodes[soldier.node].playerId == this.map.nodes[data.from].playerId) ||
+				    (soldier.node == data.to && this.map.nodes[soldier.node].playerId == null))
+				{
+					turn.layers['soldiers'].forward_arrival[soldier.id].start.count += data.number_of_soldiers;
+					turn.layers['soldiers'].backward_arrival[soldier.id].start.count = turn.layers['soldiers'].forward_arrival[soldier.id].start.count;
+				}
+			}, this);
+			
+			// announce capture
+			$A(turn.layers['nodes'].objects).each(function(node) {
+				if (node.node == data.to && this.map.nodes[data.to].playerId == null) {
+					turn.layers['nodes'].forward_arrival[node.id].start.color = this._getPlayerColor(this.map.nodes[data.from].playerId);
+					turn.layers['nodes'].backward_arrival[node.id].start.color = turn.layers['nodes'].forward_arrival[node.id].start.color;
+				}
+			}, this);
+		}, this);
+		
+		return turn;
+	},	
 	
 	_processStates: function (states)
 	{
@@ -172,22 +250,20 @@
 		var nextId = 0;
 
 		$A(states).each(function(data) {
-			if (data.player_id != null) {
-				var soldiersObject = this._createSoldiersObject(nextId++, data.node_id, data.number_of_soldiers);
-				
-				var layer = turn.layers['soldiers'];
-				
-				layer.objects.push(soldiersObject);
-				
-				var soldiersAnimations = this._createSoldiersAnimations(soldiersObject);
-				
-				layer.forward_arrival[soldiersObject.id] = soldiersAnimations['forward_arrival'];
-				layer.forward_departure[soldiersObject.id] = soldiersAnimations['forward_departure'];
-				layer.backward_arrival[soldiersObject.id] = soldiersAnimations['backward_arrival'];
-				layer.backward_departure[soldiersObject.id] = soldiersAnimations['backward_departure'];
-				
-				nextId++;
-			}		
+			var soldiersObject = this._createSoldiersObject(nextId++, data.node_id, data.number_of_soldiers);
+			
+			var layer = turn.layers['soldiers'];
+			
+			layer.objects.push(soldiersObject);
+			
+			var soldiersAnimations = this._createSoldiersAnimations(soldiersObject);
+			
+			layer.forward_arrival[soldiersObject.id] = soldiersAnimations['forward_arrival'];
+			layer.forward_departure[soldiersObject.id] = soldiersAnimations['forward_departure'];
+			layer.backward_arrival[soldiersObject.id] = soldiersAnimations['backward_arrival'];
+			layer.backward_departure[soldiersObject.id] = soldiersAnimations['backward_departure'];
+			
+			nextId++;
 		}, this);
 		
 		return turn;	
@@ -235,6 +311,9 @@
 		var result = this._processStates(preStates);
 		turn.layers['nodes'] = result.layers['nodes'];
 		turn.layers['soldiers'] = result.layers['soldiers'];
+		turn.layers['moves'] = this._createLayer();
+		turn.layers['combats'] = this._createLayer();
+		
 		
 		this.players = turn.players;
 		
@@ -251,6 +330,14 @@
 			layer.forward_departure[spawnObject.id] = spawnAnimations['forward_departure'];
 			layer.backward_arrival[spawnObject.id] = spawnAnimations['backward_arrival'];
 			layer.backward_departure[spawnObject.id] = spawnAnimations['backward_departure'];
+			
+			//increment the number of soldiers
+			$A(turn.layers['soldiers'].objects).each(function(soldier) {
+				if (soldier.node == data.node_id) {
+					turn.layers['soldiers'].forward_departure[soldier.id].start.count += data.number_of_soldiers;
+					turn.layers['soldiers'].backward_departure[soldier.id].start.count = turn.layers['soldiers'].forward_departure[soldier.id].start.count;
+				}
+			}, this);
 			
 			nextId++;
 		}, this);
@@ -289,7 +376,7 @@
 				{
 					'x': soldierObject.position.x,
 					'y': soldierObject.position.y,
-					'font': 'Lucida Console',
+					'font': 'Symbol',
 					'fontWeight': 'bold',
 					'fontSize': 20,
 					'fill': '#000000',
@@ -307,7 +394,7 @@
 				{
 					'x': soldierObject.position.x,
 					'y': soldierObject.position.y,
-					'font': 'Lucida Console',
+					'font': 'Symbol',
 					'fontWeight': 'bold',
 					'fontSize': 20,
 					'fill': '#000000',
@@ -325,7 +412,7 @@
 				{
 					'x': soldierObject.position.x,
 					'y': soldierObject.position.y,
-					'font': 'Lucida Console',
+					'font': 'Symbol',
 					'fontWeight': 'bold',
 					'fontSize': 20,
 					'fill': '#000000',
@@ -344,7 +431,7 @@
 				{
 					'x': soldierObject.position.x,
 					'y': soldierObject.position.y,
-					'font': 'Lucida Console',
+					'font': 'Symbol',
 					'fontWeight': 'bold',
 					'fontSize': 20,
 					'fill': '#000000',
@@ -391,7 +478,7 @@
 					'x': spawnObject.position.x,
 					'y': spawnObject.position.y,
 					'opacity': 0,
-					'font': 'Lucida Console',
+					'font': 'Symbol',
 					'fontWeight': 'bold',
 					'fontSize': 20,
 					'fill': '#000000',
@@ -415,7 +502,7 @@
 					'x': spawnObject.position.x,
 					'y': spawnObject.position.y - 15,
 					'opacity': 1,
-					'font': 'Lucida Console',
+					'font': 'Symbol',
 					'fontWeight': 'bold',
 					'fontSize': 20,
 					'fill': '#000000',
@@ -439,7 +526,7 @@
 					'x': spawnObject.position.x,
 					'y': spawnObject.position.y - 30,
 					'opacity': 0,
-					'font': 'Lucida Console',
+					'font': 'Symbol',
 					'fontWeight': 'bold',
 					'fontSize': 20,
 					'fill': '#000000',
@@ -463,7 +550,7 @@
 					'x': spawnObject.position.x,
 					'y': spawnObject.position.y - 15,
 					'opacity': 1,
-					'font': 'Lucida Console',
+					'font': 'Symbol',
 					'fontWeight': 'bold',
 					'fontSize': 20,
 					'fill': '#000000',
@@ -495,7 +582,7 @@
 			'type': 'move',
 			'count': count,
 			'countAttrs': {
-				'font': 'Lucida Console',
+				'font': 'Symbol',
 				'fontWeight': 'bold',
 				'fontSize': 20,
 				'fill': '#000000',
@@ -512,14 +599,7 @@
 		
 		if (link == null) {
 			link = this.map.nodes[to].getLink(from);
-			backPointer = true;
-			//object['from'] = this._getNodePosition(from);
-			//object['to'] = this._getNodePosition(to);		
-		}
-		
-		else {
-			//object['from'] = this._getNodePosition(from);
-			//object['to'] = this._getNodePosition(to);
+			backPointer = true;	
 		}
 		
 		object['controlRatio'] = this._getQuadraticCurvePoint(
@@ -534,7 +614,9 @@
 	 * Create move animations
 	 */
 	_createMoveAnimations: function (moveObject)
-	{	
+	{
+		var img = (moveObject.from.x > moveObject.to.x) ? this.graphics.army1 : this.graphics.army1_backward;
+		
 		var animations =
 	
 		{
@@ -543,7 +625,8 @@
 				'start': {
 					'opacity': 0,
 					'x': moveObject.from.x,
-					'y': moveObject.from.y
+					'y': moveObject.from.y,
+					'img': img
 				},
 				'end': {
 					'opacity': 1,
@@ -564,7 +647,8 @@
 					'setPositionFromPath': {
 						'at': 0.4,
 						'path': "M #{from.x} #{from.y} Q #{controlRatio.x} #{controlRatio.y} #{to.x} #{to.y}".interpolate(moveObject)
-					}
+					},
+					'img': img
 				},
 				'end': {
 					'opacity': 0,
@@ -585,7 +669,8 @@
 					'setPositionFromPath': {
 						'at': 1,
 						'path': "M #{from.x} #{from.y} Q #{controlRatio.x} #{controlRatio.y} #{to.x} #{to.y}".interpolate(moveObject)
-					}					
+					},
+					'img': img
 				},
 				'end': {
 					'opacity': 1,
@@ -606,7 +691,8 @@
 					'setPositionFromPath': {
 						'at': 0.4,
 						'path': "M #{from.x} #{from.y} Q #{controlRatio.x} #{controlRatio.y} #{to.x} #{to.y}".interpolate(moveObject)
-					}	
+					},
+					'img': img
 				},
 				'end': {
 					'opacity': 0,
@@ -622,7 +708,110 @@
 		};
 
 		return animations;
-	},	
+	},
+	
+	/*
+	 * Create a combat object
+	 */
+	_createCombatObject: function (id, from, to, count)
+	{
+		var defenderCount = this.map.nodes[to].nbSoldiers;
+		
+		var object =
+		{
+			'id': id,
+			'type': 'combat',
+			'text': '',
+			'textAttrs': {
+				'font': 'Symbol',
+				'font-weight': 'bold',
+				'font-size': 20,
+				'fill': '#FFFFFF'
+			},
+			'attackerCount': count,
+			'defenderCount': defenderCount,
+			'position': this._getNodePosition(to)
+		};
+		
+		object.textAttrs.y = object.position.y - 40;
+		
+		return object;
+	},
+	
+	/*
+	 * Create combat animations
+	 */
+	_createCombatAnimations: function (combatObject)
+	{
+		var animations =
+		{
+			'forward_arrival':
+			{
+				'start': {
+					'x': combatObject.position.x,
+					'y': combatObject.position.y,
+					'img': this.graphics.combat,
+					'scale': '1, 1',
+					'opacity': 1
+				},
+				'end': {
+					'scale': '0.5, 0.5',
+					'opacity': 1
+				},
+				'length': 500
+			},
+			
+			'forward_departure':
+			{
+				'start': {
+					'x': combatObject.position.x,
+					'y': combatObject.position.y,
+					'img': this.graphics.combat,
+					'scale': '0.5, 0.5',
+					'opacity': 1
+				},
+				'end': {
+					'scale': '0.0001, 0.0001',
+					'opacity': 0
+				},
+				'length': 500
+			},
+			
+			'backward_arrival':
+			{
+				'start': {
+					'x': combatObject.position.x,
+					'y': combatObject.position.y,
+					'img': this.graphics.combat,
+					'scale': '0.0001, 0.0001',
+					'opacity': 0
+				},
+				'end': {
+					'scale': '0.5, 0.5',
+					'opacity': 1
+				},
+				'length': 500
+			},
+			
+			'backward_departure':
+			{
+				'start': {
+					'x': combatObject.position.x,
+					'y': combatObject.position.y,
+					'img': this.graphics.combat,
+					'scale': '0.5, 0.5',
+					'opacity': 1
+				},
+				'end': {
+					'scale': '1, 1',
+					'opacity': 0
+				},
+				'length': 500
+			}			
+		};
+
+		return animations;
+	},		
 	
 	/*
 	 * Create a node object
@@ -633,6 +822,7 @@
 		{
 			'id': id,
 			'type': 'node',
+			'node': node.id,
 			'position': this._getNodePosition(node.id)
 		};
 		
@@ -651,11 +841,11 @@
 			{
 				'start':
 				{
-					'x': nodeObject.position.x - this.graphics.nodes['node'].width / 2,
-					'y': nodeObject.position.y - this.graphics.nodes['node'].height / 2,
-					'img': this.graphics.nodes['node'],
-					'width': this.graphics.nodes['node'].width,
-					'height': this.graphics.nodes['node'].height,
+					'x': nodeObject.position.x - this.graphics.node.width / 2,
+					'y': nodeObject.position.y - this.graphics.node.height / 2,
+					'img': this.graphics.node,
+					'width': this.graphics.node.width,
+					'height': this.graphics.node.height,
 					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'radius': 10
 				},
@@ -668,11 +858,11 @@
 			{
 				'start':
 				{
-					'x': nodeObject.position.x - this.graphics.nodes['node'].width / 2,
-					'y': nodeObject.position.y - this.graphics.nodes['node'].height / 2,
-					'img': this.graphics.nodes['node'],
-					'width': this.graphics.nodes['node'].width,
-					'height': this.graphics.nodes['node'].height,
+					'x': nodeObject.position.x - this.graphics.node.width / 2,
+					'y': nodeObject.position.y - this.graphics.node.height / 2,
+					'img': this.graphics.node,
+					'width': this.graphics.node.width,
+					'height': this.graphics.node.height,
 					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'radius': 10
 				},
@@ -685,11 +875,11 @@
 			{
 				'start':
 				{
-					'x': nodeObject.position.x - this.graphics.nodes['node'].width / 2,
-					'y': nodeObject.position.y - this.graphics.nodes['node'].height / 2,
-					'img': this.graphics.nodes['node'],
-					'width': this.graphics.nodes['node'].width,
-					'height': this.graphics.nodes['node'].height,
+					'x': nodeObject.position.x - this.graphics.node.width / 2,
+					'y': nodeObject.position.y - this.graphics.node.height / 2,
+					'img': this.graphics.node,
+					'width': this.graphics.node.width,
+					'height': this.graphics.node.height,
 					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'radius': 10
 				},
@@ -703,11 +893,11 @@
 			{
 				'start':
 				{
-					'x': nodeObject.position.x - this.graphics.nodes['node'].width / 2,
-					'y': nodeObject.position.y - this.graphics.nodes['node'].height / 2,
-					'img': this.graphics.nodes['node'],
-					'width': this.graphics.nodes['node'].width,
-					'height': this.graphics.nodes['node'].height,
+					'x': nodeObject.position.x - this.graphics.node.width / 2,
+					'y': nodeObject.position.y - this.graphics.node.height / 2,
+					'img': this.graphics.node,
+					'width': this.graphics.node.width,
+					'height': this.graphics.node.height,
 					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'radius': 10
 				},
@@ -729,6 +919,7 @@
 		{
 			'id': id,
 			'type': 'city',
+			'node': node.id,
 			'position': this._getNodePosition(node.id)
 		};
 		
@@ -740,18 +931,20 @@
 	 */
 	_createCityAnimations: function (nodeObject, node)
 	{
+		var img = (node.layout == 0) ? this.graphics.city1 :
+		          (node.layout == 1) ? this.graphics.city2 : this.graphics.city3;
+		
 		var animations =
-	
 		{
 			'forward_arrival':
 			{
 				'start':
 				{
-					'x': nodeObject.position.x - this.graphics.nodes['city'].width / 2,
-					'y': nodeObject.position.y - this.graphics.nodes['city'].height / 2,
-					'img': this.graphics.nodes['city'],
-					'width': this.graphics.nodes['city'].width,
-					'height': this.graphics.nodes['city'].height,
+					'x': nodeObject.position.x - img.width / 2,
+					'y': nodeObject.position.y - img.height / 2,
+					'img': img,
+					'width': img.width,
+					'height': img.height,
 					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'layout': node.layout,
 					'radius': 7.5,
@@ -766,11 +959,11 @@
 			{
 				'start':
 				{
-					'x': nodeObject.position.x - this.graphics.nodes['city'].width / 2,
-					'y': nodeObject.position.y - this.graphics.nodes['city'].height / 2,
-					'img': this.graphics.nodes['city'],
-					'width': this.graphics.nodes['city'].width,
-					'height': this.graphics.nodes['city'].height,
+					'x': nodeObject.position.x - img.width / 2,
+					'y': nodeObject.position.y - img.height / 2,
+					'img': img,
+					'width': img.width,
+					'height': img.height,
 					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'layout': node.layout,
 					'radius': 7.5,
@@ -785,11 +978,11 @@
 			{
 				'start':
 				{
-					'x': nodeObject.position.x - this.graphics.nodes['city'].width / 2,
-					'y': nodeObject.position.y - this.graphics.nodes['city'].height / 2,
-					'img': this.graphics.nodes['city'],
-					'width': this.graphics.nodes['city'].width,
-					'height': this.graphics.nodes['city'].height,
+					'x': nodeObject.position.x - img.width / 2,
+					'y': nodeObject.position.y - img.height / 2,
+					'img': img,
+					'width': img.width,
+					'height': img.height,
 					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'layout': node.layout,
 					'radius': 7.5,
@@ -805,11 +998,11 @@
 			{
 				'start':
 				{
-					'x': nodeObject.position.x - this.graphics.nodes['city'].width / 2,
-					'y': nodeObject.position.y - this.graphics.nodes['city'].height / 2,
-					'img': this.graphics.nodes['city'],
-					'width': this.graphics.nodes['city'].width,
-					'height': this.graphics.nodes['city'].height,
+					'x': nodeObject.position.x - img.width / 2,
+					'y': nodeObject.position.y - img.height / 2,
+					'img': img,
+					'width': img.width,
+					'height': img.height,
 					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'layout': node.layout,
 					'radius': 7.5,
@@ -986,7 +1179,19 @@
 	 */
 	_initPlayerColor: function (playerId)
 	{
-		return this.color.getColor(playerId + 1);
+		var color = '#FFFFFF';
+		
+		switch (playerId)
+		{
+			case 0: color = '#bd1550'; break;
+			case 1: color = '#e97f02'; break;
+			case 2: color = "#73797b"; break;
+			case 3: color = "#e32424"; break;
+			case 4: color = "#21bbbd"; break;
+			case 5: color = "#8a9b0f"; break;
+		}
+		
+		return color;
 	},
 	
 	/*
@@ -1010,20 +1215,7 @@
 		
 		return players;
 	},
-	
-	/*
-	 * Synchronize the state of the map
-	 */
-	_syncMap: function (states)
-	{
-		states.each(function(nodeState) {
-			var node = this.map.nodes[nodeState.node_id];
-			
-			node.setSoldiers(nodeState.player_id, nodeState.number_of_soldiers);
-		}, this);
-	
-	},
-	
+
 	/*
 	 * Get the state of the players
 	 */
@@ -1069,5 +1261,19 @@
 		};
 		
 		return data;
-	}
+	},
+	
+	_getRotation: function (start, end)
+	{
+		// compute the angle
+		var vector =
+		{
+			x: end.x - start.x,
+			y: end.y - start.y
+		}
+		
+		var angleRad = Math.atan2(vector.y, vector.x);
+		
+		return angleRad * (180 / Math.PI);
+	}	
 });

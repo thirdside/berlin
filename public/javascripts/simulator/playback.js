@@ -84,7 +84,7 @@ TS.AIPlayback = Class.create(TS, {
 	{
 		this.onPause();
 		this.turnNumber = 0;
-		this.forward = true;
+		this.forward = false;
 		this.drawCurrentTurn();
 	},
 	
@@ -187,8 +187,8 @@ TS.AIPlayback = Class.create(TS, {
 		
 		var data =
 		{
-			currentTurn: this.turnNumber / 4 | 0,
-			nbTurns: this.getMaxTurn() / 4 | 0
+			currentTurn: this.turnNumber / this.playbackDescription.simulatioGameRatio | 0,
+			nbTurns: this.getMaxTurn() / this.playbackDescription.simulatioGameRatio | 0
 		};
 		
 		this.progressTurns.update(format.interpolate(data));
@@ -209,7 +209,7 @@ TS.AIPlayback = Class.create(TS, {
 	
 	/*
 	 * Get the number of simulation turns.
-	 * A simulation turn is 1/4 of a game turn.
+	 * A simulation turn is 1/5 of a game turn.
 	 */
 	getMaxTurn: function ()
 	{
