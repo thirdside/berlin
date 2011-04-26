@@ -20,11 +20,10 @@ fr:
             particulières à cette partie (voir plus loin). Vous êtes alors
             invité à bouger vos soldats afin de conquérir un maximum de
             noeuds pour un maximum de points. Tour après tour, Berlin vous
-            enverra un nouvel apperçu sur lequel vous verrez les mouvements
-            des autres joueurs, le résultat des combats, etc. S'en suit
-            alors une furieuse épopée qui ne se terminera qu'à la mort de
-            tous vos ennemis, ou encore jusqu'à ce que le temps alloué se
-            soit écoulé.
+            enverra un nouvel apperçu sur lequel vous verrez le résultat 
+            des combats. S'en suit alors une furieuse épopée qui ne se
+            terminera qu'à la mort de tous vos ennemis, ou encore jusqu'à 
+            ce que le temps alloué se soit écoulé.
         what_do_i_need:
           title: De quoi ais-je besoin?
           content: |
@@ -34,7 +33,7 @@ fr:
             préoccupation reste suite de vous assurer que votre serveur
             demeure disponible, et vos IAs, fonctionnels.
         programming_language:
-          title: Quel langage de programmation dois-je utilisé?
+          title: Quel langage de programmation dois-je utiliser?
           content: |
             Puisque les communications s'effectuent via requêtes HTTP,
             aucune restriction n'existe en ce qui concerne le langage
@@ -60,7 +59,7 @@ fr:
               content: |
                 Une carte dirigée signifie que tous ses chemins sont des
                 sens uniques. Ainsi, un chemin définissant un lien entre
-                le noeud #1 et le noeuf #2 ne signifie pas pour autant
+                le noeud #1 et le noeud #2 ne signifie pas pour autant
                 qu'il soit possible de faire le trajet inverse, soit du
                 noeud #2 au noeud #1, à moins que ce trajet ne soit
                 explicitement spécifié. En revanche, une carte non dirigée
@@ -93,6 +92,7 @@ fr:
                   un combat éclate jusqu'à ce que l'une d'entre elle n'en ressorte vaincoeur.
               soldiers_per_turn:
                 title:Recrutement (soldiers_per_turn)
+                content: |
                   Chaque noeud possède un type lui conférant certaines propriétés, dont l'une est appellée recrutement. Cette propriété spécifie le nombre de nouveaux soldats
                   auxquels le possesseur du noeud a droit à la fin d'un tour. Faites attention, car rien dans les règles n'interdit un recrutement négatif...
               points:
