@@ -15,7 +15,10 @@
 		{"name": "city1", "src": "/images/simulator/city1.png"},
 		{"name": "city2", "src": "/images/simulator/city2.png"},
 		{"name": "city3", "src": "/images/simulator/city3.png"},
-		{"name": "node", "src": "/images/simulator/node.png"}
+		{"name": "node", "src": "/images/simulator/node.png"},
+		{"name": "army1", "src": "/images/simulator/army1.png"},
+		{"name": "army1_backward", "src": "/images/simulator/army1_backward.png"},
+		{"name": "combat", "src": "/images/simulator/combat.png"}
 	],
 
 	"types": [
