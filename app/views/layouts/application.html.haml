@@ -33,6 +33,7 @@
           = render :partial=>'/layouts/info'
 
       %ul#menu
+        %li{:class=>controller.controller_name == "welcome" ? "active" : nil}= link_to( I18n.t( "titles.welcome" ), root_path )
         - menu.each do |model, url|
           %li{:class=>controller.controller_name == model.tableize ? 'active' : nil}= link_to model.human.pluralize, url
 
