@@ -8,8 +8,10 @@ BerlinWeb::Application.routes.draw do
   resources :artificial_intelligences
 
   resources :users
+  
+  match 'home' => 'welcome#index'
 
   match 'doc' => 'doc#index'
 
-  root :to => "artificial_intelligences#index"
+  root :to => "welcome#index"
 end
