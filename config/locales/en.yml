@@ -24,6 +24,7 @@ en:
     all_games: List of all games played
     games_played: Games played
     table_of_content: Table of content
+    welcome: Welcome
 
   activerecord:
     models:

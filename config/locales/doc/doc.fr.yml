@@ -118,16 +118,15 @@ fr:
       title: Communications
       sections:
         ready_url:
-          title: Ready URL
+          title: Info URL
           sections:
             what_it_is:
               title: Qu'est-ce que c'est?
               content: |
-                Pour chaque IA, vous devez nous fournir ce qu'on appelle le Ready URL. Nous envoyons une requête à cet URL avant chaque
+                Pour chaque IA, vous devez nous fournir ce qu'on appelle le Info URL. Nous envoyons une requête à cet URL avant chaque
                 partie afin de nous assurer que votre serveur est bel et bien fonctionnel. Votre seul objectif est de nous retourner
                 un statut 200 OK. Nous en profitons au passage pour vous envoyer un premier apperçu du plateau de jeu, ce qui vous permettera
-                dès lors de commencer à penser aux stratégies que vous utiliserez. Si pour une raison quelconque
-
+                dès lors de commencer à penser aux stratégies que vous utiliserez.
             details:
               title: Détails de la requête envoyée
               content: |
@@ -157,7 +156,7 @@ fr:
               content: |
                 Lors d'une partie, à chaque nouveau tour, Berlin vous enverra le nouvel état du jeu sur ce qu'on appelle le onTurn URL. Puisqu'à cette étape,
                 votre serveur est considéré comme actif, toute requête restant sans réponse ou dont le temps de réponse dépasserait le délais
-                permis dans les règles de la partie sera interpréter comme si vous n'aviez aucun ordre à donner pour ce tour. Les différents règles pour la
+                permis dans les règles de la partie sera interprétée comme si vous n'aviez aucun ordre à donner pour ce tour. Les différents règles pour la
                 partie sont également réenvoyées afin de permettre l'existence de serveurs stateless.
             details:
               title: Détails de la requête envoyée

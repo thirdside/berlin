@@ -68,72 +68,67 @@ en:
          nodes:
            title: Nodes (node)
            content: |
-             The nodes are
-             Les noeuds représentent le coeur du jeu. Il s'agit des intersections entre les différents chemins, et ce sont ces noeuds que vos
-             troupes doivent posséder afin de controller la partie et gagner des points. Chaque noeud se voit associé un type dont les
-             propriétés sont définies dans les règles propres à chaque partie. À titre d'exemple, il serait possible de définir un type de noeud
-             appelé "Château", valant 4 points et donnant 2 soldats par tour, ainsi qu'un autre, appelé "Croisée des chemins", ne valant
-             qu'un point tout en ne donnant aucun soldat. Les différents noeuds sont alors distribués sur le plateau, reliés entre eux par
-             des chemins. Il vous importe donc de déterminer quels sont les noeuds qui vous intéressent et de combattre pour en obtenir possession.
+             The nodes are at the core of the game. They are the intersections between paths, and your troops must own the nodes to score
+             at the end of the game. The nodes are distributed on the board and linked with paths. You must determine which node is worth 
+             fighting for. Each node has a type, and it's properties are defined for each map. For example, a node type can be called
+             "Castle", yield two soldiers per turn and be worth four points at the end of the game. Another one could be called "Crossroads", 
+             yeild no soldiers and be worth no points.
            sections:
              owner_id:
                title: Possession (owner_id)
                content: |
-                 Les noeuds peuvent être vacant ou encore occupé par un maximum d'un IA. Si plus d'un IAs se trouvent sur un même noeud au même moment,
-                 un combat éclate jusqu'à ce que l'une d'entre elle n'en ressorte vaincoeur.
+                 The nodes can be free (empty) or occupied by a maximum of one AI. If more than one AI are standing on a node at the end of a turn,
+                 there will be a combat to determine who will win the possession of the node.
              soldiers_per_turn:
-               title:Recrutement (soldiers_per_turn)
+               title: Reinforcement (soldiers_per_turn)
                content: |
-                 Chaque noeud possède un type lui conférant certaines propriétés, dont l'une est appellée recrutement. Cette propriété spécifie le nombre de nouveaux soldats
-                 auxquels le possesseur du noeud a droit à la fin d'un tour. Faites attention, car rien dans les règles n'interdit un recrutement négatif...
+                 Each node has a type which determines how many soldiers it will yield per turn. After the combat, the winner will recieve a
+                 reinforcement of this many units. Watch out, this number can also be negative.
              points:
                title: Points (points)
                content: |
-                 Chaque noeud peut valoir un nombre posifit ou négatif de points. Les points sont cumulés à la fin d'une partie, et chaque IA se voit attribué un score
-                 en fonction du nombre de points qu'elle possède sur le nombre total de points disponibles durant la partie.
+                 Each node can be worth a positive or negative number of points. At the end of the game, each AI will score relative to
+                 the points attributed to each of the nodes it possesses and how many points are available on the board.
          paths:
-           title: Chemins (paths)
+           title: Paths (paths)
            content: |
-             Les chemins sont ce qui vous permets de passer d'un noeud à l'autre. Ils partent d'un noeud (from) vers un autre (to). N'oubliez pas! Si les règles
-             spécifient que la carte est dirigée, il ne vous est possible que de vous rendre du noeud de départ au noeud d'arrivée, et non l'inverse.
-             En revanche, une carte non dirigée permet de faire des allés-retours, du noeud d'arrivée au noeud de départ, et vice-versa.
-
+             The paths are links between nodes allowing soldiers to move from one node to another. They are specified as starting from a node (from), to
+             the other node (to). If the map is directed, each path can only be used in one direction. If the map is undirected, the paths can be used
+             in both directions.
          combats:
            title: Combats
            content: |
-             Un combat survient lorsque plus d'un IA se trouvent sur un même noeud à la fin d'un même tour. Les combats sont fort simple : Tous les IAs présents
-             perdent un soldat de manière simultanée jusqu'à ce qu'il ne reste qu'un seul vaincoeur, ou encore personne. La possession du noeud se vera attribuée
-             au vaincoeur s'il y en a un, ou restera entre les mains du dernier possesseur autrement.
-
+             Combats take place when more than one AI are on the same node at the end of a turn. Combats occur in the following way: each AI will
+             lose one soldier simultaneously until there is only one AI left, or none. The owner of the node will be the only remaining AI if there is one,
+             or the last owner if all the soldiers were killed. 
    communication:
      title: Communications
      sections:
        ready_url:
-         title: Ready URL
+         title: Info URL
          sections:
            what_it_is:
-             title: Qu'est-ce que c'est?
+             title: What is it?
              content: |
-               Pour chaque IA, vous devez nous fournir ce qu'on appelle le Ready URL. Nous envoyons une requête à cet URL avant chaque
-               partie afin de nous assurer que votre serveur est bel et bien fonctionnel. Votre seul objectif est de nous retourner
-               un statut 200 OK. Nous en profitons au passage pour vous envoyer un premier apperçu du plateau de jeu, ce qui vous permettera
-               dès lors de commencer à penser aux stratégies que vous utiliserez. Si pour une raison quelconque
-
+               For each AI you create, you will be required to create an Info URL. We will use this url before each game to ensure that
+               all the AIs are ready and functionnal. At this time, you will recieve a copy of the map. You can use this information 
+               in any way you like, including calculating your strategy. The AI must return a 200 OK status, otherwise it will be considered 
+               non-functionnal. 
            details:
-             title: Détails de la requête envoyée
+             title: Request details
              content: |
                <dl>
                  <dt>Type</dt><dd>Post</dd>
-                 <dt>Contenu</dt><dd>JSON</dd>
-                 <dt>Paramètres envoyés</dt>
+                 <dt>Content</dt><dd>JSON</dd>
+                 <dt>Parameters sent</dt>
                  <dd>
                    <dl>
-                     <dt>self</dt><dd>Entier représentant votre identifiant unique pour cette partie</dd>
-                     <dt>game</dt><dd>String représentant l'identifiant unique de la partie</dd>
-                     <dt>json</dt><dd>Voir annexe 1 : RequestJSON</dd>
+                     <dt>self</dt><dd>The AI's unique ID for this game.</dd>
+                     <dt>game</dt><dd>The game's unique ID.</dd>
+                     <dt>json</dt><dd>See Annex 1 : RequestJSON</dd>
                    </dl>
                  </dd>
-                 <dt>Réponse attendue</dt>
+                 <dt>Expected response</dt>
                  <dd>
                    <dl>
                      <dt>Statut</dt><dd>200 OK</dd>
@@ -144,31 +139,30 @@ en:
          title: onTurn URL
          sections:
            what_it_is:
-             title: Qu'est-ce que c'est?
+             title: What is it?
              content: |
-               Lors d'une partie, à chaque nouveau tour, Berlin vous enverra le nouvel état du jeu sur ce qu'on appelle le onTurn URL. Puisqu'à cette étape,
-               votre serveur est considéré comme actif, toute requête restant sans réponse ou dont le temps de réponse dépasserait le délais
-               permis dans les règles de la partie sera interpréter comme si vous n'aviez aucun ordre à donner pour ce tour. Les différents règles pour la
-               partie sont également réenvoyées afin de permettre l'existence de serveurs stateless.
+               During the game, Berlin will send you the state of the game at each turn, using the onTurn URL. At this stage, your AI is considered
+               active and any response received after the maximum specified for the game will be ignored. Berlin will understand that your AI has
+               no move to make. Note that each turn, the complete state of the map is sent to allow for stateless AIs.
            details:
-             title: Détails de la requête envoyée
+             title: Request details
              content: |
                <dl>
                  <dt>Type</dt><dd>Post</dd>
-                 <dt>Contenu</dt><dd>JSON</dd>
-                 <dt>Paramètres envoyés</dt>
+                 <dt>Content</dt><dd>JSON</dd>
+                 <dt>Parameters sent</dt>
                  <dd>
                    <dl>
-                     <dt>self<dt><dd>Entier représentant votre identifiant unique pour cette partie</dd>
-                     <dt>game<dt><dd>String représentant l'identifiant unique de la partie</dd>
-                     <dt>turn<dt><dd>Entier représentant le tour actuel</dd>
-                     <dt>json<dt><dd>Json représentant l'état actuel de la partie ainsi que ses paramètres. Voir annexe 1 : RequestJSON</dd>
+                     <dt>self</dt><dd>The AI's unique ID for this game.</dd>
+                     <dt>game</dt><dd>The game's unique ID.</dd>
+                     <dt>turn<dt><dd>The turn number.</dd>
+                     <dt>json<dt><dd>JSON representing the current state of the game. See Annex 1: RequestJSON</dd>
                    </dl>
                  </dd>
-                 <dt>Réponse attendue</dt>
+                 <dt>Expected response</dt>
                  <dd>
                    <dl>
                      <dt>Statut<dt><dd>200 OK</dd>
-                     <dt>Body<dt><dd>Json représentant vos différents ordres pour le tour précisé en paramètre. Voir annexe 2 : ResponseJSON</dd>
+                     <dt>Body<dt><dd>JSON representing the moves your AI chooses to make. See Annex 2: ResponseJSON</dd>
                    </dl>
                  </dd>

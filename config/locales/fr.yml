@@ -24,6 +24,7 @@ fr:
     all_games: Liste des parties jouées
     games_played: Parties jouées
     table_of_content: Table des matières
+    welcome: Accueil
 
   activerecord:
     models:
