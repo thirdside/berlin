@@ -6,7 +6,7 @@ class CreateGames < ActiveRecord::Migration
       t.timestamp :time_end
       t.integer :number_of_turns
       t.integer :artificial_intelligence_games_count, :default=>0
-      t.text :json, :null=>false
+      t.text :json, :null=>false, :limit => 16777216
 
       t.timestamps
     end
