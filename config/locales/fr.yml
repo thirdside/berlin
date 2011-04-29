@@ -88,3 +88,19 @@ fr:
     success: La partie a débuté! Les résultats devraient apparaître ici dans quelques instants...
     failure: Il y a eu une erreur avec la partie demandée... Nous en avons été avisé.
     problem: Il y a un problème avec la configuration de la partie demandée. Merci de revérifier.
+  
+  intro:
+    what_is_berlin: Qu'est-ce que Berlin?
+    intro_text: |
+      Vous voilà sur ce site, n'ayant aucune idée de ce qu'est Berlin. Berlin est un jeu, auquel vous
+      <em>voulez</em> jouer. En fait, Berlin est un jeu de plateau électronique et stratégique
+      d'intelligences artificielles, multijoueur et tour par tour. 
+      <strong>Attends... Quoi?!</strong> Voyons voir: 
+    breakdown: 
+      b1: "Plateau: des pièces sont déplacées sur un plateau de jeu"
+      b2: "Électronique: votre ordinateur joue"
+      b3: "Stratégique: Les décisions ont des répercussions importantes"
+      b4: "Multijoueur: plusieurs joueurs jouent les uns contre les autres"
+      b5: "Tour par tour: le jeu se déroule selon une séquence de tour, plutôt qu'en temps réel"
+      b6: "Intelligence artificielle: Votre ordinateur fait des décisions pseudo-intelligentes"
+

@@ -88,3 +88,18 @@ en:
     success: The game has started! The result should appears here within few seconds...
     failure: There has been an error with the game you asked. We have been noticed of the error.
     problem: "There's a problem with the config you asked. Please check again."
+  
+  intro:
+    what_is_berlin: What is Berlin?
+    intro_text: |
+      Well here you are, wondering what this is. Berlin is a game, and you <em>want</em> to play. 
+      Actually, Berlin is an electronic turn-based multiplayer artificial intelligence strategy board game. 
+      <strong>Wait. What?!</strong> Let's break it down: 
+    breakdown: 
+      b1: "Electronic: Played by your computer"
+      b2: "Turn-based: Turn by turn, in opposition to real-time"
+      b3: "Multiplayer: Many players competing against one-another"
+      b4: "Artificial Intelligence: Your computer makes pseudo-intelligent moves"
+      b5: "Strategy: Decisions have significant outcome"
+      b6: "Board: A type of game where pieces are moved on a board"
+      b7: "Game: Let's not go there"
