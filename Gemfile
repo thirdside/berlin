@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rails'
-gem 'mysql2'
+gem 'mysql2', '0.2.7'
 gem 'haml'
 gem 'inherited_resources'
 gem 'has_scope'
@@ -16,5 +16,4 @@ gem 'kaminari'
 group :test do
   gem "typhoeus"
   gem "uuidtools"
-  gem "yajl-ruby"
 end
