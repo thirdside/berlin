@@ -91,7 +91,7 @@ fr:
                   Les noeuds peuvent être vacant ou encore occupé par un maximum d'un IA. Si plus d'un IAs se trouvent sur un même noeud au même moment,
                   un combat éclate jusqu'à ce que l'une d'entre elle n'en ressorte vaincoeur.
               soldiers_per_turn:
-                title:Recrutement (soldiers_per_turn)
+                title: Recrutement (soldiers_per_turn)
                 content: |
                   Chaque noeud possède un type lui conférant certaines propriétés, dont l'une est appellée recrutement. Cette propriété spécifie le nombre de nouveaux soldats
                   auxquels le possesseur du noeud a droit à la fin d'un tour. Faites attention, car rien dans les règles n'interdit un recrutement négatif...
