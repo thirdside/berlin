@@ -136,10 +136,17 @@
 		
 		$A(moves).each(function(data) {
 			var moveObject = this._createMoveObject(nextId, data.from, data.to, data.player_id, data.number_of_soldiers);
+			nextId++;
+			var moveTextObject = this._createMoveObject(nextId, data.from, data.to, data.player_id, data.number_of_soldiers);
+			nextId++;
+			
+			moveTextObject.type = 'moveText';
+			moveTextObject.rotate = false;
 			
 			var layer = turn.layers['moves'];
 			
 			layer.objects.push(moveObject);
+			layer.objects.push(moveTextObject);
 			
 			var moveAnimations = this._createMoveAnimations(moveObject);
 			
@@ -148,6 +155,15 @@
 			layer.backward_arrival[moveObject.id] = moveAnimations['backward_arrival'];
 			layer.backward_departure[moveObject.id] = moveAnimations['backward_departure'];
 			
+			//todo: omg
+			var moveTextAnimations = this._createMoveAnimations(moveTextObject);
+
+			layer.forward_arrival[moveTextObject.id] = moveTextAnimations['forward_arrival'];
+			layer.forward_departure[moveTextObject.id] = moveTextAnimations['forward_departure'];
+			layer.backward_arrival[moveTextObject.id] = moveTextAnimations['backward_arrival'];
+			layer.backward_departure[moveTextObject.id] = moveTextAnimations['backward_departure'];
+
+			
 			//decrement the number of soldiers on the starting node
 			$A(turn.layers['soldiers'].objects).each(function(soldier) {
 				if (soldier.node == data.from) {
@@ -155,8 +171,6 @@
 					turn.layers['soldiers'].backward_arrival[soldier.id].start.count = turn.layers['soldiers'].forward_arrival[soldier.id].start.count;
 				}
 			}, this);
-			
-			nextId++;	
 		}, this);
 		
 		return turn;
@@ -589,7 +603,8 @@
 				'blurColor': '#FFFFFF'
 			},
 			'color': this.players[playerId].color,
-			'radius': 20,
+			'radius': 10,
+			'rotate': true,
 			'from': this._getNodePosition(from),
 			'to': this._getNodePosition(to)
 		};
@@ -634,7 +649,7 @@
 						'start': 0,
 						'end': 0.4,
 						'path': "M #{from.x} #{from.y} Q #{controlRatio.x} #{controlRatio.y} #{to.x} #{to.y}".interpolate(moveObject),
-						'rotate': false
+						'rotate': moveObject.rotate
 					}
 				},
 				'length': 500
@@ -656,7 +671,7 @@
 						'start': 0.4,
 						'end': 1,
 						'path': "M #{from.x} #{from.y} Q #{controlRatio.x} #{controlRatio.y} #{to.x} #{to.y}".interpolate(moveObject),
-						'rotate': false
+						'rotate': moveObject.rotate
 					}
 				},
 				'length': 500
@@ -678,7 +693,7 @@
 						'start': 1,
 						'end': 0.6,
 						'path': "M #{to.x} #{to.y} Q #{controlRatio.x} #{controlRatio.y} #{from.x} #{from.y}".interpolate(moveObject),
-						'rotate': false
+						'rotate': moveObject.rotate
 					}					
 				},
 				'length': 500
@@ -700,7 +715,7 @@
 						'start': 0.6,
 						'end': 1,
 						'path': "M #{to.x} #{to.y} Q #{controlRatio.x} #{controlRatio.y} #{from.x} #{from.y}".interpolate(moveObject),
-						'rotate': false
+						'rotate': moveObject.rotate
 					}	
 				},
 				'length': 500
@@ -724,8 +739,8 @@
 			'text': '',
 			'textAttrs': {
 				'font': 'Symbol',
-				'font-weight': 'bold',
-				'font-size': 20,
+				'font-weight': 'normal',
+				'font-size': 12,
 				'fill': '#FFFFFF'
 			},
 			'attackerCount': count,
@@ -733,7 +748,7 @@
 			'position': this._getNodePosition(to)
 		};
 		
-		object.textAttrs.y = object.position.y - 40;
+		object.textAttrs.y = object.position.y - 30;
 		
 		return object;
 	},

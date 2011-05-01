@@ -38,6 +38,8 @@
 			this.objects[object.id] = this._createPathObject(object.from, object.to, object.controlRatio);
 		else if (object.type == 'move')
 			this.objects[object.id] = this._createMoveObject(object, attrs);
+		else if (object.type == 'moveText')
+			this.objects[object.id] = this._createMoveTextObject(object, attrs);			
 		else if (object.type == 'combat')
 			this.objects[object.id] = this._createCombatObject(object, attrs);			
 	},
@@ -50,7 +52,6 @@
 			
 			if (attrs['animateAlong'])
 				this._animateAlong(this.objects[id], attrs['animateAlong'], length);
-				//this.objects[id].animateAlong(attrs['path'], length, attrs['rotate']);
 			
 			this.objects[id].animate(attrs, length);
 		}
@@ -186,8 +187,12 @@
 			y: attrs.y + attrs.height / 2
 		};		
 		
-		var circle = this.raphael.circle(circlePosition.x, circlePosition.y, attrs.radius + 20);
-		circle.attr({'opacity': 1, 'fill': attrs.color, 'stroke': 'none'});
+		var circle = this.raphael.circle(circlePosition.x, circlePosition.y, attrs.radius + 10);
+		circle.attr({
+			'opacity': 1,
+			'fill': attrs.color,
+			'stroke': 'none'
+		});
 		
 		// draw the city
 		var image = this.raphael.image(
@@ -218,7 +223,7 @@
 			y: attrs.y + attrs.height / 2
 		};		
 		
-		var circle = this.raphael.circle(circlePosition.x, circlePosition.y, attrs.radius + 10);
+		var circle = this.raphael.circle(circlePosition.x, circlePosition.y, attrs.radius + 5);
 		circle.attr({'opacity': 1, 'fill': attrs.color, 'stroke': 'none'});
 		
 		var image = this.raphael.image(
@@ -251,21 +256,40 @@
 		
 		// create the background circle
 		var circle = this.raphael.circle(position.x, position.y, object.radius);
-		circle.attr({'opacity': attrs['opacity'], 'fill': object['color'], 'stroke': 'none'});
-
-		// create the army graphic
-		var army = this.raphael.image(
-			attrs.img.src,
-			position.x - attrs.img.width / 2,
-			position.y - attrs.img.height / 2,
-			attrs.img.width,
-			attrs.img.height);
-			
-		army.attr({
-			'opacity': attrs['opacity'],
-			'rotation': 180
+		circle.attr({
+			'opacity': attrs.opacity,
+			'fill': object.color,
+			'stroke': 'none'
 		});
 
+		// create the army graphic
+		//var army = this.raphael.image(
+		//	attrs.img.src,
+		//	position.x - attrs.img.width / 2,
+		//	position.y - attrs.img.height / 2,
+		//	attrs.img.width,
+		//	attrs.img.height);
+			
+		//army.attr({
+		//	'opacity': attrs['opacity'],
+		//	'rotation': 180
+		//});
+		
+		var move = this.raphael.set();
+
+		move.push(circle);
+		//move.push(army);	
+		return move;
+	},
+	
+	_createMoveTextObject: function (object, attrs)
+	{
+		// get the position
+		var position = (attrs['setPositionFromPath']) ? this._getPositionFromPath(attrs['setPositionFromPath']) : {
+			x: object.from.x,
+			y: object.from.y
+		};		
+		
         // create the soldiers count
 		var textAttrs = object.countAttrs;
 		textAttrs.x = position.x;
@@ -273,12 +297,8 @@
 		textAttrs.opacity = attrs['opacity'];
 		textAttrs.count = object.count;
 		
-		var set = this._createSoldiersObject(textAttrs);
-
-		set.push(circle);
-		set.push(army);	
-		return set;
-	},
+		return this._createSoldiersObject(textAttrs);
+	},	
 	
 	_createCombatObject: function (object, attrs)
 	{
@@ -317,18 +337,7 @@
 		// remove the full path
 		path.remove();
 		
-		// get the starting angle
-		//var rotationStart = this._getRotationFromPath(sub, 1, true);
-		//var tmp = this.raphael.path(sub);
-		//var rotationStart = tmp.getPointAtLength(1).alpha;
-		//var rotationEnd = rotationStart; //tmp.getPointAtLength(tmp.getTotalLength() * 0.999).alpha;
-		//tmp.remove();
-		
-		// animate along the partial path
-		//object.attr({'rotation': 180});
-		object.animateAlong(sub, length, true, function() {
-			//object.attr({'rotation': 0});
-		});
+		object.animateAlong(sub, length, attrs['rotate']);
 	},
 	
 	_getPositionFromPath: function (data)
