@@ -19,7 +19,7 @@
 		this.links		= new Array();
 		this.playerId	= null;
 		this.nbSoldiers	= 0;
-		this.players    = {}; //for combats
+		this.players    = new Hash(); //for combats
 	},
 	
 	linkTo: function (otherNode, controlRatio)
@@ -96,14 +96,35 @@ TS.NodeGraph = Class.create(TS, {
 	 */
 	syncCombats: function (moves)
 	{
-		// reset the players on the node
+		// reset the players on the nodes
 		Object.keys(this.nodes).each(function(nodeKey) {
-			this.nodes[nodeKey].players = {};
+			var node = this.nodes[nodeKey];
+			
+			node.players = new Hash();
+			
+			if (node.playerId != null && node.nbSoldiers != 0)
+				node.players.set(node.playerId, node.nbSoldiers);
 		}, this);
 		
-		// sync the players on the node
+		// sync the players on the nodes
 		moves.each(function(data) {
-			this.nodes[data.to].players[data.player_id] = data.number_of_soldiers;
+			// increment the to node
+			var node = this.nodes[data.to];
+			var id = parseInt(data.player_id);
+			
+			node.players.set(id, node.players.get(id) == null ?
+				data.number_of_soldiers :
+				(node.players.get(id) + data.number_of_soldiers));
+				
+			// decrement the from node
+			node = this.nodes[data.from];
+			
+			node.players.set(id, node.players.get(id) - data.number_of_soldiers);
+			
+			var value = null;
+			
+			if (node.players.get(id) == 0)
+				value = node.players.unset(id);
 		}, this);
 		
 		// - decrement the number of soldiers on the 'from' node
@@ -125,34 +146,41 @@ TS.NodeGraph = Class.create(TS, {
 	
 	getNodeCaptured: function(id) {
 		var node = this.nodes[id];
-		var playersIds = Object.keys(node.players);
+		var playersIds = node.players.keys();
 		
 		return (playersIds.size() == 1) &&
 		       (node.playerId == null ||
-			       (node.players[playersIds[0]] != node.playerId && node.nbSoldiers == 0));
+			       (node.players.get(playersIds[0]) != node.playerId && node.nbSoldiers == 0));
 	},
 	
 	getNodeReinforced: function(id) {
 		var node = this.nodes[id];
-		var playersIds = Object.keys(node.players);
+		var playersIds = node.players.keys();
 		
 		return (playersIds.size() == 1) && (node.playerId == playersIds[0]);	
 	},
 	
 	getNodeSuicide: function(id) {
 		var node = this.nodes[id];
-		var playersIds = Object.keys(node.players);
+		var playersIds = node.players.keys();
 
 		var suicide = true;
 		
 		playersIds.each(function (playerId) {
-			var soldiers = node.players[playerId];
+			var soldiers = node.players.get(playerId);
 			
 			if (soldiers > node.nbSoldiers)
 				suicide = false;
 		}, this);
 		
 		return suicide;		
+	},
+	
+	getNodeCombat: function(id) {
+		var node = this.nodes[id];
+		var playersIds = node.players.keys();
+		
+		return playersIds.size() > 1;
 	},
 	
 	getPlayers: function(id) {

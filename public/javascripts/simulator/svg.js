@@ -41,7 +41,9 @@
 		else if (object.type == 'moveText')
 			this.objects[object.id] = this._createMoveTextObject(object, attrs);			
 		else if (object.type == 'combat')
-			this.objects[object.id] = this._createCombatObject(object, attrs);			
+			this.objects[object.id] = this._createCombatObject(object, attrs);
+		else if (object.type == 'chart')
+			this.objects[object.id] = this._createChartObject(object, attrs);			
 	},
 	
 	addAnimation: function (id, attrs, length)
@@ -261,19 +263,6 @@
 			'fill': object.color,
 			'stroke': 'none'
 		});
-
-		// create the army graphic
-		//var army = this.raphael.image(
-		//	attrs.img.src,
-		//	position.x - attrs.img.width / 2,
-		//	position.y - attrs.img.height / 2,
-		//	attrs.img.width,
-		//	attrs.img.height);
-			
-		//army.attr({
-		//	'opacity': attrs['opacity'],
-		//	'rotation': 180
-		//});
 		
 		var move = this.raphael.set();
 
@@ -281,6 +270,24 @@
 		//move.push(army);	
 		return move;
 	},
+	
+	_createChartObject: function (object, attrs)
+	{
+		// modify the current colors palette
+		this.raphael.g.colors = object.colors;
+		
+		// create the chart
+		var chart = this.raphael.g.piechart(
+			object.position.x,
+			object.position.y,
+			object.radius,
+			object.data.clone(),
+			{legend: [], legendpos: 'west', legendcolor: '#fff'});
+		
+		chart.attr({'opacity': attrs.opacity});
+	
+		return chart;
+	},	
 	
 	_createMoveTextObject: function (object, attrs)
 	{
@@ -313,7 +320,7 @@
 		image.attr({
 			'scale': attrs['scale'],
 			'opacity': attrs['opacity']
-			});
+		});
 			
 		// create the combat quote
 		var text = this.raphael.text(attrs.x, attrs.y, object.text);

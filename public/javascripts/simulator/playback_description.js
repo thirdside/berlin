@@ -83,12 +83,8 @@
 		layer = this._createLayer();
 		
 		object = this._createBackgroundObject(nextId, this.mapDescription.infos['tile_background'] || true);
-		animations = this._createBackgroundAnimations(object);
+		this._syncAnimationLayerObject(layer, object.id, this._createEmptyAnimation());
 		layer.objects.push(object);
-		layer.forward_arrival[nextId] = animations['forward_arrival'];
-		layer.forward_departure[nextId] = animations['forward_departure'];
-		layer.backward_arrival[nextId] = animations['backward_arrival'];
-		layer.backward_departure[nextId] = animations['backward_departure'];
 		
 		turn.layers['background'] = layer;
 		
@@ -102,13 +98,8 @@
 			
 			node.links.each(function(link) {
 				object = this._createPathObject(nextId, nodeId, link.toId);
-				animations = this._createPathAnimations(object);
-				
-				layer.objects.push(object);
-				layer.forward_arrival[nextId] = animations['forward_arrival'];
-				layer.forward_departure[nextId] = animations['forward_departure'];
-				layer.backward_arrival[nextId] = animations['backward_arrival'];
-				layer.backward_departure[nextId] = animations['backward_departure'];				
+				this._syncAnimationLayerObject(layer, object.id, this._createEmptyAnimation());
+				layer.objects.push(object);			
 				
 				nextId++;
 			}, this);
@@ -134,35 +125,22 @@
 
 		this.players = turn.players;
 		
+		var layer = turn.layers['moves'];
+		
 		$A(moves).each(function(data) {
 			var moveObject = this._createMoveObject(nextId, data.from, data.to, data.player_id, data.number_of_soldiers);
-			nextId++;
-			var moveTextObject = this._createMoveObject(nextId, data.from, data.to, data.player_id, data.number_of_soldiers);
+			var moveAnimations = this._createMoveAnimations(moveObject);
+			this._syncAnimationLayerObject(layer, moveObject.id, moveAnimations);
+			layer.objects.push(moveObject);
 			nextId++;
 			
+			var moveTextObject = this._createMoveObject(nextId, data.from, data.to, data.player_id, data.number_of_soldiers);
 			moveTextObject.type = 'moveText';
 			moveTextObject.rotate = false;
-			
-			var layer = turn.layers['moves'];
-			
-			layer.objects.push(moveObject);
-			layer.objects.push(moveTextObject);
-			
-			var moveAnimations = this._createMoveAnimations(moveObject);
-			
-			layer.forward_arrival[moveObject.id] = moveAnimations['forward_arrival'];
-			layer.forward_departure[moveObject.id] = moveAnimations['forward_departure'];
-			layer.backward_arrival[moveObject.id] = moveAnimations['backward_arrival'];
-			layer.backward_departure[moveObject.id] = moveAnimations['backward_departure'];
-			
-			//todo: omg
 			var moveTextAnimations = this._createMoveAnimations(moveTextObject);
-
-			layer.forward_arrival[moveTextObject.id] = moveTextAnimations['forward_arrival'];
-			layer.forward_departure[moveTextObject.id] = moveTextAnimations['forward_departure'];
-			layer.backward_arrival[moveTextObject.id] = moveTextAnimations['backward_arrival'];
-			layer.backward_departure[moveTextObject.id] = moveTextAnimations['backward_departure'];
-
+			this._syncAnimationLayerObject(layer, moveTextObject.id, moveTextAnimations);
+			layer.objects.push(moveTextObject);
+			nextId++;
 			
 			//decrement the number of soldiers on the starting node
 			$A(turn.layers['soldiers'].objects).each(function(soldier) {
@@ -198,7 +176,7 @@
 			var fromNode = this.map.nodes[data.from];
 			var toNode = this.map.nodes[data.to];
 			
-			var combatObject = this._createCombatObject(nextId, data.from, data.to, data.number_of_soldiers);
+			var combatObject = this._createCombatObject(nextId, data.to);
 			
 			// add a commentary on the move
 			if (this.map.getNodeCaptured(data.to)) {
@@ -207,21 +185,35 @@
 			} else if (this.map.getNodeReinforced(data.to)) {
 				combatObject.text = "reinforced!";
 				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);					
-			} else if (this.map.getNodeSuicide(data.to)) {
-				combatObject.text = "suicide!";
-				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);										
+			//} else if (this.map.getNodeSuicide(data.to)) {
+			//	combatObject.text = "suicide!";
+			//	combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);										
+			} else if (this.map.getNodeCombat(data.to)) {
+				combatObject.text = "fight!";
+				combatObject.textAttrs.fill = '#ffffff';
 			}
 
 			layer.objects.push(combatObject);
 			
 			var combatAnimations = this._createCombatAnimations(combatObject);
 			
-			layer.forward_arrival[combatObject.id] = combatAnimations['forward_arrival'];
-			layer.forward_departure[combatObject.id] = combatAnimations['forward_departure'];
-			layer.backward_arrival[combatObject.id] = combatAnimations['backward_arrival'];
-			layer.backward_departure[combatObject.id] = combatAnimations['backward_departure'];
+			this._syncAnimationLayerObject(layer, combatObject.id, combatAnimations);
 			
 			nextId++;
+			
+			// if the node is in combat, create a chart object that displays the players involved
+			if (this.map.getNodeCombat(data.to)) {
+				var players = this.map.getPlayers(data.to);
+				
+				var chartObject = this._createChartObject(nextId, data.to, players);
+				var charAnimations = this._createChartAnimations(chartObject);
+				
+				this._syncAnimationLayerObject(layer, chartObject.id, charAnimations);
+				
+				layer.objects.push(chartObject);
+				
+				nextId++;
+			}
 			
 			//- decrement the number of soldiers on the starting node
 			//- increment the number of soldiers on the ending node (if the same player or no player)
@@ -231,8 +223,9 @@
 					turn.layers['soldiers'].backward_arrival[soldier.id].start.count = turn.layers['soldiers'].forward_arrival[soldier.id].start.count;
 				}
 				
-				if ((soldier.node == data.to && this.map.nodes[soldier.node].playerId == this.map.nodes[data.from].playerId) ||
-				    (soldier.node == data.to && this.map.nodes[soldier.node].playerId == null))
+				if ((soldier.node == data.to && this.map.nodes[soldier.node].playerId == this.map.nodes[data.from].playerId) || //reinforce
+				    (soldier.node == data.to && this.map.nodes[soldier.node].playerId == null) || //capture (no owner)
+					(soldier.node == data.to && this.map.nodes[soldier.node].nbSoldiers == 0)) //capture (0 soldiers)
 				{
 					turn.layers['soldiers'].forward_arrival[soldier.id].start.count += data.number_of_soldiers;
 					turn.layers['soldiers'].backward_arrival[soldier.id].start.count = turn.layers['soldiers'].forward_arrival[soldier.id].start.count;
@@ -241,7 +234,7 @@
 			
 			// announce capture
 			$A(turn.layers['nodes'].objects).each(function(node) {
-				if (node.node == data.to && this.map.nodes[data.to].playerId == null) {
+				if (node.node == data.to) {
 					turn.layers['nodes'].forward_arrival[node.id].start.color = this._getPlayerColor(this.map.nodes[data.from].playerId);
 					turn.layers['nodes'].backward_arrival[node.id].start.color = turn.layers['nodes'].forward_arrival[node.id].start.color;
 				}
@@ -262,21 +255,13 @@
 
 		// prepare the soldiers counts
 		var nextId = 0;
+		var layer = turn.layers['soldiers'];
 
 		$A(states).each(function(data) {
 			var soldiersObject = this._createSoldiersObject(nextId++, data.node_id, data.number_of_soldiers);
-			
-			var layer = turn.layers['soldiers'];
-			
-			layer.objects.push(soldiersObject);
-			
 			var soldiersAnimations = this._createSoldiersAnimations(soldiersObject);
-			
-			layer.forward_arrival[soldiersObject.id] = soldiersAnimations['forward_arrival'];
-			layer.forward_departure[soldiersObject.id] = soldiersAnimations['forward_departure'];
-			layer.backward_arrival[soldiersObject.id] = soldiersAnimations['backward_arrival'];
-			layer.backward_departure[soldiersObject.id] = soldiersAnimations['backward_departure'];
-			
+			this._syncAnimationLayerObject(layer, soldiersObject.id, soldiersAnimations);
+			layer.objects.push(soldiersObject);
 			nextId++;
 		}, this);
 		
@@ -306,11 +291,8 @@
 			}
 
 			layer.objects.push(nodeObject);
-
-			layer.forward_arrival[nodeObject.id] = nodeAnimations['forward_arrival'];
-			layer.forward_departure[nodeObject.id] = nodeAnimations['forward_departure'];
-			layer.backward_arrival[nodeObject.id] = nodeAnimations['backward_arrival'];
-			layer.backward_departure[nodeObject.id] = nodeAnimations['backward_departure'];
+			
+			this._syncAnimationLayerObject(layer, nodeObject.id, nodeAnimations);
 			
 			nextId++;	
 		}, this);
@@ -340,10 +322,7 @@
 			
 			var spawnAnimations = this._createSpawnAnimations(spawnObject);
 			
-			layer.forward_arrival[spawnObject.id] = spawnAnimations['forward_arrival'];
-			layer.forward_departure[spawnObject.id] = spawnAnimations['forward_departure'];
-			layer.backward_arrival[spawnObject.id] = spawnAnimations['backward_arrival'];
-			layer.backward_departure[spawnObject.id] = spawnAnimations['backward_departure'];
+			this._syncAnimationLayerObject(layer, spawnObject.id, spawnAnimations);
 			
 			//increment the number of soldiers
 			$A(turn.layers['soldiers'].objects).each(function(soldier) {
@@ -358,6 +337,87 @@
 		
 		this.turns.push(turn);
 	},
+	
+	/*
+	 * Create a chart object
+	 */
+	_createChartObject: function (id, node, players)
+	{
+		var object =
+		{
+			'id': id,
+			'type': 'chart',
+			'position': this._getNodePosition(node),
+			'radius': 15,
+			'colors': new Array(),
+			'data': new Array()
+		};
+		
+		players.each(function(pair) {
+			var color = this._getPlayerColor(pair.key);
+			var soldiers = pair.value;
+		
+			object.colors.push(color);
+			object.data.push(soldiers);
+		}, this);
+		
+		return object;		
+	},
+	
+	/*
+	 * Create chart animations
+	 */
+	_createChartAnimations: function (chartObject)
+	{
+		var animations =
+		{
+			'forward_arrival':
+			{
+				'start': {
+					'opacity': 1
+				},
+				'end': {
+					'opacity': 1
+				},
+				'length': 500
+			},
+			
+			'forward_departure':
+			{
+				'start': {
+					'opacity': 1
+				},
+				'end': {
+					'opacity': 0
+				},
+				'length': 500
+			},
+			
+			'backward_arrival':
+			{
+				'start': {
+					'opacity': 0
+				},
+				'end': {
+					'opacity': 1
+				},
+				'length': 500
+			},
+			
+			'backward_departure':
+			{
+				'start': {
+					'opacity': 1
+				},
+				'end': {
+					'opacity': 0
+				},
+				'length': 500
+			}			
+		};
+
+		return animations;
+	},	
 	
 	/*
 	 * Create a soldiers object
@@ -728,10 +788,8 @@
 	/*
 	 * Create a combat object
 	 */
-	_createCombatObject: function (id, from, to, count)
+	_createCombatObject: function (id, position)
 	{
-		var defenderCount = this.map.nodes[to].nbSoldiers;
-		
 		var object =
 		{
 			'id': id,
@@ -743,9 +801,7 @@
 				'font-size': 12,
 				'fill': '#FFFFFF'
 			},
-			'attackerCount': count,
-			'defenderCount': defenderCount,
-			'position': this._getNodePosition(to)
+			'position': this._getNodePosition(position)
 		};
 		
 		object.textAttrs.y = object.position.y - 30;
@@ -1049,46 +1105,6 @@
 	},
 	
 	/*
-	 * Create background animations
-	 */
-	_createBackgroundAnimations: function (backgroundObject)
-	{
-		var animations =
-	
-		{
-			'forward_arrival':
-			{
-				'start': {},			
-				'end': {},				
-				'length': 0
-			},
-			
-			'forward_departure':
-			{
-				'start': {},			
-				'end': {},				
-				'length': 0
-			},
-			
-			'backward_arrival':
-			{
-				'start': {},			
-				'end': {},				
-				'length': 0
-			},
-			
-			'backward_departure':
-			{
-				'start': {},			
-				'end': {},				
-				'length': 0
-			}			
-		};
-
-		return animations;
-	},	
-	
-	/*
 	 * Create a path object
 	 */
 	_createPathObject: function (id, from, to)
@@ -1106,46 +1122,6 @@
 		object['controlRatio'] = this._getQuadraticCurvePoint(object.from, object.to, link.controlRatio);
 		
 		return object;
-	},	
-	
-	/*
-	 * Create background animations
-	 */
-	_createPathAnimations: function (pathObject)
-	{
-		var animations =
-	
-		{
-			'forward_arrival':
-			{
-				'start': {},			
-				'end': {},				
-				'length': 0
-			},
-			
-			'forward_departure':
-			{
-				'start': {},			
-				'end': {},				
-				'length': 0
-			},
-			
-			'backward_arrival':
-			{
-				'start': {},			
-				'end': {},				
-				'length': 0
-			},
-			
-			'backward_departure':
-			{
-				'start': {},			
-				'end': {},				
-				'length': 0
-			}			
-		};
-
-		return animations;
 	},	
 	
 	/*
@@ -1278,6 +1254,9 @@
 		return data;
 	},
 	
+	/*
+	 * Get the angle of a vector
+	 */
 	_getRotation: function (start, end)
 	{
 		// compute the angle
@@ -1290,5 +1269,55 @@
 		var angleRad = Math.atan2(vector.y, vector.x);
 		
 		return angleRad * (180 / Math.PI);
+	},
+	
+	/*
+	 * Synchronize an Animation descriptor with a Layer's Object descriptor
+	 */
+	_syncAnimationLayerObject: function (layer, objectId, animation)
+	{
+		layer.forward_arrival[objectId] = animation.forward_arrival;
+		layer.forward_departure[objectId] = animation.forward_departure;
+		layer.backward_arrival[objectId] = animation.backward_arrival;
+		layer.backward_departure[objectId] = animation.backward_departure;		
+	},
+	
+	/*
+	 * Create an empty animation descriptor
+	 */
+	_createEmptyAnimation: function ()
+	{
+		var animation =
+		{
+			'forward_arrival':
+			{
+				'start': {},			
+				'end': {},				
+				'length': 0
+			},
+			
+			'forward_departure':
+			{
+				'start': {},			
+				'end': {},				
+				'length': 0
+			},
+			
+			'backward_arrival':
+			{
+				'start': {},			
+				'end': {},				
+				'length': 0
+			},
+			
+			'backward_departure':
+			{
+				'start': {},			
+				'end': {},				
+				'length': 0
+			}			
+		};
+
+		return animation;
 	}	
 });
