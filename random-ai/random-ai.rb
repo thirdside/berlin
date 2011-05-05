@@ -24,7 +24,7 @@ post '/onturn' do
 
   # Then, let's see if we can find that game. If not, register it.
   game_id = params[:game]
-  @@games[game_id] ||= Game.new game_id, json, params[:self]
+  @@games[game_id] ||= Game.new game_id, json, params[:self].to_i
   game = @@games[game_id]
 
   # Now, we want to update the current state of the game with the new content

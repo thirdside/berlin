@@ -1,14 +1,22 @@
-#welcome.content
-  %h2= t("titles.welcome")
+.content#welcome
+  %h2= t('titles.welcome')
+
   .intro
-    %h3= t "intro.what_is_berlin"
-    %p
-      = raw t("intro.intro_text")
-    %ul.padded
-      - t("intro.breakdown").each do |key, explain|
-        %li= explain
+    %blockquote.quote
+      = t('intro.quote')
+      .signature
+        = ["NASA Engineer", "Barack Obama", "Mark Zuckerberg", "Steve Jobs", "Sarah Palin", "Ginette St-Pierre", "Pikachu", "Bill Gates"].sample
+
   .map-container
-    #map{:style => "background-color: #ff00ff"}
-      %img{:src => "/images/screenshots/game-1.jpg"}
-  %div{:style => "clear:both;"}
-    
+    %img{:src => "/images/screenshots/game-1.jpg"}
+
+  %div{:style=>"clear: both;"}
+
+  %table.breakdown{:cellspacing=>10}
+    %tr
+      - items = t("intro.breakdown").values
+      - total = items.count
+      - items.each do |item|
+        %td{:style=>"width: #{100 / total}%;"}
+          %h4= item[:title]
+          %p= item[:text]

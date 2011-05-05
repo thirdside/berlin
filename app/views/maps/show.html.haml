@@ -1,7 +1,7 @@
 .content
   %h2= @map.name
 
-  %table
+  %table.large
     %thead
       %tr
         %th(colspan=2)= t('common.statistics')
@@ -39,7 +39,7 @@
 .content#games
   %h2= t('titles.games_played')
 
-  %table
+  %table.large
     %thead
       %tr
         %th= Game.human_attribute_name :id

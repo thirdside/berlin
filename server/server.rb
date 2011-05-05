@@ -4,6 +4,7 @@ require 'typhoeus'
 require 'yajl/json_gem'
 require 'active_record'
 require 'uuidtools'
+require 'utilities'
 
 ROOT = File.expand_path( File.dirname( __FILE__ ) )
 
@@ -17,7 +18,8 @@ options = Hash[*ARGV]
 default_env = ENV['RAILS_ENV'] ? ENV['RAILS_ENV'] : 'development'
 environment = options['-e'] ? options['-e'] : default_env
 config_path = ROOT + "/../config/database.yml"
-config_yaml = YAML::load( File.open( config_path ) )
+config_file = File.open( config_path )
+config_yaml = YAML::load( config_file )
 
 # db connexion
 ActiveRecord::Base.establish_connection( config_yaml[ environment ] )
@@ -28,8 +30,13 @@ ActiveRecord::Base.establish_connection( config_yaml[ environment ] )
 end
 
 # models
-%w( game map node_type node artificial_intelligence artificial_intelligence_game award ).each do |model|
+%w( game map artificial_intelligence artificial_intelligence_game award ).each do |model|
   require ROOT + "/../app/models/#{model}"
+end
+
+# classes
+%w( game map path artificial_intelligence node node_type move ).each do |model|
+  require ROOT + "/#{model}"
 end
 
 # achievements
@@ -37,47 +44,22 @@ end
   require ROOT + "/../app/models/achievements/#{model}"
 end
 
-# start a random fight, on a random map with random (2!) ais
-get '/random' do
-  map = Map.first(:order=>"RAND()")
-  ais = ArtificialIntelligence.find(:all, :limit=>2, :order=>"RAND()")
-  run map, ais
-  
-  200
-end
-
-# start a fight for map X with ais Y, Z, ...
-# params[:map_id] : Map ID
-# params[:ai_ids] : List of AI ids
 get '/fight' do
   begin
-    map = Map.find(params[:map_id])
-    ais = ArtificialIntelligence.find(params[:ai_ids])
-    run map, ais
-  rescue Exception => e
-    log( e )
-
-    # return Forbidden HTTP Status
-    return 403
-  end
-
-  200
-end
-
-def run map, ais
-  map.init( ais )
-  game = Game.new
-  game.map = map
-
-  Thread.new do
-    begin
+    Thread.new do
+      game = Berlin::Server::Game.new
+      game.map = Berlin::Server::Map.find( params[:map_id] )
+      game.players = Berlin::Server::ArtificialIntelligence.find( params[:ai_ids] )
+      game.init
+      game.debug = true
       game.run
-    rescue Exception => e
-      log( e )
     end
+  rescue Exception => e
+    log e.inspect
   end
 end
 
+# log to error file
 def log string
   open('errors.log', 'a') do |f|
     f.puts "#{DateTime.now} : #{request.path_info} #{params.inspect}"

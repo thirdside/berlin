@@ -1,4 +1,4 @@
-%table
+%table.large
   %thead
     %tr
       %th(colspan=2)= t('common.statistics')
@@ -12,6 +12,9 @@
     %tr
       %td.label= ArtificialIntelligence.human_attribute_name :won_games
       %td= user.artificial_intelligence_games.winners.count
+    %tr
+      %td.label= ArtificialIntelligence.human_attribute_name :victory_percentage
+      %td= user.artificial_intelligence_games.winners.count.percentage_of user.artificial_intelligence_games.count
     %tr
       %td.label= ArtificialIntelligence.human_attribute_name :score
       %td= show_score user.score

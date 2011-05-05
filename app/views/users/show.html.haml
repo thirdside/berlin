@@ -6,19 +6,21 @@
 .content
   %h2= Award.model_name.human.pluralize
 
-  %table
+  %table.large
     %thead
       %tr
-        %th testitestou
+        %th= Award.human_attribute_name :name
+        %th= Award.human_attribute_name :total
     %tbody
-      - @user.awards.each do |award|
+      - @user.awards.grouped.each do |award|
         %tr
           %td= award.achievement.class.model_name.human
+          %td= award.total
 
 .content
   %h2= t('titles.artificial_intelligences')
 
-  %table
+  %table.large
     %thead
       %tr
         %th= ArtificialIntelligence.human_attribute_name :name
