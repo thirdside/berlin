@@ -4,7 +4,7 @@
 
   %h2= @artificial_intelligence.name
 
-  %table
+  %table.large
     %thead
       %tr
         %th(colspan=2)= t('common.statistics')
@@ -22,11 +22,26 @@
         %td.label= ArtificialIntelligence.human_attribute_name :won_games
         %td= @artificial_intelligence.won_games
       %tr
+        %td.label= ArtificialIntelligence.human_attribute_name :victory_percentage
+        %td= @artificial_intelligence.won_games.percentage_of @artificial_intelligence.artificial_intelligence_games.count
+      %tr
         %td.label= ArtificialIntelligence.human_attribute_name :score
         %td= show_score( @artificial_intelligence.score )
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :created_at
         %td= @artificial_intelligence.created_at
+
+.content
+  %h2= Award.model_name.human.pluralize
+
+  %table.large
+    %thead
+      %tr
+        %th= Award.human_attribute_name :name
+    %tbody
+      - @artificial_intelligence.awards.each do |award|
+        %tr
+          %td= award.achievement.class.model_name.human
 
 .content
   %h2= t('common.history')
@@ -69,7 +84,7 @@
 .content
   %h2= t('titles.games_played')
 
-  %table
+  %table.large
     %thead
       %tr
         %th= Game.human_attribute_name :id

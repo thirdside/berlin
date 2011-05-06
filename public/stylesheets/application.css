@@ -110,6 +110,7 @@ div#user-info {
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     padding: 15px;
+    font-size: 12px;
 }
 
 div#user-info ul {
@@ -248,55 +249,105 @@ ul#menu li ul li a:hover {
     background-color: #dddddd;
 }
 
+blockquote.quote {
+    background: #fff url(/images/quote.png) top left no-repeat;
+    padding: 5px 5px 5px 50px;
+    margin: 15px;
+    letter-spacing: 1px;
+    font-style: italic;
+    font-size: 1.2em;
+}
+
+blockquote.quote .signature {
+    text-align: right;
+    letter-spacing: -1px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
+    empty-cells: show;
+}
+
+table.breakdown {
+    border-collapse: separate;
+    margin-top: 10px;
+}
+
+table.breakdown td {
+    padding: 8px;
+    background: #343434;
+    color: #fdfdfd;
+    border-radius: 5px;
+    vertical-align: top;
+    letter-spacing: 0.1px;
+    -moz-box-shadow:inset 2px 0 10px #202020;
+    -webkit-box-shadow:inset 2px 0 10px #202020;
+    box-shadow:inset 2px 0 10px #202020;
+    text-align: center;
+}
+
+table.breakdown td:hover {
+    background: #202020;
+    color: #ffffff;
+}
+
+table.breakdown td h4 {
+    font-family: 'Waiting for the Sunrise';
+    font-size: 17px;
+    color: #f78d1d;
+    text-shadow: 1px 1px 0 #202020;
+    border-bottom: 1px dotted #eee;
+    margin-bottom: 5px;
+}
+
+table.large {
     color: #333333;
 }
 
-table thead th {
+table.large thead th {
     border-top: 1px solid #cccccc;
     background-color: #E1E1E1;
     font-weight: bold;
     text-align: left;
 }
 
-table tbody tr:nth-child(odd) {
+table.large tbody tr:nth-child(odd) {
     background-color: #ffffff;
 }
 
-table tbody tr:nth-child(even) {
+table.large tbody tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-table tbody tr:hover td {
+table.large tbody tr:hover td {
     background-color: #333333;
     color: #ffffff;
 }
 
-table th, table td {
+table.large th, table.large td {
     border-bottom: 1px solid #cccccc;
     padding: 4px 6px;
 }
 
-table td {
+table.large td {
     border-right: 1px dotted #cccccc;
     line-height: 20px;
 }
 
-table td.label {
+table.large td.label {
     width: 200px;
 }
 
-table td:last-child {
+table.large td:last-child {
     border-right: none;
 }
 
-table th.icon, table td.icon {
+table.large th.icon, table td.icon {
     width: 16px;
 }
 
-table th.icon a, table td.icon a {
+table.large th.icon a, table td.icon a {
     position: relative;
     top: 2px;
 }
@@ -320,11 +371,14 @@ table th.icon a, table td.icon a {
 
 .map-container {
   float: right;
-}
-
-#welcome #map {
   width: 500px;
   height: 300px;
+  padding: 10px;
+  margin-right: 20px;
+  background: #eeeeee;
+  box-shadow: 0 0 10px #202020;
+  -moz-box-shadow: 0 0 10px #202020;
+  -webkit-box-shadow: 0 0 10px #202020;
 }
 
 #container canvas {

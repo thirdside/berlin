@@ -34,6 +34,8 @@ fr:
       doc: Doc
       map: Carte
       achievement: Accomplissement
+      victories_achievement: Accomplissement de victoires
+      games_played_achievement: Accomplissement de parties jouées
       award: Trophée
     attributes:
       user:
@@ -65,11 +67,18 @@ fr:
         language: Langage
         score: Pointage moyen
         won_games: Parties gagnées
+        victory_percentage: Pourcentage de victoires
         url_ready: URL - début
         url_on_turn: URL - tour
         created_at: Créé le
       artificial_intelligence_game:
         score: Pointage
+
+  support:
+    array:
+      words_connector: ", "
+      two_words_connector: " et "
+      last_word_connecter: " et "
 
   views:
     pagination:
@@ -90,17 +99,27 @@ fr:
     problem: Il y a un problème avec la configuration de la partie demandée. Merci de revérifier.
   
   intro:
-    what_is_berlin: Qu'est-ce que Berlin?
-    intro_text: |
-      Vous voilà sur ce site, n'ayant aucune idée de ce qu'est Berlin. Berlin est un jeu, auquel vous
-      <em>voulez</em> jouer. En fait, Berlin est un jeu de plateau électronique et stratégique
-      d'intelligences artificielles, multijoueur et tour par tour. 
-      <strong>Attends... Quoi?!</strong> Voyons voir: 
-    breakdown: 
-      b1: "Plateau: des pièces sont déplacées sur un plateau de jeu"
-      b2: "Électronique: votre ordinateur joue"
-      b3: "Stratégique: Les décisions ont des répercussions importantes"
-      b4: "Multijoueur: plusieurs joueurs jouent les uns contre les autres"
-      b5: "Tour par tour: le jeu se déroule selon une séquence de tour, plutôt qu'en temps réel"
-      b6: "Intelligence artificielle: Votre ordinateur fait des décisions pseudo-intelligentes"
-
+    quote: "En plus d'être exceptionnel, Berlin est un jeu stratégique de plateau électronique en ligne multijoueurs en tour par tour d'intelligences artificielles."
+    breakdown:
+      b0:
+        title: Stratégique
+        text: Les décisions ont des répercussions importantes.
+      b1:
+        title: Plateau
+        text: Des pièces sont déplacées sur un plateau de jeu. Simple comme bonjour!
+      b2:
+        title: Électronique
+        text: Votre ordinateur joue pour vous. Quoi de mieux?
+      b3:
+        title: En ligne
+        text: Rien à télécharger! Tout se joue via le navigateur!
+      b4:
+        title: Multijoueurs
+        text: Plusieurs joueurs jouent les uns contre les autres. Sinon, ou serait le plaisir?
+      b5:
+        title: Tour par tour
+        text: Le jeu se déroule selon une séquence de tours, plutôt qu'en temps réel.
+      b6:
+        title: AI
+        text: Votre ordinateur fait des décisions pseudo-intelligentes. Souvent très "pseudo"...
+      

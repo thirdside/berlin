@@ -11,47 +11,53 @@ require 'yajl/json_gem'
 # Let's keep track of all played games
 @@games = {}
 
-get '/ready' do
-  "ready!"
+get '/infos' do
+    create_or_update_game
 end
 
-# params[:game] = Uniq game ID
-# params[:self] = Your ID for the game
-# params[:json] = Description of the game, for a given turn
 post '/onturn' do
-  # First, we parse the received json
-  json = JSON.parse( params[:json] )
-
-  # Then, let's see if we can find that game. If not, register it.
-  game_id = params[:game]
-  @@games[game_id] ||= Game.new game_id, json, params[:self]
-  game = @@games[game_id]
-
-  # Now, we want to update the current state of the game with the new content
-  game.update json
-
+  create_or_update_game
   # Respond with a json of our moves
   game.turn_moves.to_json
+end
+
+def create_or_update_game
+  # First, we parse the received request
+  map = JSON.parse( params[:map] )
+  infos = JSON.parse( params[:infos] )
+  state = JSON.parse( params[:state] )
+  action = params[:action] ? params[:action] : nil
+  
+  # Then, let's see if we can find that game. If not, register it.
+  game_id = infos['game_id']
+  @@games[game_id] ||= Game.new game_id, map, infos
+  game = @@games[game_id]
+
+  if action == "game_over"
+    # Release the game to avoid memory leaks
+    @@games[game_id] = nil
+  else
+    # Now, we want to update the current state of the game with the new content
+    game.update state
+  end
 end
 
 # This class will hold all the "intelligence" of the program. By
 # analyzing the current state of the map, we'll be able to determine
 # the best moves to do.
 class Game
-  attr_reader :id, :player_id
+  attr_reader :id
 
   # @id = Uniq game ID (params[:game])
-  # @player_id = My ID for the given game (params[:self])
   # @map = Current state of the game (params[:json])
-  def initialize id, json, player_id
+  def initialize id, map, infos
     @id         = id
-    @player_id  = player_id
-    @map        = Map.new json, @player_id
+    @map        = Map.new map, infos
   end
 
   # Let's update the map with the latest state
-  def update json
-    @map.update json['states']
+  def update state
+    @map.update state
   end
 
   # For this example, we removed the 'Intelligence' part of the 'Artificial Intelligence' term...
@@ -76,23 +82,23 @@ class Map
   attr_accessor :nodes
   attr_reader :player_id
   
-  def initialize json, player_id
-    @player_id  = player_id
+  def initialize map, infos
+    @player_id  = infos['player_id']
     @nodes      = {}
-    @directed   = json['infos']['directed'] || false
+    @directed   = infos['directed'] || false
 
     # Let's parse json['nodes'] and register all nodes we can find.
     # We'll keep track of them in @nodes so we can find them later.
     # At this step (Map creation...), we still don't know who possess
     # the node and how many soldiers there is. We'll get back to that later.
     # json['nodes'] => [{:id => STRING}, ...]
-    json['nodes'].each do |node|
+    map['nodes'].each do |node|
       @nodes[node['id']] = Node.new node['id']
     end
 
     # Same thing here, with paths.
     # json['paths'] => [{:from => INTEGER, :to => INTEGER}, ...]
-    json['paths'].each do |path|
+    map['paths'].each do |path|
       @nodes[path['from']].link_to @nodes[path['to']]
 
       # Don't forget! If the map is not directed, we must create the reverse link!

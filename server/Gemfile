@@ -1,7 +1,0 @@
-source 'http://rubygems.org'
-
-gem "typhoeus"
-gem "utilities"
-gem "uuidtools"
-gem "yajl-ruby"
-gem "sinatra"
