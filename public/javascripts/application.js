@@ -3,7 +3,7 @@
 
 
 TS.NewGameHelper = Class.create(TS, {
-	initialize: function (map_container, map_select, available_ais, selected_ais, hidden_ais, map_path)
+	initialize: function (map_container, map_select, available_ais, selected_ais, hidden_ais, create_button, map_path)
 	{
 		this.available_ais = $(available_ais);
 		this.selected_ais = $(selected_ais);
@@ -11,6 +11,7 @@ TS.NewGameHelper = Class.create(TS, {
 		this.map_container = $(map_container);
 		this.map_path = map_path || "/maps/#{id}.json";
 		this.map_select = $(map_select);
+		this.create_button = $(create_button);
 		
 		this.map_select.observe('change', this.onMapChange.bindAsEventListener(this));
 		
@@ -30,6 +31,8 @@ TS.NewGameHelper = Class.create(TS, {
 			element.value = div.id.split('_').last();
 			this.hidden_ais.insert( element );
 		}, this);
+		
+		this.updateAIsCount();
 	},
 	
 	onMapChange: function (e)
@@ -44,7 +47,7 @@ TS.NewGameHelper = Class.create(TS, {
 		this.map.observe('ready', this.onMapReady.bindAsEventListener(this));
 	},
 	
-	onMapReady: function ()
+	onMapReady: function (e)
 	{
 		var desc = new TS.PlaybackDescription(
 			this.map.config,
@@ -52,9 +55,15 @@ TS.NewGameHelper = Class.create(TS, {
 			null,
 			this.map.layers['background'],
 			this.map.graphics);
-        
-        desc.initializePreview();
-        
-        this.map.doTurn(null, desc.preview, true);
+		
+		this.updateAIsCount();
+		
+		desc.initializePreview();
+		this.map.doTurn(null, desc.preview, true);
+	},
+	
+	updateAIsCount: function ()
+	{
+		this.create_button[this.map.config.infos.number_of_players.include(this.hidden_ais.childElements().size()) ? "enable" : "disable"]();
 	}
 });
