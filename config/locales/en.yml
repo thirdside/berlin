@@ -34,6 +34,8 @@ en:
       doc: Doc
       map: Map
       achievement: Achievement
+      victories_achievement: Victories Achievement
+      games_played_achievement: Games played Achievement
       award: Award
     attributes:
       user:
@@ -56,6 +58,8 @@ en:
         time_start: Time
         artificial_intelligence_games_count: Artificial intelligences
         winner: Winner
+        number_of_soldiers: Soldiers
+        points: Points
       artificial_intelligence:
         short_model_name: IA
         id: "#"

@@ -4,18 +4,7 @@
   = render :partial => '/users/info', :locals=>{:user=>@user}
 
 .content
-  %h2= Award.model_name.human.pluralize
-
-  %table.large
-    %thead
-      %tr
-        %th= Award.human_attribute_name :name
-        %th= Award.human_attribute_name :total
-    %tbody
-      - @user.awards.grouped.each do |award|
-        %tr
-          %td= award.achievement.class.model_name.human
-          %td= award.total
+  = render :partial => '/awards/list', :locals=>{:awards=>@user.awards.grouped, :show_total=>true}
 
 .content
   %h2= t('titles.artificial_intelligences')

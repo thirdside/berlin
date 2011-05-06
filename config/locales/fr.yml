@@ -25,7 +25,16 @@ fr:
     games_played: Parties jouées
     table_of_content: Table des matières
     welcome: Accueil
-
+  
+  achievements:
+    descriptions:
+      victories_achievement: "Ce trophé de victoires est octroyé après %{condition_1} victoires"
+      games_played_achivement: "Bla bla bla nombre de parties..."
+    names:
+      victories_achievement:
+        first_victory: "1ère victoire!"
+      
+  
   activerecord:
     models:
       user: Utilisateur
@@ -58,6 +67,8 @@ fr:
         time_start: Début
         artificial_intelligence_games_count: Intelligences artificielles
         winner: Gagnant
+        number_of_soldiers: Soldats
+        points: Points
       artificial_intelligence:
         short_model_name: AI
         id: "#"

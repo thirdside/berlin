@@ -54,16 +54,17 @@ get '/fight' do
       game.debug = true
       game.run
     rescue Exception => e
-      log e.inspect
+      log e
     end
   end
 end
 
 # log to error file
-def log string
+def log error
   open('errors.log', 'a') do |f|
     f.puts "#{DateTime.now} : #{request.path_info} #{params.inspect}"
-    f.puts string
+    f.puts e.inspect
+    f.puts e.backtrace
     f.puts "--------------------------------------------------------"
   end
 end
