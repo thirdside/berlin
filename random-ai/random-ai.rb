@@ -36,7 +36,7 @@ def create_or_update_game
   if action == "game_over"
     # Release the game to avoid memory leaks
     @@games[game_id] = nil
-  else
+  elsif state
     # Now, we want to update the current state of the game with the new content
     game.update state
   end
