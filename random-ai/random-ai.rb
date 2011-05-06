@@ -39,6 +39,7 @@ def create_or_update_game
   else
     # Now, we want to update the current state of the game with the new content
     game.update state
+  end
 end
 
 # This class will hold all the "intelligence" of the program. By
