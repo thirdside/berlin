@@ -95,9 +95,12 @@ TS.AIPlayback = Class.create(TS, {
 	{
 		e.stop();
 		this.onPause();
-		this.turnNumber--;
-		this.forward = false;
-		this.drawCurrentTurn();	
+		if (this.turnNumber > 0)
+		{
+			this.turnNumber--;
+			this.forward = false;
+			this.drawCurrentTurn();
+		}
 	},
 	
 	/*
@@ -137,9 +140,12 @@ TS.AIPlayback = Class.create(TS, {
 	{
 		e.stop();
 		this.onPause();
-		this.turnNumber++;
-		this.forward = true;
-		this.drawCurrentTurn();
+		if (this.turnNumber < this.getMaxTurn())
+		{
+			this.turnNumber++;
+			this.forward = true;
+			this.drawCurrentTurn();
+		}
 	},
 	
 	/*
