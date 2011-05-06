@@ -1,35 +1,37 @@
 {
-	"infos": {
-	    "api_version": 1,
-		"number_of_players": INTEGER,
-		"time_limit_per_turn": INTEGER,
-		"maximum_number_of_turns": INTEGER,
-		"directed": BOOLEAN
-	},
+  "infos": {
+    "game_id":"7c7905c6-2423-4a91-b5e7-44ff10cddd5d",
+    "maximum_number_of_turns":10,
+    "current_turn":5
+    "number_of_players":2
+  },
+  
+  "map": {
+    "types":[
+      {"name":"city", "points":-23, "units_per_turn":1}
+    ],
+    
+    "nodes":[
+      {"id":1, "type":"city"},
+      {"id":2, "type":"node"},
+      {"id":3, "type":"node"},
+      {"id":4, "type":"city"}
+    ],
+      
+    "paths":[
+      {"from":1, "to":2},
+      {"from":2, "to":3},
+      {"from":3, "to":4},
+      {"from":1, "to":3},
+      {"from":1, "to":4},
+      {"from":2, "to":4}
+    ]
+  }
 
-	"types": [
-		{
-			"name": STRING,
-			"soldiers_per_turn": INTEGER,
-			"points": INTEGER
-		}
-	],
-
-	"nodes": [
-		{
-			"id": INTEGER,
-			"type": STRING, ref.: types.name
-		}
-	],
-
-	"paths": [
-		{
-			"from": INTEGER, ref.: nodes.id
-			"to": INTEGER, ref.: nodes.id
-		}
-	],
-
-	"state": [
-		// TODO
-	]
+  "state":[
+    {"node_id":1, "player_id":0, "units":24},
+    {"node_id":2, "player_id":null, "units":0},
+    {"node_id":3, "player_id":null, "units":0},
+    {"node_id":4, "player_id":1, "units":24}
+  ]
 }
