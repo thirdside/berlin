@@ -32,16 +32,7 @@
         %td= @artificial_intelligence.created_at
 
 .content
-  %h2= Award.model_name.human.pluralize
-
-  %table.large
-    %thead
-      %tr
-        %th= Award.human_attribute_name :name
-    %tbody
-      - @artificial_intelligence.awards.each do |award|
-        %tr
-          %td= award.achievement.class.model_name.human
+  = render :partial => '/awards/list', :locals=>{:awards=>@artificial_intelligence.awards}
 
 .content
   %h2= t('common.history')

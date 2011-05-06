@@ -1,0 +1,19 @@
+- show_total ||= false
+
+%h2= Award.model_name.human.pluralize
+
+%table.large
+  %thead
+    %tr
+      %th= Award.human_attribute_name :name
+      - if show_total
+        %th= Award.human_attribute_name :total
+      %th= Award.human_attribute_name :description
+  %tbody
+    - awards.each do |award|
+      %tr
+        %td= t("achievements.names.#{ award.achievement.class.model_name.underscore }.#{ award.achievement.internal_code }")
+        - if show_total
+          %td= award.total
+        %td= t("achievements.descriptions.#{ award.achievement.class.model_name.underscore }", :condition_1=>award.achievement.condition_1, :condition_2=>award.achievement.condition_2, :condition_3=>award.achievement.condition_3)
+

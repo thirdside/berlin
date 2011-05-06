@@ -27,9 +27,9 @@ function RandomAI() {
 		if (uri === "/onturn")
 		{
 			this.onTurn(request, response);
-		} else if (uri === "/ready")
+		} else if (uri === "/infos")
 		{
-			this.onReady(request, response);
+			this.onInfos(request, response);
 		}
 		response.writeHead(200, {'Content-Type': 'application/json'});
 	}
@@ -38,16 +38,7 @@ function RandomAI() {
 	{
 		this.postHandler(request, function(request_data)
 		{
-			var game = this.games[request_data.game];
-			var json = JSON.parse(request_data.json);
-			if (!game)
-			{
-				game = new Game();
-				game.initialize(request_data.game, json, request_data.self);
-				this.games[request_data.game] = game;
-			}
-			game.update(json);
-			
+			var game = this.createOrUpdateGame(request_data);
 			var moves_json = JSON.stringify(game.turnMoves());
 			response.write(moves_json);
 			v("Moves for this turn: " + moves_json);
@@ -56,7 +47,34 @@ function RandomAI() {
 	    }.bind(this));
 	}
 	
-	this.onReady = function (request, response)
+	this.createOrUpdateGame = function (request)
+	{
+		var map = JSON.parse(request.map);
+		var infos = JSON.parse(request.infos);
+		var state = JSON.parse(request.state);
+		var action = request.action ? request.action : null;
+		var game_id = infos.game_id;
+		
+		var game = this.games[game_id];
+		
+		if (!game)
+		{
+			game = new Game();
+			game.initialize(game_id, map, infos);
+			this.games[game_id] = game;
+		}
+		if (action == "game_over")
+		{
+			
+		} else if (state)
+		{
+			game.update(state);
+		}
+		
+		return game;
+	}
+	
+	this.onInfos = function (request, response)
 	{
 		response.write("Ready!");
 	}
@@ -117,17 +135,16 @@ function Node ()
 
 function Game ()
 {
-	this.initialize = function (id, map_info, player_id)
+	this.initialize = function (id, map_info, infos)
 	{
 		this.id = id;
-		this.player_id = player_id;
 		this.map = new Map();
-		this.map.initialize(map_info, this.player_id);
+		this.map.initialize(map_info, infos);
 	}
 	
-	this.update = function (json)
+	this.update = function (states)
 	{
-		this.map.update(json.states);
+		this.map.update(states);
 	}
 	
 	this.turnMoves = function ()
@@ -155,22 +172,22 @@ function Game ()
 
 function Map ()
 {
-	this.initialize = function (config, player_id)
+	this.initialize = function (map, infos)
 	{
-		this.player_id = player_id;
+		this.player_id = infos.player_id;
 		this.nodes = {};
-		this.directed = config.infos.directed || false;
+		this.directed = infos.directed || false;
 		
-		for (var i = 0; i < config.nodes.length; i++)
+		for (var i = 0; i < map.nodes.length; i++)
 		{
-			var node = config.nodes[i];
+			var node = map.nodes[i];
 			this.nodes[node.id] = new Node();
 			this.nodes[node.id].initialize(node.id);
 		}
 		
-		for (var i = 0; i < config.paths.length; i++)
+		for (var i = 0; i < map.paths.length; i++)
 		{
-			var path = config.paths[i];
+			var path = map.paths[i];
 			this.nodes[path.from].linkTo(this.nodes[path.to]);
 			
 			if (!this.isDirected())

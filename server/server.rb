@@ -45,25 +45,26 @@ end
 end
 
 get '/fight' do
-  begin
-    Thread.new do
+  Thread.new do
+    begin
       game = Berlin::Server::Game.new
       game.map = Berlin::Server::Map.find( params[:map_id] )
       game.players = Berlin::Server::ArtificialIntelligence.find( params[:ai_ids] )
       game.init
       game.debug = true
       game.run
+    rescue Exception => e
+      log e
     end
-  rescue Exception => e
-    log e.inspect
   end
 end
 
 # log to error file
-def log string
+def log error
   open('errors.log', 'a') do |f|
     f.puts "#{DateTime.now} : #{request.path_info} #{params.inspect}"
-    f.puts string
+    f.puts e.inspect
+    f.puts e.backtrace
     f.puts "--------------------------------------------------------"
   end
 end

@@ -8,11 +8,14 @@
   %table.large
     %thead
       %tr
-        %th(colspan=4)= ArtificialIntelligence.model_name.human.pluralize
+        %th
+        %th= Game.human_attribute_name :number_of_soldiers
+        %th= Game.human_attribute_name :points
+        %th= ArtificialIntelligence.model_name.human
     %tbody
       - @game.artificial_intelligence_games.each do |artificial_intelligence_game|
         %tr{:id=>"info_player_#{artificial_intelligence_game.player_id}"}
-          %td.color
+          %td.color.icon
           %td.soldiers
           %td.cities
           %td= link_to artificial_intelligence_game.artificial_intelligence.name, artificial_intelligence_game.artificial_intelligence

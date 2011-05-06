@@ -110,14 +110,17 @@ module Berlin
         end
       end
 
-      def infos player_id
-        {
+      def infos player_id = nil
+        info = {
           :game_id                  => @uuid,
-          :player_id                => player_id,
           :current_turn             => @turn,
           :maximum_number_of_turns  => map.maximum_number_of_turns,
+          :time_limit_per_turn      => map.time_limit_per_turn,
+          :directed                 => map.directed,
           :number_of_players        => number_of_players
         }
+
+        player_id ? info.merge(:player_id => player_id) : info
       end
 
       def ranking
@@ -126,8 +129,10 @@ module Berlin
         total   = 0
 
         map.nodes.each do |node|
-          points[node.owner] += node.points if node.owner.present?
-          total += node.points
+          if node.owned?
+            points[node.owner] += node.points
+            total += node.points
+          end
         end
 
         # Get max points to determine winners
@@ -172,9 +177,10 @@ module Berlin
               :infos=>self.infos( player.player_id ).to_json,
               :map=>map.to_hash.to_json,
               :state=>map.states.to_json
-            })
-          
-          puts req[player.player_id].inspect
+            }
+          )
+
+          puts req[player.player_id].inspect if @debug
 
           req[player.player_id].on_complete do |response|
             rep[player.player_id] = response
