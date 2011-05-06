@@ -3,7 +3,7 @@ module Berlin
     class Map < Map
       after_initialize :build
 
-      attr_reader :nodes, :paths, :maximum_number_of_turns, :number_of_players, :time_limit_per_turn
+      attr_reader :nodes, :paths, :maximum_number_of_turns, :number_of_players, :time_limit_per_turn, :directed
 
       def build
         @nodes = []
@@ -63,7 +63,7 @@ module Berlin
         {
             :types=>@types.values.map(&:to_hash),
             :nodes=>@nodes.map(&:to_hash),
-            :paths=>@paths.map(&:to_path)
+            :paths=>@paths.map(&:to_hash)
         }
       end
 
