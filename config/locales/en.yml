@@ -94,9 +94,8 @@ en:
     problem: "There's a problem with the config you asked. Please check again."
   
   intro:
-    quote: |
-      Beside being awesome, Berlin is a web-based electronic turn-by-turn multiplayer artificial intelligence strategy
-      board game.
+    quote_01: "Beside being awesome, Berlin is a web-based electronic turn-by-turn multiplayer artificial intelligence strategy board game."
+    quote_02: "Thank you so much for those exciting and endless hours of delightful pleasure! I'll never forget it!"
       
     breakdown:
       b0:

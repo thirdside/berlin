@@ -34,7 +34,6 @@ fr:
       victories_achievement:
         first_victory: "1ère victoire!"
       
-  
   activerecord:
     models:
       user: Utilisateur
@@ -110,7 +109,9 @@ fr:
     problem: Il y a un problème avec la configuration de la partie demandée. Merci de revérifier.
   
   intro:
-    quote: "En plus d'être exceptionnel, Berlin est un jeu stratégique de plateau électronique en ligne multijoueurs en tour par tour d'intelligences artificielles."
+    quote_01: "En plus d'être exceptionnel, Berlin est un jeu stratégique de plateau électronique en ligne multijoueurs en tour par tour d'intelligences artificielles."
+    quote_02: "Merci Berlin pour toutes ces heures de délicieux plaisir incessant! C'est une expérience que je n'oublierai jamais!"
+    
     breakdown:
       b0:
         title: Stratégique

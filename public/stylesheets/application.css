@@ -271,7 +271,7 @@ table {
 
 table.breakdown {
     border-collapse: separate;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 table.breakdown td {
@@ -294,7 +294,7 @@ table.breakdown td:hover {
 
 table.breakdown td h4 {
     font-family: 'Waiting for the Sunrise';
-    font-size: 17px;
+    font-size: 16px;
     color: #f78d1d;
     text-shadow: 1px 1px 0 #202020;
     border-bottom: 1px dotted #eee;
@@ -366,19 +366,19 @@ table.large th.icon a, table td.icon a {
     position: relative;
     width: 960px;
     height: 500px;
+    background: #eeeeee;
+    box-shadow: 0 0 10px #202020;
+    -moz-box-shadow: 0 0 10px #202020;
+    -webkit-box-shadow: 0 0 10px #202020;
 }
 
 
-.map-container {
+.map-container #map {
   float: right;
   width: 500px;
   height: 300px;
-  padding: 10px;
   margin-right: 20px;
-  background: #eeeeee;
-  box-shadow: 0 0 10px #202020;
-  -moz-box-shadow: 0 0 10px #202020;
-  -webkit-box-shadow: 0 0 10px #202020;
+  padding: 4px;
 }
 
 #container canvas {

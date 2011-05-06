@@ -12,7 +12,7 @@
     %tbody
       - @users.each do |user|
         %tr
-          %td= user.username
+          %td= link_to user.username, user
           %td.centered= user.artificial_intelligences.count
           %td.centered= user.artificial_intelligence_games.count
           %td.icon= link_to_show user

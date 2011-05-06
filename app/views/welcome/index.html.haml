@@ -2,13 +2,21 @@
   %h2= t('titles.welcome')
 
   .intro
+    - signatures = ["NASA Engineer", "Dr. House", "Ted - 'Winter is coming'", "Barack Obama", "Capt'n Picard", "Spock", "McGyver", "Ron Jeremy", "Chuck Norris", "Nathan Filion", "Malcom Reynolds", "Richard Castle", "Ceiling Cat", "George W. Bush", "Mark Zuckerberg", "Steve Jobs", "Sarah Palin", "Ginette St-Pierre", "Pikachu", "Bill Gates"]
+    
     %blockquote.quote
-      = t('intro.quote')
+      = t('intro.quote_01')
       .signature
-        = ["NASA Engineer", "Barack Obama", "Mark Zuckerberg", "Steve Jobs", "Sarah Palin", "Ginette St-Pierre", "Pikachu", "Bill Gates"].sample
+        = signatures.shuffle.pop
+    
+    %blockquote.quote
+      = t('intro.quote_02')
+      .signature
+        = signatures.shuffle.pop
 
   .map-container
-    %img{:src => "/images/screenshots/game-1.jpg"}
+    #map
+      %img{:src => "/images/screenshots/game-1.jpg"}
 
   %div{:style=>"clear: both;"}
 
