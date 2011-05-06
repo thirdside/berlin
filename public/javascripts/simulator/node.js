@@ -53,7 +53,7 @@ TS.City = Class.create(TS.Node, {
 	initialize: function ($super, id, x, y)
 	{
 		$super(id, 'city', x, y);
-		this.layout = (Math.random() * 3) | 0;
+		this.layout = id % 3 | 0;
 	},
 });
 
