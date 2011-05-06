@@ -1,9 +1,11 @@
-{
+POST {
+  "action": "game_start", // or "game_over" #=> if /infos
   "infos": {
     "game_id":"7c7905c6-2423-4a91-b5e7-44ff10cddd5d",
     "maximum_number_of_turns":10,
-    "current_turn":5
-    "number_of_players":2
+    "current_turn":5,
+    "number_of_players":2,
+    "player_id": 5
   },
   
   "map": {
