@@ -59,6 +59,14 @@ module Berlin
         end
       end
 
+      def to_hash
+        {
+            :types=>@types.values.map(&:to_hash),
+            :nodes=>@nodes.map(&:to_hash),
+            :paths=>@paths.map(&:to_path)
+        }
+      end
+
       def states
         @nodes.map(&:state)
       end

@@ -74,6 +74,12 @@ fr:
       artificial_intelligence_game:
         score: Pointage
 
+  support:
+    array:
+      words_connector: ", "
+      two_words_connector: " et "
+      last_word_connecter: " et "
+
   views:
     pagination:
       previous: "&laquo; "

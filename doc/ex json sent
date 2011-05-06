@@ -9,7 +9,7 @@
   
   "map": {
     "types":[
-      {"name":"city", "points":-23, "units_per_turn":1}
+      {"name":"city", "points":-23, "soldiers_per_turn":1}
     ],
     
     "nodes":[
@@ -30,10 +30,10 @@
   }
 
   "state":[
-    {"node_id":1, "player_id":0, "units":24},
-    {"node_id":2, "player_id":null, "units":0},
-    {"node_id":3, "player_id":null, "units":0},
-    {"node_id":4, "player_id":1, "units":24}
+    {"node_id":1, "player_id":0, "number_of_soldiers":24},
+    {"node_id":2, "player_id":null, "number_of_soldiers":0},
+    {"node_id":3, "player_id":null, "number_of_soldiers":0},
+    {"node_id":4, "player_id":1, "number_of_soldiers":24}
   ]
 }
 

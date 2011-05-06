@@ -110,10 +110,11 @@ module Berlin
         end
       end
 
-      def infos
+      def infos player_id
         {
           :game_id                  => @uuid,
-          :map_id                   => map.id,
+          :player_id                => player_id,
+          :current_turn             => @turn,
           :maximum_number_of_turns  => map.maximum_number_of_turns,
           :number_of_players        => number_of_players
         }
@@ -156,17 +157,6 @@ module Berlin
         temp.to_json
       end
 
-      def snapshot
-        temp = Hash.new
-
-        temp[:infos]  = infos
-        temp[:nodes]  = map.nodes.map(&:to_hash)
-        temp[:paths]  = map.paths.map(&:to_hash)
-        temp[:states] = @turns[@turn][:init_state]
-
-        temp.to_json
-      end
-
       def play! players
         # initializing responses and requests
         rep = {}
@@ -179,10 +169,9 @@ module Berlin
             :timeout       => map.time_limit_per_turn,
             :cache_timeout => 0,
             :params        => {
-              :self=>player.player_id,
-              :game=>@uuid,
-              :turn=>@turn,
-              :json=>snapshot
+              :infos=>self.infos( player.player_id ).to_json,
+              :map=>map.to_hash.to_json,
+              :state=>map.states.to_json
             })
           
           puts req[player.player_id].inspect
