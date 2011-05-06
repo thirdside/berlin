@@ -186,7 +186,7 @@
 				combatObject.text = "reinforced!";
 				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);					
 			//} else if (this.map.getNodeSuicide(data.to)) {
-			//	combatObject.text = "suicide!";
+			//	combatObject.text = "kamikaze!";
 			//	combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);										
 			} else if (this.map.getNodeCombat(data.to)) {
 				combatObject.text = "fight!";
@@ -917,7 +917,7 @@
 					'img': this.graphics.node,
 					'width': this.graphics.node.width,
 					'height': this.graphics.node.height,
-					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
+					'color': (node.playerId != null) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'radius': 10
 				},
 				
@@ -934,7 +934,7 @@
 					'img': this.graphics.node,
 					'width': this.graphics.node.width,
 					'height': this.graphics.node.height,
-					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
+					'color': (node.playerId != null) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'radius': 10
 				},
 				
@@ -951,7 +951,7 @@
 					'img': this.graphics.node,
 					'width': this.graphics.node.width,
 					'height': this.graphics.node.height,
-					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
+					'color': (node.playerId != null) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'radius': 10
 				},
 				
@@ -969,7 +969,7 @@
 					'img': this.graphics.node,
 					'width': this.graphics.node.width,
 					'height': this.graphics.node.height,
-					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
+					'color': (node.playerId != null) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'radius': 10
 				},
 				
@@ -1016,7 +1016,7 @@
 					'img': img,
 					'width': img.width,
 					'height': img.height,
-					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
+					'color': (node.playerId != null) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'layout': node.layout,
 					'radius': 7.5,
 					'spacing': 1.8
@@ -1035,7 +1035,7 @@
 					'img': img,
 					'width': img.width,
 					'height': img.height,
-					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
+					'color': (node.playerId != null) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'layout': node.layout,
 					'radius': 7.5,
 					'spacing': 1.8
@@ -1054,7 +1054,7 @@
 					'img': img,
 					'width': img.width,
 					'height': img.height,
-					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
+					'color': (node.playerId != null) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'layout': node.layout,
 					'radius': 7.5,
 					'spacing': 1.8
@@ -1074,7 +1074,7 @@
 					'img': img,
 					'width': img.width,
 					'height': img.height,
-					'color': (node.playerId) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
+					'color': (node.playerId != null) ? this._getPlayerColor(node.playerId) : '#FFFFFF',
 					'layout': node.layout,
 					'radius': 7.5,
 					'spacing': 1.8
