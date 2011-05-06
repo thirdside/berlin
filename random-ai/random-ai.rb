@@ -33,9 +33,12 @@ def create_or_update_game
   @@games[game_id] ||= Game.new game_id, map, infos
   game = @@games[game_id]
 
-  # Now, we want to update the current state of the game with the new content
-  game.update state
-  
+  if action == "game_over"
+    # Release the game to avoid memory leaks
+    @@games[game_id] = nil
+  else
+    # Now, we want to update the current state of the game with the new content
+    game.update state
 end
 
 # This class will hold all the "intelligence" of the program. By
