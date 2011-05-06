@@ -273,16 +273,13 @@
 	
 	_createChartObject: function (object, attrs)
 	{
-		// modify the current colors palette
-		this.raphael.g.colors = object.colors;
-		
 		// create the chart
 		var chart = this.raphael.g.piechart(
 			object.position.x,
 			object.position.y,
 			object.radius,
 			object.data.clone(),
-			{legend: [], legendpos: 'west', legendcolor: '#fff'});
+			{legend: [], legendpos: 'west', legendcolor: '#fff', colors: object.colors});
 		
 		chart.attr({'opacity': attrs.opacity});
 	

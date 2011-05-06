@@ -16,7 +16,7 @@ get '/infos' do
 end
 
 post '/onturn' do
-  create_or_update_game
+  game = create_or_update_game
   # Respond with a json of our moves
   game.turn_moves.to_json
 end
@@ -40,6 +40,8 @@ def create_or_update_game
     # Now, we want to update the current state of the game with the new content
     game.update state
   end
+  
+  game
 end
 
 # This class will hold all the "intelligence" of the program. By

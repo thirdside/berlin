@@ -46,6 +46,15 @@ TS.NewGameHelper = Class.create(TS, {
 	
 	onMapReady: function ()
 	{
-		
+		var desc = new TS.PlaybackDescription(
+			this.map.config,
+			this.map.nodeGraph,
+			null,
+			this.map.layers['background'],
+			this.map.graphics);
+        
+        desc.initializePreview();
+        
+        this.map.doTurn(null, desc.preview, true);
 	}
 });
