@@ -56,8 +56,8 @@ class Game
   end
 
   # Let's update the map with the latest state
-  def update json
-    @map.update json['state']
+  def update state
+    @map.update state
   end
 
   # For this example, we removed the 'Intelligence' part of the 'Artificial Intelligence' term...
