@@ -1,0 +1,453 @@
+.content
+  %h2= t('titles.tutorial')
+  
+  %p
+    Donc, ça y est? Vous désirez vous aussi lancer votre propre intelligence artificielle dans l'arène pour le voir démolir
+    quoique ce soit qui oserait se tenir sur sa route? Vous êtes au bon endroit. Nous décortiquerons ici un exemple court
+    et simple, qui vous permettra d'établir les bases de ce qui, je l'espère, sera un programme gagnant. Pour sa simplicité,
+    Ruby sera ici utilisé, mais sachez que vous êtes libre d'utiliser le langage de votre choix. Pour les plus curieux
+    d'entre vous, voici un <a href='/random-ai/random-ai.rb'>lien pour télécharger</a> le code relatif à l'exemple suivant.
+  
+  %h3 Rubygems
+  
+  %p
+    Dans un premier temps, nous aurons besoin de deux <a href='https://rubygems.org/' target='_blank'>gems</a>.
+    <a href='http://www.sinatrarb.com/' target='_blank'>Sinatra</a> nous permet de créer aisément et rapidement une
+    application web alors que <a href='https://rubygems.org/gems/yajl-ruby' target='_blank'>yajl</a>, qui tient pour
+    "yet another json library", nous aidera à analyser et créer les différents messages JSON échangés.
+  
+  %pre.code
+    :preserve
+      require 'rubygems'
+      require 'sinatra'
+      require 'yajl/json_gem'
+  
+  %h3 URLs
+  
+  %p
+    Tel que spécifié dans la doc de Berlin, tout serveur se doit de répondre à deux URLs. Grâce à Sinatra, la tâche
+    nous est grandement simplifiée. Le premier, <i>/infos</i>, nous servira à inscrire une nouvelle partie ainsi qu'à
+    la détruite le moment venue, alors que le deuxième, <i>/onturn</i>, nous servira à recevoir de Berlin
+    les informations de la partie, tour par tour, ainsi qu'à lui communiquer les mouvements que nous désirons faire.
+    Nous déclarons donc les deux URLs de la manière suivante :
+  
+  %pre.code
+    :preserve
+      get '/infos' do
+        
+      end
+
+      post '/onturn' do
+        
+      end
+  
+  %h3 Créer et mémoriser les parties
+  
+  %p
+    Maintenant que nous possédons nos deux URLs, nous aurons besoin de créer une nouvelle partie chaque fois qu'on
+    nous le demandera. Pour ce faire, l'approche choisie ici consiste à se créer une méthode <i>create_or_update_game</i>
+    qui sera appelée via les deux urls. Une variable de classe, <i>@@games</i>, doit également être créée afin de garder
+    trace de toutes les parties en cours. Nous utiliserons ici un Hash afin d'indexer les parties sur leur identifiant.
+  
+  %pre.code
+    :preserve
+      @@games = {}
+
+      get '/infos' do
+        create_or_update_game
+      end
+
+      post '/onturn' do
+        create_or_update_game
+      end
+      
+      def create_or_update_game
+        #Here we are...
+      end
+  
+  %h3 Analyser les requêtes reçues
+  
+  %p
+    Les différentes requêtes sont décortiquées dans les annexes, je vous laisse donc le soin de prendre note de toute
+    l'information mise à votre disposition. Comme il vous est possible de le constater, les deux requêtes sont en soit
+    très semblable, ce qui a motivé notre choix de n'utiliser qu'une seule méthode. Vous receverez donc quatre différents
+    paramètres dont l'un, <i>infos</i>, contient un identifiant unique pour la partie en cours. Nous allons donc, dans
+    un premier temps, vérifier s'il existe une partie portant cet identifiant. Si non, nous la créons en lui passant
+    ce qui sera plus tard de l'information qui lui sera utile. S'il s'agit d'un appel sur l'url <i>/onturn</i>, la
+    requête contiendra également un paramètre <i>state</i> qui nous servira à mettre à jour l'état de la partie. On termine
+    le tout en retournant la partie courante. Le code est assez simple, je vous laisse donc y jeter un coup d'oeil avant
+    de continuer.
+  
+  %pre.code
+    :preserve
+      def create_or_update_game
+        # First, we parse the received request
+        map = JSON.parse( params[:map] )
+        infos = JSON.parse( params[:infos] )
+        state = JSON.parse( params[:state] )
+        action = params[:action] ? params[:action] : nil
+        
+        # Then, let's see if we can find that game. If not, register it.
+        game_id = infos['game_id']
+        @@games[game_id] ||= Game.new game_id, map, infos
+        game = @@games[game_id]
+
+        if action == "game_over"
+          # Release the game to avoid memory leaks
+          @@games.delete game_id
+        elsif state
+          # Now, we want to update the current state of the game with the new content
+          game.update state
+        end
+        
+        game
+      end
+    
+  %h3 class Game
+  
+  %p
+    Les plus perspicaces d'entre vous aurons sans doute remarqué que bien que nous avons trois méthode faisant appel
+    à la classe <i>Game</i>, cette dernière n'est toujours pas créée! Remédions donc immédiatement à la situation.
+    Nous avons préalablement vue que nous créerons une nouvelle partie en lui passant en paramètre un identifiant,
+    une carte ainsi que les informations liées à ladite carte. Comme nous nous créerons une classe représentant la
+    carte, le code de la partie en est grandement simplifié. Voici donc, sans plus attendre :
+  
+  %pre.code
+    :preserve
+      class Game
+        attr_reader :id
+
+        # @id = Uniq game ID (params[:game])
+        # @map = Current state of the game (params[:json])
+        def initialize id, map, infos
+          @id   = id
+          @map  = Map.new map, infos
+        end
+
+        
+        def update state
+          @map.update state
+        end
+      end
+  
+  %h3 class Map
+  
+  %p
+    Bon, la classe <i>Game</i> n'ayant pas été un défi particulièrement épuisant, attaquons nous immédiatement à la classe <i>Map</i>,
+    qui fera le gros du boulot. Tel que vu plus haut, une map est créée en lui passant deux paramètres. 
+    Le paramètre <i>map</i> nous permettera de virtualiser la carte en créant tous les points et les chemins alors que
+    le paramètre <i>infos</i> nous permettera d'identifier certaines composantes importantes du jeu, tel que notre
+    identifiant de joueur pour cette partie. Vous remarquerez que nous utilisons au passage une classe <i>Node</i>, que
+    je détaillerai également plus bas. Encore une fois, je compte sur un code relativement simple qui, je l'espère,
+    sera auto-explicatif.
+  
+  %pre.code
+    :preserve
+      class Map
+        attr_accessor :nodes
+        attr_reader :player_id
+        
+        def initialize map, infos
+          @player_id  = infos['player_id']
+          @nodes      = {}
+          @directed   = infos['directed'] || false
+
+          # Let's parse json['nodes'] and register all nodes we can find.
+          # We'll keep track of them in @nodes so we can find them later.
+          # At this step (Map creation...), we still don't know who possess
+          # the node and how many soldiers there is. We'll get back to that later.
+          # json['nodes'] => [{:id => STRING}, ...]
+          map['nodes'].each do |node|
+            @nodes[node['id']] = Node.new node['id']
+          end
+
+          # Same thing here, with paths.
+          # json['paths'] => [{:from => INTEGER, :to => INTEGER}, ...]
+          map['paths'].each do |path|
+            @nodes[path['from']].link_to @nodes[path['to']]
+
+            # Don't forget! If the map is not directed, we must create the reverse link!
+            @nodes[path['to']].link_to @nodes[path['from']] unless directed?
+          end
+        end
+
+        # By checking node.player_id, we are able to know if we own the node or not.
+        def owned_nodes
+          @nodes.select do |id, node|
+            node.player_id == player_id
+          end
+        end
+
+        # Node.number_of_soldiers returns, well, the number of soldiers a node has.
+        # We can noe loop on our owned nodes in order to find our controlled nodes.
+        def controlled_nodes
+          owned_nodes.select do |id, node|
+            node.number_of_soldiers > 0
+          end
+        end
+
+        # Is the map directed?
+        def directed?
+          @directed
+        end
+
+        # Let's update the current state with the latest provided info! With this step,
+        # we'll now know who possess the node and how many soldiers there is.
+        # state contains an array of nodes, so we just have to loop on it.
+        # state => [{:node_id => STRING, :number_of_soldiers => INTEGER, :player_id => INTEGER}, ...]
+        def update state
+          state.each do |n|
+            node                    = @nodes[n['node_id']]
+            node.number_of_soldiers = n['number_of_soldiers']
+            node.player_id          = n['player_id']
+          end
+        end
+      end
+  
+  %pre.code
+    :preserve
+      class Node
+        attr_accessor :id, :player_id, :number_of_soldiers
+        
+        def initialize id
+          @id                 = id
+          @number_of_soldiers = 0
+          @player_id          = 0
+          @links              = []
+        end
+
+        # Register a given node as an adjacent one.
+        def link_to other_node
+          @links << other_node
+        end
+
+        # Is other_node adjacents to current node?
+        def adjacent? other_node
+          @links.include? other_node
+        end
+
+        # What are current node's neighbors?
+        def adjacent_nodes
+          @links.dup
+        end
+      end
+  
+  %h3 Mouvements
+  
+  %p
+    Nous voilà donc rendu à l'étape la plus intéressante : les mouvements! Jusqu'à présent, nous avons
+    donc une partie et une carte capable de nous aider à prendre les meilleurs décisions. En effet, avec la
+    carte mise à jour (méthode <i>update</i>), nous sommes en mesure de connaître qui possède quoi, combien
+    de soldats sont présents, etc. Bien qu'il existe une foule d'autres détails à notre disposition, telle que la valeur
+    en point de chacun des points, nous n'en tiendrons pas compte dans le présent exemple. Pour les besoins
+    de la cause, nous nous en tiendrons à des mouvements tout à faire aléatoires, vous laissant le plaisir d'imaginer
+    la meilleure des intelligences artificielles. La classe <i>Game</i> aura donc la responsabilité de déterminer pour
+    nous les meilleurs mouvements à faire, et nous ne devons pas oublier de modifier la méthode <i>/onturn</i> afin
+    de communiquer le tout au server de Berlin.
+    
+  %pre.code
+    :preserve
+      post '/onturn' do
+        game = create_or_update_game
+        
+        game.turn_moves.to_json
+      end
+      
+      class Game
+        
+        # ...
+        
+        def turn_moves
+          @map.controlled_nodes.map do |id, node|
+            {
+              :from => node.id,
+              :to => node.adjacent_nodes.sample.id,
+              :number_of_soldiers => rand(node.number_of_soldiers + 1)
+            }
+          end
+        end
+      end
+  
+  %h3 Révision
+  
+  %p
+    C'est tout. Nous avons donc bâti une partie, une carte, des points et des chemins. Nous avons analysé le tout
+    et nous avons fait part à Berlin des mouvements que nous désirions faire. Après avoir effectuer les mouvements
+    de tous les joueurs, Berlin nous réenverra une nouvelle requête, notre carte sera mise à jour, de
+    nouveaux mouvements seront calculés, etc. Ne vous reste plus qu'à exposer votre code sur un quelconque
+    serveur web, tel qu'<a href="http://www.heroku.com" target="_blank">heroku</a>, et d'enregistrer votre nouvelle intelligence artificielle sur Berlin.
+    Félicitation! Je termine en vous laissant l'ensemble du code en un seul et unique morceau.
+  
+  %pre.code
+    :preserve
+      # BERLIN :: Ruby Artificial Intelligence example
+      # This ruby example is based on sinatra which provides an easy way to deploy a website.
+      # By showing you how to deal with the communication layer, you can concentrate on the
+      # intelligence part of your program. All classes are kept in this file for simplicity.
+      # Please keep in mind that this is only an example and shouldn't be pushed in production.
+
+      require 'rubygems'
+      require 'sinatra'
+      require 'yajl/json_gem'
+
+      # Let's keep track of all played games
+      @@games = {}
+
+      get '/infos' do
+          create_or_update_game
+      end
+
+      post '/onturn' do
+        game = create_or_update_game
+        # Respond with a json of our moves
+        game.turn_moves.to_json
+      end
+
+      def create_or_update_game
+        # First, we parse the received request
+        map = JSON.parse( params[:map] )
+        infos = JSON.parse( params[:infos] )
+        state = JSON.parse( params[:state] )
+        action = params[:action] ? params[:action] : nil
+        
+        # Then, let's see if we can find that game. If not, register it.
+        game_id = infos['game_id']
+        @@games[game_id] ||= Game.new game_id, map, infos
+        game = @@games[game_id]
+
+        if action == "game_over"
+          # Release the game to avoid memory leaks
+          @@games[game_id] = nil
+        elsif state
+          # Now, we want to update the current state of the game with the new content
+          game.update state
+        end
+        
+        game
+      end
+
+      # This class will hold all the "intelligence" of the program. By
+      # analyzing the current state of the map, we'll be able to determine
+      # the best moves to do.
+      class Game
+        attr_reader :id
+
+        # @id = Uniq game ID (params[:game])
+        # @map = Current state of the game (params[:json])
+        def initialize id, map, infos
+          @id         = id
+          @map        = Map.new map, infos
+        end
+
+        # Let's update the map with the latest state
+        def update state
+          @map.update state
+        end
+
+        # For this example, we removed the 'Intelligence' part of the 'Artificial Intelligence' term...
+        # We respond with random moves from one node to another without any intelligence...
+        # Usually, it's this part of the code that you'd like to improve a bit. ;-)
+        # Expected return format : [{"from": NodeID, "to": NodeID, "number_of_soldiers": X}, {...}, ...]
+        def turn_moves
+          @map.controlled_nodes.map do |id, node|
+            {
+              :from => node.id,
+              :to => node.adjacent_nodes.sample.id,
+              :number_of_soldiers => rand(node.number_of_soldiers + 1)
+            }
+          end
+        end
+      end
+
+      # Map will keep track of all the useful information needed to play, such as
+      # nodes, points, soldiers, etc. Game will then be able to pick any information
+      # it wants from map to decide what are the best moves to do.
+      class Map
+        attr_accessor :nodes
+        attr_reader :player_id
+        
+        def initialize map, infos
+          @player_id  = infos['player_id']
+          @nodes      = {}
+          @directed   = infos['directed'] || false
+
+          # Let's parse json['nodes'] and register all nodes we can find.
+          # We'll keep track of them in @nodes so we can find them later.
+          # At this step (Map creation...), we still don't know who possess
+          # the node and how many soldiers there is. We'll get back to that later.
+          # json['nodes'] => [{:id => STRING}, ...]
+          map['nodes'].each do |node|
+            @nodes[node['id']] = Node.new node['id']
+          end
+
+          # Same thing here, with paths.
+          # json['paths'] => [{:from => INTEGER, :to => INTEGER}, ...]
+          map['paths'].each do |path|
+            @nodes[path['from']].link_to @nodes[path['to']]
+
+            # Don't forget! If the map is not directed, we must create the reverse link!
+            @nodes[path['to']].link_to @nodes[path['from']] unless directed?
+          end
+        end
+
+        # By checking node.player_id, we are able to know if we own the node or not.
+        def owned_nodes
+          @nodes.select do |id, node|
+            node.player_id == player_id
+          end
+        end
+
+        # Node.number_of_soldiers returns, well, the number of soldiers a node has.
+        # We can noe loop on our owned nodes in order to find our controlled nodes.
+        def controlled_nodes
+          owned_nodes.select do |id, node|
+            node.number_of_soldiers > 0
+          end
+        end
+
+        # Is the map directed?
+        def directed?
+          @directed
+        end
+
+        # Let's update the current state with the latest provided info! With this step,
+        # we'll now know who possess the node and how many soldiers there is.
+        # state contains an array of nodes, so we just have to loop on it.
+        # state => [{:node_id => STRING, :number_of_soldiers => INTEGER, :player_id => INTEGER}, ...]
+        def update state
+          state.each do |n|
+            node                    = @nodes[n['node_id']]
+            node.number_of_soldiers = n['number_of_soldiers']
+            node.player_id          = n['player_id']
+          end
+        end
+      end
+
+      # Node will help us to keep track of possible moves.
+      # We'll be able to use it in order to know if two
+      # nodes are adjacent, how much points worth a node, etc.
+      class Node
+        attr_accessor :id, :player_id, :number_of_soldiers
+        
+        def initialize id
+          @id                 = id
+          @number_of_soldiers = 0
+          @player_id          = 0
+          @links              = []
+        end
+
+        # Register a given node as an adjacent one.
+        def link_to other_node
+          @links << other_node
+        end
+
+        # Is other_node adjacents to current node?
+        def adjacent? other_node
+          @links.include? other_node
+        end
+
+        # What are current node's neighbors?
+        def adjacent_nodes
+          @links.dup
+        end
+      end

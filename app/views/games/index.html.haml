@@ -1,6 +1,7 @@
 .content
   - if user_signed_in?
     .right
+      = link_to t('games.view_random'), random_games_path, :class=>:button
       = link_to t('games.new'), new_game_path, :class=>:button
 
   %h2= t('titles.all_games')

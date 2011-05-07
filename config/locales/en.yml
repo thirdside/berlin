@@ -90,6 +90,7 @@ en:
     feeling_lucky: Feelin lucky?
     rematch: Rematch
     new: New game
+    view_random: View random game
     success: The game has started! The result should appears here within few seconds...
     failure: There has been an error with the game you asked. We have been noticed of the error.
     problem: "There's a problem with the config you asked. Please check again."

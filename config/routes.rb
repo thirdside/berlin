@@ -3,7 +3,11 @@ BerlinWeb::Application.routes.draw do
 
   resources :maps
 
-  resources :games
+  resources :games do
+    collection do
+      get :random
+    end
+  end
 
   resources :artificial_intelligences
 
@@ -12,6 +16,7 @@ BerlinWeb::Application.routes.draw do
   match 'home' => 'welcome#index'
 
   match 'doc' => 'doc#index'
+  match 'tutorial' => 'doc#tutorial'
 
   root :to => "welcome#index"
 end

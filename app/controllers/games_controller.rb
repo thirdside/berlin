@@ -19,6 +19,10 @@ class GamesController < InheritedResources::Base
       format.json { render :json => @game.json }
     end
   end
+  
+  def random
+    redirect_to Game.order('RAND()').first
+  end
 
   def new
     if params[:artificial_intelligence_id]

@@ -105,6 +105,7 @@ fr:
     feeling_lucky: Un peu de chance?
     rematch: Rejouer
     new: Nouvelle partie
+    view_random: Visionnement aléatoire
     success: La partie a débuté! Les résultats devraient apparaître ici dans quelques instants...
     failure: Il y a eu une erreur avec la partie demandée... Nous en avons été avisé.
     problem: Il y a un problème avec la configuration de la partie demandée. Merci de revérifier.

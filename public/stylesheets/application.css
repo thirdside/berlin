@@ -175,6 +175,14 @@ div.content h2 {
 
 div.content h3 {
   text-shadow: 2px 2px 5px #cccccc;
+  padding: 10px 0 5px 0;
+}
+
+div.content i {
+  padding: 1px 5px;
+  background: #f78d1d;
+  color: #202020;
+  border-radius: 5px;
 }
 
 ul#menu {
@@ -490,6 +498,14 @@ input[type='submit'][disabled], a.button.disabled {
 
 .label .data-container {
     float: right;
+}
+
+pre.code {
+  margin: 10px;
+  padding: 10px;
+  background: #606060;
+  border-radius: 4px;
+  color: #ffffff;
 }
 
 .data-container {
