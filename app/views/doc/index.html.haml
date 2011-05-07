@@ -1,5 +1,7 @@
-- if @doc.is_a? Hash
-  .content.table_of_content
+- if @doc.is_a? Hash  
+  .content.table_of_content    
+    = render :partial => '/doc/shared/menu'
+    
     %h2= t('titles.table_of_content')
 
     %ul.padded

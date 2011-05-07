@@ -25,6 +25,7 @@ fr:
     games_played: Parties jouées
     table_of_content: Table des matières
     welcome: Accueil
+    tutorial: Tutoriel
   
   achievements:
     descriptions:
@@ -109,7 +110,7 @@ fr:
     success: La partie a débuté! Les résultats devraient apparaître ici dans quelques instants...
     failure: Il y a eu une erreur avec la partie demandée... Nous en avons été avisé.
     problem: Il y a un problème avec la configuration de la partie demandée. Merci de revérifier.
-  
+            
   intro:
     quote_01: "En plus d'être exceptionnel, Berlin est un jeu stratégique de plateau électronique en ligne multijoueurs en tour par tour d'intelligences artificielles."
     quote_02: "Merci Berlin pour toutes ces heures de délicieux plaisir incessant! C'est une expérience que je n'oublierai jamais!"

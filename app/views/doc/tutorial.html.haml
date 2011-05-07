@@ -1,20 +1,13 @@
-.content
+.content  
+  = render :partial => '/doc/shared/menu'
+  
   %h2= t('titles.tutorial')
   
-  %p
-    Donc, ça y est? Vous désirez vous aussi lancer votre propre intelligence artificielle dans l'arène pour le voir démolir
-    quoique ce soit qui oserait se tenir sur sa route? Vous êtes au bon endroit. Nous décortiquerons ici un exemple court
-    et simple, qui vous permettra d'établir les bases de ce qui, je l'espère, sera un programme gagnant. Pour sa simplicité,
-    Ruby sera ici utilisé, mais sachez que vous êtes libre d'utiliser le langage de votre choix. Pour les plus curieux
-    d'entre vous, voici un <a href='/random-ai/random-ai.rb'>lien pour télécharger</a> le code relatif à l'exemple suivant.
+  %p= t('tutorial.intro')
   
-  %h3 Rubygems
+  %h3= t('tutorial.rubygems.title')
   
-  %p
-    Dans un premier temps, nous aurons besoin de deux <a href='https://rubygems.org/' target='_blank'>gems</a>.
-    <a href='http://www.sinatrarb.com/' target='_blank'>Sinatra</a> nous permet de créer aisément et rapidement une
-    application web alors que <a href='https://rubygems.org/gems/yajl-ruby' target='_blank'>yajl</a>, qui tient pour
-    "yet another json library", nous aidera à analyser et créer les différents messages JSON échangés.
+  %p= raw t('tutorial.rubygems.text')
   
   %pre.code
     :preserve
@@ -22,14 +15,9 @@
       require 'sinatra'
       require 'yajl/json_gem'
   
-  %h3 URLs
+  %h3= t('tutorial.urls.title')
   
-  %p
-    Tel que spécifié dans la doc de Berlin, tout serveur se doit de répondre à deux URLs. Grâce à Sinatra, la tâche
-    nous est grandement simplifiée. Le premier, <i>/infos</i>, nous servira à inscrire une nouvelle partie ainsi qu'à
-    la détruite le moment venue, alors que le deuxième, <i>/onturn</i>, nous servira à recevoir de Berlin
-    les informations de la partie, tour par tour, ainsi qu'à lui communiquer les mouvements que nous désirons faire.
-    Nous déclarons donc les deux URLs de la manière suivante :
+  %p= raw t('tutorial.urls.text')
   
   %pre.code
     :preserve
@@ -41,13 +29,9 @@
         
       end
   
-  %h3 Créer et mémoriser les parties
+  %h3= t('tutorial.create_games.title')
   
-  %p
-    Maintenant que nous possédons nos deux URLs, nous aurons besoin de créer une nouvelle partie chaque fois qu'on
-    nous le demandera. Pour ce faire, l'approche choisie ici consiste à se créer une méthode <i>create_or_update_game</i>
-    qui sera appelée via les deux urls. Une variable de classe, <i>@@games</i>, doit également être créée afin de garder
-    trace de toutes les parties en cours. Nous utiliserons ici un Hash afin d'indexer les parties sur leur identifiant.
+  %p= raw t('tutorial.create_games.text')
   
   %pre.code
     :preserve
@@ -65,18 +49,9 @@
         #Here we are...
       end
   
-  %h3 Analyser les requêtes reçues
+  %h3= t('tutorial.analyse.title')
   
-  %p
-    Les différentes requêtes sont décortiquées dans les annexes, je vous laisse donc le soin de prendre note de toute
-    l'information mise à votre disposition. Comme il vous est possible de le constater, les deux requêtes sont en soit
-    très semblable, ce qui a motivé notre choix de n'utiliser qu'une seule méthode. Vous receverez donc quatre différents
-    paramètres dont l'un, <i>infos</i>, contient un identifiant unique pour la partie en cours. Nous allons donc, dans
-    un premier temps, vérifier s'il existe une partie portant cet identifiant. Si non, nous la créons en lui passant
-    ce qui sera plus tard de l'information qui lui sera utile. S'il s'agit d'un appel sur l'url <i>/onturn</i>, la
-    requête contiendra également un paramètre <i>state</i> qui nous servira à mettre à jour l'état de la partie. On termine
-    le tout en retournant la partie courante. Le code est assez simple, je vous laisse donc y jeter un coup d'oeil avant
-    de continuer.
+  %p= raw t('tutorial.analyse.text')
   
   %pre.code
     :preserve
@@ -103,14 +78,9 @@
         game
       end
     
-  %h3 class Game
+  %h3= t('tutorial.game_class.title')
   
-  %p
-    Les plus perspicaces d'entre vous aurons sans doute remarqué que bien que nous avons trois méthode faisant appel
-    à la classe <i>Game</i>, cette dernière n'est toujours pas créée! Remédions donc immédiatement à la situation.
-    Nous avons préalablement vue que nous créerons une nouvelle partie en lui passant en paramètre un identifiant,
-    une carte ainsi que les informations liées à ladite carte. Comme nous nous créerons une classe représentant la
-    carte, le code de la partie en est grandement simplifié. Voici donc, sans plus attendre :
+  %p= raw t('tutorial.game_class.text')
   
   %pre.code
     :preserve
@@ -130,16 +100,9 @@
         end
       end
   
-  %h3 class Map
+  %h3= t('tutorial.map_class.title')
   
-  %p
-    Bon, la classe <i>Game</i> n'ayant pas été un défi particulièrement épuisant, attaquons nous immédiatement à la classe <i>Map</i>,
-    qui fera le gros du boulot. Tel que vu plus haut, une map est créée en lui passant deux paramètres. 
-    Le paramètre <i>map</i> nous permettera de virtualiser la carte en créant tous les points et les chemins alors que
-    le paramètre <i>infos</i> nous permettera d'identifier certaines composantes importantes du jeu, tel que notre
-    identifiant de joueur pour cette partie. Vous remarquerez que nous utilisons au passage une classe <i>Node</i>, que
-    je détaillerai également plus bas. Encore une fois, je compte sur un code relativement simple qui, je l'espère,
-    sera auto-explicatif.
+  %p= raw t('tutorial.map_class.text')
   
   %pre.code
     :preserve
@@ -232,18 +195,9 @@
         end
       end
   
-  %h3 Mouvements
+  %h3= t('tutorial.mouvements.title')
   
-  %p
-    Nous voilà donc rendu à l'étape la plus intéressante : les mouvements! Jusqu'à présent, nous avons
-    donc une partie et une carte capable de nous aider à prendre les meilleurs décisions. En effet, avec la
-    carte mise à jour (méthode <i>update</i>), nous sommes en mesure de connaître qui possède quoi, combien
-    de soldats sont présents, etc. Bien qu'il existe une foule d'autres détails à notre disposition, telle que la valeur
-    en point de chacun des points, nous n'en tiendrons pas compte dans le présent exemple. Pour les besoins
-    de la cause, nous nous en tiendrons à des mouvements tout à faire aléatoires, vous laissant le plaisir d'imaginer
-    la meilleure des intelligences artificielles. La classe <i>Game</i> aura donc la responsabilité de déterminer pour
-    nous les meilleurs mouvements à faire, et nous ne devons pas oublier de modifier la méthode <i>/onturn</i> afin
-    de communiquer le tout au server de Berlin.
+  %p= raw t('tutorial.mouvements.text')
     
   %pre.code
     :preserve
@@ -268,15 +222,9 @@
         end
       end
   
-  %h3 Révision
+  %h3= t('tutorial.conclusion.title')
   
-  %p
-    C'est tout. Nous avons donc bâti une partie, une carte, des points et des chemins. Nous avons analysé le tout
-    et nous avons fait part à Berlin des mouvements que nous désirions faire. Après avoir effectuer les mouvements
-    de tous les joueurs, Berlin nous réenverra une nouvelle requête, notre carte sera mise à jour, de
-    nouveaux mouvements seront calculés, etc. Ne vous reste plus qu'à exposer votre code sur un quelconque
-    serveur web, tel qu'<a href="http://www.heroku.com" target="_blank">heroku</a>, et d'enregistrer votre nouvelle intelligence artificielle sur Berlin.
-    Félicitation! Je termine en vous laissant l'ensemble du code en un seul et unique morceau.
+  %p= raw t('tutorial.conclusion.text')
   
   %pre.code
     :preserve
