@@ -76,8 +76,22 @@ module Berlin
       end
 
       def spawn!
-        map.nodes.each do |node|         
-          node.spawn!
+        map.nodes.each do |node|
+          if node.owned?
+            # get spawn info
+            number_of_soldiers  = node.type.soldiers_per_turn
+            player_id           = node.owner
+            node_id             = node.id
+            
+            # we don't need to spawn if soldiers per turn == 0
+            if number_of_soldiers != 0
+              # spawn!
+              node.add_soldiers( player_id, number_of_soldiers )
+              
+              # register the spawn
+              @turns[@turn][:spawns] << {:node_id=>node_id, :player_id=>player_id, :number_of_soldiers=>number_of_soldiers}
+            end
+          end
         end
       end
 
@@ -97,12 +111,13 @@ module Berlin
 
         # save information
         Game.create! do |game|
-          game.map              = map
+          game.map              = self.map
+          game.user_id          = self.user_id
           game.time_start       = @time_start
           game.time_end         = Time.now
           game.number_of_turns  = @turn
-          game.json             = to_json
-
+          game.json             = self.to_json
+          
           # save scores
           @players.each do |player|
             game.artificial_intelligence_games.build( :artificial_intelligence=>player, :player_id=>player.player_id, :score=>results[player.player_id][:score], :winner=>results[player.player_id][:winner] )

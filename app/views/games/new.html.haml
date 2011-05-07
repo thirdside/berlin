@@ -6,6 +6,7 @@
     .field
       = label :game, :map_id, Map.model_name.human
       = select :game, :map_id, options_from_collection_for_select( Map.all, :id, :name, params[:map_id] )
+      = link_to_function t('games.feeling_lucky'), "pickRandom($$('select#game_map_id option')).selected = true"
     .field
       .label
         = t('artificial_intelligences.available')

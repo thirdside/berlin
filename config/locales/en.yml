@@ -87,6 +87,7 @@ en:
     selected: Selected artificial intelligences
 
   games:
+    feeling_lucky: Feelin lucky?
     rematch: Rematch
     new: New game
     success: The game has started! The result should appears here within few seconds...

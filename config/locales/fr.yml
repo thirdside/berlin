@@ -102,7 +102,8 @@ fr:
     selected: Intelligences artificielles sélectionnées
 
   games:
-    rematch: Rejoué
+    feeling_lucky: Un peu de chance?
+    rematch: Rejouer
     new: Nouvelle partie
     success: La partie a débuté! Les résultats devraient apparaître ici dans quelques instants...
     failure: Il y a eu une erreur avec la partie demandée... Nous en avons été avisé.

@@ -43,6 +43,7 @@ class GamesController < InheritedResources::Base
           url  = BERLIN_SERVER[:url].dup
           url += "?#{BERLIN_SERVER[:params][:map]}=#{map.id}"
           url += ais.map{ |ai| "&#{BERLIN_SERVER[:params][:ais]}[]=#{ai.id}" }.join
+          url += "&user_id=#{current_user.id}"
           rep = Net::HTTP.get_response( URI.parse( url ) )
       end
     rescue Exception => e

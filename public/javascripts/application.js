@@ -1,6 +1,9 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
-
+function pickRandom (collection)
+{
+  return collection[ Math.floor ( Math.random() * collection.length ) ];
+}
 
 TS.NewGameHelper = Class.create(TS, {
 	initialize: function (map_container, map_select, available_ais, selected_ais, hidden_ais, create_button, map_path)
