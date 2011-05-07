@@ -1,0 +1,19 @@
+.content
+  = render :partial => '/doc/shared/menu'  
+  
+  %h2= t('titles.response')
+  
+  %p
+    Afin de nous communiquer vos mouvements, Berlin s'attend simplement à lire dans le corps de la page un JSON formatté selon
+    l'exemple suivant. Il s'agit d'un tableau contenant la liste de tous vos déplacements contenant l'identifiant du noeud
+    d'origine, celui du noeud d'arrivé, ainsi que le nombre de soldats que vous désirez déplacer. Un mouvement est considéré
+    valide par Berlin si vous posséder assez de soldat sur le noeud d'origine, si le nombre de soldats en déplacement à
+    partir d'un même noeud n'excède pas le nombre de soldats que possédait ledit noeud et si le noeud d'origine et le noeud
+    d'arrivé sont relié par un chemin. Simplement!
+  
+  %pre.code
+    :preserve
+      [
+        {"from": 1, "to": 2, "number_of_soldiers": 2},
+        {"from": 1, "to": 3, "number_of_soldiers": 4}
+      ]

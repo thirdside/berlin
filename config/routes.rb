@@ -17,6 +17,8 @@ BerlinWeb::Application.routes.draw do
 
   match 'doc' => 'doc#index'
   match 'tutorial' => 'doc#tutorial'
+  match 'json_request' => 'doc#json_request'
+  match 'json_response' => 'doc#json_response'
 
   root :to => "welcome#index"
 end

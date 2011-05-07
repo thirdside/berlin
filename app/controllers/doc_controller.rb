@@ -6,4 +6,12 @@ class DocController < ApplicationController
   def tutorial
     
   end
+  
+  def json_request
+  
+  end
+  
+  def json_response
+    
+  end
 end

@@ -59,7 +59,7 @@ fr:
       text: |
         Bon, la classe <i>Game</i> n'ayant pas été un défi particulièrement épuisant, attaquons nous immédiatement à la classe <i>Map</i>,
         qui fera le gros du boulot. Tel que vu plus haut, une map est créée en lui passant deux paramètres. 
-        Le paramètre <i>map</i> nous permettera de virtualiser la carte en créant tous les points et les chemins alors que
+        Le paramètre <i>map</i> nous permettera de virtualiser la carte en créant tous les noeuds et les chemins alors que
         le paramètre <i>infos</i> nous permettera d'identifier certaines composantes importantes du jeu, tel que notre
         identifiant de joueur pour cette partie. Vous remarquerez que nous utilisons au passage une classe <i>Node</i>, que
         je détaillerai également plus bas. Encore une fois, je compte sur un code relativement simple qui, je l'espère,
@@ -72,7 +72,7 @@ fr:
         donc une partie et une carte capable de nous aider à prendre les meilleurs décisions. En effet, avec la
         carte mise à jour (méthode <i>update</i>), nous sommes en mesure de connaître qui possède quoi, combien
         de soldats sont présents, etc. Bien qu'il existe une foule d'autres détails à notre disposition, telle que la valeur
-        en point de chacun des points, nous n'en tiendrons pas compte dans le présent exemple. Pour les besoins
+        en point de chacun des noeuds, nous n'en tiendrons pas compte dans le présent exemple. Pour les besoins
         de la cause, nous nous en tiendrons à des mouvements tout à faire aléatoires, vous laissant le plaisir d'imaginer
         la meilleure des intelligences artificielles. La classe <i>Game</i> aura donc la responsabilité de déterminer pour
         nous les meilleurs mouvements à faire, et nous ne devons pas oublier de modifier la méthode <i>/onturn</i> afin
@@ -81,7 +81,7 @@ fr:
     conclusion:
       title: Conclusion
       text: |
-        C'est tout. Nous avons donc bâti un object de partie, une carte, des points et des chemins. Nous avons analysé le tout
+        C'est tout. Nous avons donc bâti un object de partie, une carte, des noeuds et des chemins. Nous avons analysé le tout
         et nous avons fait part à Berlin des mouvements que nous désirions faire. Après avoir effectuer les mouvements
         de tous les joueurs, Berlin nous réenverra une nouvelle requête, notre carte sera mise à jour, de
         nouveaux mouvements seront calculés, etc. Ne vous reste plus qu'à exposer votre code sur un quelconque
