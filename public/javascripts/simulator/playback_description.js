@@ -48,8 +48,7 @@
 			this.map.syncStates(turn.states_post);
 			
 			this.turns.push(this._processStates(turn.states_post));
-			
-			this._processSpawns(turn.spawns, turn.states_post);
+			this.turns.push(this._processSpawns(turn.spawns, turn.states_post));
 		}, this);
 		
 		// prepare first turn
@@ -338,7 +337,7 @@
 			nextId++;
 		}, this);
 		
-		this.turns.push(turn);
+		return turn;
 	},
 	
 	/*
