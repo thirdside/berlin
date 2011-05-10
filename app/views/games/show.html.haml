@@ -12,6 +12,7 @@
         %th= ArtificialIntelligence.model_name.human
         %th= Game.human_attribute_name :number_of_soldiers
         %th= Game.human_attribute_name :points
+        %th= Artificial.human_attribute_name :score
     %tbody
       - @game.artificial_intelligence_games.each do |artificial_intelligence_game|
         %tr{:id=>"info_player_#{artificial_intelligence_game.player_id}"}
@@ -19,7 +20,8 @@
           %td= link_to artificial_intelligence_game.artificial_intelligence.name, artificial_intelligence_game.artificial_intelligence
           %td.soldiers
           %td.cities
-          
+          %td.score
+
 #progress_bar_container
   #progress_bar
 

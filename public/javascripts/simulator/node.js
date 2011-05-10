@@ -10,7 +10,7 @@
  * A general node
  */
  TS.Node = Class.create(TS, {
-	initialize: function ($super, id, type, x, y)
+	initialize: function ($super, id, type, x, y, value)
 	{
 		$super();
 		this.position	= {x: x, y: y};
@@ -20,6 +20,7 @@
 		this.playerId	= null;
 		this.nbSoldiers	= 0;
 		this.players    = new Hash(); //for combats
+		this.value      = value; //for score
 	},
 	
 	linkTo: function (otherNode, controlRatio)
@@ -50,9 +51,9 @@
  * A city node
  */
 TS.City = Class.create(TS.Node, {
-	initialize: function ($super, id, x, y)
+	initialize: function ($super, id, x, y, value)
 	{
-		$super(id, 'city', x, y);
+		$super(id, 'city', x, y, value);
 		this.layout = id % 3 | 0;
 	},
 });
@@ -68,16 +69,23 @@ TS.NodeGraph = Class.create(TS, {
 		this.map 		= map;
 		this.directed 	= map.infos.directed || false;
 		
+		// Get the nodes types
+		var types = {};
+		
+		this.map.types.each(function(type) {
+			types[type.name] = type;
+		}, this);		
+		
 		// Create nodes
-		this.map.nodes.each(function(node){
+		this.map.nodes.each(function(node) {
 			if (node.type == 'city')
-				this.nodes[node.id] = new TS.City(node.id, node.x, node.y);
+				this.nodes[node.id] = new TS.City(node.id, node.x, node.y, types[node.type].points);
 			else
-				this.nodes[node.id] = new TS.Node(node.id, node.type, node.x, node.y);
+				this.nodes[node.id] = new TS.Node(node.id, node.type, node.x, node.y, types[node.type].points);
 		}, this);
 		
 		// Add paths between the nodes
-		this.map.paths.each(function(path){
+		this.map.paths.each(function(path) {
 			this.nodes[path.from].linkTo(this.nodes[path.to], path.control_ratio);
 		}, this);
 	},
@@ -169,11 +177,34 @@ TS.NodeGraph = Class.create(TS, {
 		playersIds.each(function (playerId) {
 			var soldiers = node.players.get(playerId);
 			
-			if (soldiers > node.nbSoldiers)
+			if (playerId != node.playerId && 
+				soldiers * 2 > node.nbSoldiers) //todo: *2?
 				suicide = false;
 		}, this);
 		
 		return suicide;		
+	},
+	
+	getNodeManoAMano: function(id) {
+		var node = this.nodes[id];
+		var playersIds = node.players.keys();
+
+		if (playersIds.size() < 2)
+			return false;
+
+		var even = true;
+		var soldiersForEven = -1;
+		
+		playersIds.each(function (playerId) {
+			var soldiers = node.players.get(playerId);
+			
+			if (soldiersForEven == -1)
+				soldiersForEven = soldiers;
+			else if (soldiers != soldiersForEven)
+				even = false;
+		}, this);
+		
+		return even;
 	},
 	
 	getNodeCombat: function(id) {

@@ -318,13 +318,24 @@
 			'scale': attrs['scale'],
 			'opacity': attrs['opacity']
 		});
+
+		// draw blurry back
+		var blurryText = this.raphael.text(attrs.x, attrs.y, object.text);
+		blurryText.attr({
+			'y': object.textAttrs.y,
+			'font': object.textAttrs.font,
+			'font-weight': object.textAttrs['font-weight'],
+			'font-size': object.textAttrs['font-size'],
+			'fill': object.blurColor
+		});
+		blurryText.blur(3);
 			
 		// create the combat quote
 		var text = this.raphael.text(attrs.x, attrs.y, object.text);
 		text.attr(object.textAttrs);
 
 		var combat = this.raphael.set();
-		combat.push(image, text);
+		combat.push(image, text, blurryText);
 
 		return combat;
 	},	
