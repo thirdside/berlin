@@ -7,7 +7,7 @@
  */
 
  TS.PlaybackDescription = Class.create(TS, {
- 	initialize: function (mapDescription, map, gameDescription, canvas, graphics)
+ 	initialize: function (mapDescription, map, gameDescription, canvas, graphics, stepTime)
 	{
 		this.mapDescription = mapDescription;
 		this.map = map;
@@ -22,6 +22,7 @@
 		this.currentTurn = 0;
 		this.direction = 'forward';
 		
+		this.stepTime = stepTime;
 		this.players = null;
 		
 		this.simulatioGameRatio = 5;
@@ -379,7 +380,7 @@
 				'end': {
 					'opacity': 1
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'forward_departure':
@@ -390,7 +391,7 @@
 				'end': {
 					'opacity': 0
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_arrival':
@@ -401,7 +402,7 @@
 				'end': {
 					'opacity': 1
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_departure':
@@ -412,7 +413,7 @@
 				'end': {
 					'opacity': 0
 				},
-				'length': 500
+				'length': this.stepTime
 			}			
 		};
 
@@ -566,7 +567,7 @@
 					'opacity': 1
 				},
 				
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'forward_departure':
@@ -590,7 +591,7 @@
 					'opacity': 0
 				},
 				
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_arrival':
@@ -614,7 +615,7 @@
 					'opacity': 1
 				},
 				
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_departure':
@@ -638,7 +639,7 @@
 					'opacity': 0
 				},
 				
-				'length': 500
+				'length': this.stepTime
 			}			
 		};
 
@@ -712,7 +713,7 @@
 						'rotate': moveObject.rotate
 					}
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'forward_departure':
@@ -734,7 +735,7 @@
 						'rotate': moveObject.rotate
 					}
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_arrival':
@@ -756,7 +757,7 @@
 						'rotate': moveObject.rotate
 					}					
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_departure':
@@ -778,7 +779,7 @@
 						'rotate': moveObject.rotate
 					}	
 				},
-				'length': 500
+				'length': this.stepTime
 			}			
 		};
 
@@ -829,7 +830,7 @@
 					'scale': '0.5, 0.5',
 					'opacity': 1
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'forward_departure':
@@ -845,7 +846,7 @@
 					'scale': '0.0001, 0.0001',
 					'opacity': 0
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_arrival':
@@ -861,7 +862,7 @@
 					'scale': '0.5, 0.5',
 					'opacity': 1
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_departure':
@@ -877,7 +878,7 @@
 					'scale': '1, 1',
 					'opacity': 0
 				},
-				'length': 500
+				'length': this.stepTime
 			}			
 		};
 

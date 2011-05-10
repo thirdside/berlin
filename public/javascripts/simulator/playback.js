@@ -49,6 +49,7 @@ TS.AIPlayback = Class.create(TS, {
 		
 		this.enableControls();
 		this.playbackDescription = null;
+		this.stepTime = 500;
 	},
 	
 	/*
@@ -69,7 +70,8 @@ TS.AIPlayback = Class.create(TS, {
 				this.map.nodeGraph,
 				this.gameDescription,
 				this.map.layers['background'],
-				this.map.graphics);
+				this.map.graphics,
+				this.stepTime);
 			this.playbackDescription.initializeTurns();		
 			
 			this.enableControls();
@@ -279,7 +281,7 @@ TS.AIPlayback = Class.create(TS, {
 	 */
 	start: function ()
 	{
-		this.timer.start(1000, -1);
+		this.timer.start(this.stepTime, -1);
 	},
 	
 	/*
