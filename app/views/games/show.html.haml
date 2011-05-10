@@ -11,8 +11,8 @@
         %th
         %th= ArtificialIntelligence.model_name.human
         %th= Game.human_attribute_name :number_of_soldiers
+        %th= Game.human_attribute_name :cities
         %th= Game.human_attribute_name :points
-        %th= Artificial.human_attribute_name :score
     %tbody
       - @game.artificial_intelligence_games.each do |artificial_intelligence_game|
         %tr{:id=>"info_player_#{artificial_intelligence_game.player_id}"}
