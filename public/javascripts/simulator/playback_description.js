@@ -179,15 +179,18 @@
 			if (this.map.getNodeCaptured(data.to)) {
 				combatObject.text = "captured!";
 				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);
+				combatObject.blurColor = '#000';
 			} else if (this.map.getNodeReinforced(data.to)) {
 				combatObject.text = "reinforced!";
-				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);					
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);
+				combatObject.blurColor = '#000';
 			} else if (this.map.getNodeSuicide(data.to)) {
 				combatObject.text = "kamikaze!";
-				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);										
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);
+				combatObject.blurColor = '#000';
 			} else if (this.map.getNodeManoAMano(data.to)) {
 				combatObject.text = "Mano a mano!";
-				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);														
+				combatObject.textAttrs.fill = '#ffffff';														
 			} else if (this.map.getNodeCombat(data.to)) {
 				combatObject.text = "fight!";
 				combatObject.textAttrs.fill = '#ffffff';
@@ -530,6 +533,7 @@
 		{
 			'id': id,
 			'type': 'spawn',
+			'color': this._getPlayerColor(this.map.nodes[node].playerId),
 			'position': this._getNodePosition(node),
 			'count': '+' + count
 		};
@@ -555,14 +559,14 @@
 					'font': 'Symbol',
 					'fontWeight': 'bold',
 					'fontSize': 20,
-					'fill': '#000000',
-					'blurColor': '#FFFFFF'
+					'fill': spawnObject.color,
+					'blurColor': '#000'
 				},
 				
 				'end':
 				{
 					'x': spawnObject.position.x,
-					'y': spawnObject.position.y - 15,
+					'y': spawnObject.position.y - 30,
 					'opacity': 1
 				},
 				
@@ -574,19 +578,19 @@
 				'start':
 				{
 					'x': spawnObject.position.x,
-					'y': spawnObject.position.y - 15,
+					'y': spawnObject.position.y - 30,
 					'opacity': 1,
 					'font': 'Symbol',
 					'fontWeight': 'bold',
 					'fontSize': 20,
-					'fill': '#000000',
-					'blurColor': '#FFFFFF'
+					'fill': spawnObject.color,
+					'blurColor': '#000'
 				},
 				
 				'end':
 				{
 					'x': spawnObject.position.x,
-					'y': spawnObject.position.y - 30,
+					'y': spawnObject.position.y - 60,
 					'opacity': 0
 				},
 				
@@ -598,19 +602,19 @@
 				'start':
 				{
 					'x': spawnObject.position.x,
-					'y': spawnObject.position.y - 30,
+					'y': spawnObject.position.y - 60,
 					'opacity': 0,
 					'font': 'Symbol',
 					'fontWeight': 'bold',
 					'fontSize': 20,
-					'fill': '#000000',
-					'blurColor': '#FFFFFF'
+					'fill': spawnObject.color,
+					'blurColor': '#000'
 				},
 				
 				'end':
 				{
 					'x': spawnObject.position.x,
-					'y': spawnObject.position.y - 15,
+					'y': spawnObject.position.y - 30,
 					'opacity': 1
 				},
 				
@@ -622,13 +626,13 @@
 				'start':
 				{
 					'x': spawnObject.position.x,
-					'y': spawnObject.position.y - 15,
+					'y': spawnObject.position.y - 30,
 					'opacity': 1,
 					'font': 'Symbol',
 					'fontWeight': 'bold',
 					'fontSize': 20,
-					'fill': '#000000',
-					'blurColor': '#FFFFFF'
+					'fill': spawnObject.color,
+					'blurColor': '#000'
 				},
 				
 				'end':
@@ -799,8 +803,9 @@
 				'font': 'Symbol',
 				'font-weight': 'normal',
 				'font-size': 12,
-				'fill': '#FFFFFF'
+				'fill': '#fff',
 			},
+			'blurColor': '#fff',
 			'position': this._getNodePosition(position)
 		};
 		
