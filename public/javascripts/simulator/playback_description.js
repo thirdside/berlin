@@ -7,7 +7,7 @@
  */
 
  TS.PlaybackDescription = Class.create(TS, {
- 	initialize: function (mapDescription, map, gameDescription, canvas, graphics)
+ 	initialize: function (mapDescription, map, gameDescription, canvas, graphics, stepTime)
 	{
 		this.mapDescription = mapDescription;
 		this.map = map;
@@ -15,14 +15,12 @@
 		this.canvas = canvas;
 		this.graphics = graphics;
 		
-		this.color = new TS.Color();
-		
 		this.turns = new Array();
 		this.preview = null;
 		this.currentTurn = 0;
 		this.direction = 'forward';
 		
-		this.players = null;
+		this.stepTime = stepTime;
 		
 		this.simulatioGameRatio = 5;
 	},
@@ -48,8 +46,7 @@
 			this.map.syncStates(turn.states_post);
 			
 			this.turns.push(this._processStates(turn.states_post));
-			
-			this._processSpawns(turn.spawns, turn.states_post);
+			this.turns.push(this._processSpawns(turn.spawns, turn.states_post));
 		}, this);
 		
 		// prepare first turn
@@ -122,10 +119,10 @@
 		var result = this._processStates(preStates);
 		turn.layers['nodes'] = result.layers['nodes'];
 		turn.layers['soldiers'] = result.layers['soldiers'];
-
-		this.players = turn.players;
 		
 		var layer = turn.layers['moves'];
+		
+		this.players = turn.players;
 		
 		$A(moves).each(function(data) {
 			var moveObject = this._createMoveObject(nextId, data.from, data.to, data.player_id, data.number_of_soldiers);
@@ -185,9 +182,12 @@
 			} else if (this.map.getNodeReinforced(data.to)) {
 				combatObject.text = "reinforced!";
 				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);					
-			//} else if (this.map.getNodeSuicide(data.to)) {
-			//	combatObject.text = "kamikaze!";
-			//	combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);										
+			} else if (this.map.getNodeSuicide(data.to)) {
+				combatObject.text = "kamikaze!";
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);										
+			} else if (this.map.getNodeManoAMano(data.to)) {
+				combatObject.text = "Mano a mano!";
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);														
 			} else if (this.map.getNodeCombat(data.to)) {
 				combatObject.text = "fight!";
 				combatObject.textAttrs.fill = '#ffffff';
@@ -335,7 +335,7 @@
 			nextId++;
 		}, this);
 		
-		this.turns.push(turn);
+		return turn;
 	},
 	
 	/*
@@ -379,7 +379,7 @@
 				'end': {
 					'opacity': 1
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'forward_departure':
@@ -390,7 +390,7 @@
 				'end': {
 					'opacity': 0
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_arrival':
@@ -401,7 +401,7 @@
 				'end': {
 					'opacity': 1
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_departure':
@@ -412,7 +412,7 @@
 				'end': {
 					'opacity': 0
 				},
-				'length': 500
+				'length': this.stepTime
 			}			
 		};
 
@@ -566,7 +566,7 @@
 					'opacity': 1
 				},
 				
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'forward_departure':
@@ -590,7 +590,7 @@
 					'opacity': 0
 				},
 				
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_arrival':
@@ -614,7 +614,7 @@
 					'opacity': 1
 				},
 				
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_departure':
@@ -638,7 +638,7 @@
 					'opacity': 0
 				},
 				
-				'length': 500
+				'length': this.stepTime
 			}			
 		};
 
@@ -712,7 +712,7 @@
 						'rotate': moveObject.rotate
 					}
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'forward_departure':
@@ -734,7 +734,7 @@
 						'rotate': moveObject.rotate
 					}
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_arrival':
@@ -756,7 +756,7 @@
 						'rotate': moveObject.rotate
 					}					
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_departure':
@@ -778,7 +778,7 @@
 						'rotate': moveObject.rotate
 					}	
 				},
-				'length': 500
+				'length': this.stepTime
 			}			
 		};
 
@@ -829,7 +829,7 @@
 					'scale': '0.5, 0.5',
 					'opacity': 1
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'forward_departure':
@@ -845,7 +845,7 @@
 					'scale': '0.0001, 0.0001',
 					'opacity': 0
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_arrival':
@@ -861,7 +861,7 @@
 					'scale': '0.5, 0.5',
 					'opacity': 1
 				},
-				'length': 500
+				'length': this.stepTime
 			},
 			
 			'backward_departure':
@@ -877,7 +877,7 @@
 					'scale': '1, 1',
 					'opacity': 0
 				},
-				'length': 500
+				'length': this.stepTime
 			}			
 		};
 
@@ -1166,26 +1166,6 @@
 	},
 	
 	/*
-	 * Get the player's color (for a known player)
-	 */
-	_initPlayerColor: function (playerId)
-	{
-		var color = '#FFFFFF';
-		
-		switch (playerId)
-		{
-			case 0: color = '#bd1550'; break;
-			case 1: color = '#e97f02'; break;
-			case 2: color = "#73797b"; break;
-			case 3: color = "#e32424"; break;
-			case 4: color = "#21bbbd"; break;
-			case 5: color = "#8a9b0f"; break;
-		}
-		
-		return color;
-	},
-	
-	/*
 	 * 
 	 */
 	_getPlayerColor: function (playerId)
@@ -1193,20 +1173,6 @@
 		return (this.players == null || this.players[playerId] == null) ? '#FFFFFF' : this.players[playerId].color;
 	},
 	
-	/*
-	 * Initialize players data
-	 */
-	_initPlayers: function (playersInit)
-	{
-		var players = {};
-		
-		$A(playersInit).each(function(player) {
-			players[player.id] = new TS.Player(player.id, this._initPlayerColor(player.id));
-		}, this);
-		
-		return players;
-	},
-
 	/*
 	 * Get the state of the players
 	 */
@@ -1216,7 +1182,7 @@
 		var players = {};
 		
 		for (var i = 0; i < nbPlayers; i++)
-			players[i] = new TS.Player(i, this._initPlayerColor(i));
+			players[i] = new TS.Player(i);
 				
 		// synchronize the players with the map
 		Object.keys(players).each(function(playerId) {
