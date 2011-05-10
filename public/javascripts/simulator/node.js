@@ -169,11 +169,34 @@ TS.NodeGraph = Class.create(TS, {
 		playersIds.each(function (playerId) {
 			var soldiers = node.players.get(playerId);
 			
-			if (soldiers > node.nbSoldiers)
+			if (playerId != node.playerId && 
+				soldiers * 2 > node.nbSoldiers) //todo: *2?
 				suicide = false;
 		}, this);
 		
 		return suicide;		
+	},
+	
+	getNodeManoAMano: function(id) {
+		var node = this.nodes[id];
+		var playersIds = node.players.keys();
+
+		if (playersIds.size() < 2)
+			return false;
+
+		var even = true;
+		var soldiersForEven = -1;
+		
+		playersIds.each(function (playerId) {
+			var soldiers = node.players.get(playerId);
+			
+			if (soldiersForEven == -1)
+				soldiersForEven = soldiers;
+			else if (soldiers != soldiersForEven)
+				even = false;
+		}, this);
+		
+		return even;
 	},
 	
 	getNodeCombat: function(id) {

@@ -185,9 +185,12 @@
 			} else if (this.map.getNodeReinforced(data.to)) {
 				combatObject.text = "reinforced!";
 				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);					
-			//} else if (this.map.getNodeSuicide(data.to)) {
-			//	combatObject.text = "kamikaze!";
-			//	combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);										
+			} else if (this.map.getNodeSuicide(data.to)) {
+				combatObject.text = "kamikaze!";
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);										
+			} else if (this.map.getNodeManoAMano(data.to)) {
+				combatObject.text = "Mano a mano!";
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.nodes[data.from].playerId);														
 			} else if (this.map.getNodeCombat(data.to)) {
 				combatObject.text = "fight!";
 				combatObject.textAttrs.fill = '#ffffff';
