@@ -15,7 +15,6 @@
 		this.canvas = canvas;
 		this.graphics = graphics;
 		
-		this.color = new TS.Color();
 		
 		this.turns = new Array();
 		this.preview = null;
