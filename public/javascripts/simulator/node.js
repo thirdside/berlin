@@ -10,7 +10,7 @@
  * A general node
  */
  TS.Node = Class.create(TS, {
-	initialize: function ($super, id, type, x, y)
+	initialize: function ($super, id, type, x, y, value)
 	{
 		$super();
 		this.position	= {x: x, y: y};
@@ -20,6 +20,7 @@
 		this.playerId	= null;
 		this.nbSoldiers	= 0;
 		this.players    = new Hash(); //for combats
+		this.value      = value; //for score
 	},
 	
 	linkTo: function (otherNode, controlRatio)
@@ -50,9 +51,9 @@
  * A city node
  */
 TS.City = Class.create(TS.Node, {
-	initialize: function ($super, id, x, y)
+	initialize: function ($super, id, x, y, value)
 	{
-		$super(id, 'city', x, y);
+		$super(id, 'city', x, y, value);
 		this.layout = id % 3 | 0;
 	},
 });
@@ -68,16 +69,23 @@ TS.NodeGraph = Class.create(TS, {
 		this.map 		= map;
 		this.directed 	= map.infos.directed || false;
 		
+		// Get the nodes types
+		var types = {};
+		
+		this.map.types.each(function(type) {
+			types[type.name] = type;
+		}, this);		
+		
 		// Create nodes
-		this.map.nodes.each(function(node){
+		this.map.nodes.each(function(node) {
 			if (node.type == 'city')
-				this.nodes[node.id] = new TS.City(node.id, node.x, node.y);
+				this.nodes[node.id] = new TS.City(node.id, node.x, node.y, types[node.type].points);
 			else
-				this.nodes[node.id] = new TS.Node(node.id, node.type, node.x, node.y);
+				this.nodes[node.id] = new TS.Node(node.id, node.type, node.x, node.y, types[node.type].points);
 		}, this);
 		
 		// Add paths between the nodes
-		this.map.paths.each(function(path){
+		this.map.paths.each(function(path) {
 			this.nodes[path.from].linkTo(this.nodes[path.to], path.control_ratio);
 		}, this);
 	},

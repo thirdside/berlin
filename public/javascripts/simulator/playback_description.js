@@ -15,14 +15,12 @@
 		this.canvas = canvas;
 		this.graphics = graphics;
 		
-		
 		this.turns = new Array();
 		this.preview = null;
 		this.currentTurn = 0;
 		this.direction = 'forward';
 		
 		this.stepTime = stepTime;
-		this.players = null;
 		
 		this.simulatioGameRatio = 5;
 	},
@@ -121,10 +119,10 @@
 		var result = this._processStates(preStates);
 		turn.layers['nodes'] = result.layers['nodes'];
 		turn.layers['soldiers'] = result.layers['soldiers'];
-
-		this.players = turn.players;
 		
 		var layer = turn.layers['moves'];
+		
+		this.players = turn.players;
 		
 		$A(moves).each(function(data) {
 			var moveObject = this._createMoveObject(nextId, data.from, data.to, data.player_id, data.number_of_soldiers);

@@ -210,8 +210,8 @@ TS.AIPlayback = Class.create(TS, {
 		Object.values(this.playbackDescription.turns[Math.min(this.turnNumber, this.getMaxTurn() - 1)].players).each(function(player){
 			var row = $(this.playerInfoName.interpolate(player));
 			row.down('.color').setStyle({"background-color": player.color});
-			row.down('.cities').update(player.cities);
 			row.down('.soldiers').update(player.soldiers)
+			row.down('.score').update(player.score);
 		}, this);
 	},
 	

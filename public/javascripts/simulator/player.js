@@ -13,24 +13,28 @@ TS.Player = Class.create(TS, {
 		this.color = this._initPlayerColor(id);
 		
 		this.soldiers = 0;
-		this.cities = 0;
+		this.score = 0;
 	},
-	
 	
 	sync: function (map)
 	{
 		this.soldiers = 0;
-		this.cities = 0;
+		this.score = 0;
 		
 		Object.keys(map.nodes).each(function(nodeId) {
 			var node = map.nodes[nodeId];
 		
-			if (this.id == node.playerId) {
-				this.soldiers += node.nbSoldiers;
-				
-				if (node.type == 'city')
-					this.cities += 1;
-			}
+			// sync score
+			if (this.id == node.playerId)
+				this.score += node.value;
+		
+			// sync soldiers
+			var movesIds = node.players.keys();
+			
+			movesIds.each(function(id) {
+				if (this.id == id)
+					this.soldiers += node.players.get(id);
+			}, this);
 		}, this);
 	},
 	
