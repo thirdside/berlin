@@ -6,7 +6,7 @@
     .field
       = label :game, :map_id, Map.model_name.human
       = select :game, :map_id, options_from_collection_for_select( Map.all, :id, :name, params[:map_id] )
-      = link_to_function t('games.feeling_lucky'), "pickRandom($$('select#game_map_id option')).selected = true"
+      = link_to t('games.feeling_lucky'), "", :id=>"feel_lucky"
     .field
       .label
         = t('artificial_intelligences.available')
@@ -28,4 +28,4 @@
   #map
 
 :javascript
-  new TS.NewGameHelper('map', 'game_map_id', 'available_ais', 'selecte_ais', 'hidden_fields', $('game_submit'));
+  new TS.NewGameHelper('map', 'game_map_id', 'available_ais', 'selecte_ais', 'hidden_fields', 'game_submit', 'feel_lucky');

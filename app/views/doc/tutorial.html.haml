@@ -21,7 +21,7 @@
   
   %pre.code
     :preserve
-      get '/infos' do
+      post '/infos' do
         
       end
 
@@ -39,6 +39,8 @@
 
       get '/infos' do
         create_or_update_game
+        
+        200
       end
 
       post '/onturn' do
@@ -241,8 +243,10 @@
       # Let's keep track of all played games
       @@games = {}
 
-      get '/infos' do
+      post '/infos' do
           create_or_update_game
+          
+          200
       end
 
       post '/onturn' do

@@ -13,8 +13,8 @@ Map.create(:name=>"DefaultMap2", :version=>1, :json=>File.open( DIR + '/../publi
 
 User.create(:username=>"admin", :locale=>"fr", :email=>"admin@berlin.net", :password=>"123456", :password_confirmation=>"123456")
 
-ArtificialIntelligence.create(:user_id=>1, :name=>"AI1", :language=>'Java', :url_ready=>"http://localhost:4567/ready", :url_on_turn=>"http://localhost:4567/onturn")
-ArtificialIntelligence.create(:user_id=>1, :name=>"AI2", :language=>'PHP', :url_ready=>"http://localhost:4568/ready", :url_on_turn=>"http://localhost:4568/onturn")
+ArtificialIntelligence.create(:user_id=>1, :name=>"AI1", :language=>'Java', :url_info=>"http://localhost:4567/infos", :url_on_turn=>"http://localhost:4567/onturn")
+ArtificialIntelligence.create(:user_id=>1, :name=>"AI2", :language=>'PHP', :url_info=>"http://localhost:4568/infos", :url_on_turn=>"http://localhost:4568/onturn")
 
 GamesPlayedAchievement.create(:condition_1=>1, :internal_code=>'pre_newb')
 GamesPlayedAchievement.create(:condition_1=>10, :internal_code=>'newb')

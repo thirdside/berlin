@@ -10,6 +10,10 @@ class ArtificialIntelligenceGame < ActiveRecord::Base
   def date
     self.created_at.to_date
   end
+  
+  def time
+    self.created_at
+  end
 
   protected
     def check_for_achievements

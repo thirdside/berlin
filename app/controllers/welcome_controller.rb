@@ -22,7 +22,8 @@ class WelcomeController < ApplicationController
       "Ginette St-Pierre",
       "Bambi",
       "Pikachu",
-      "Bill Gates"
+      "Bill Gates",
+      "Nathalie Portman"
     ]
   end
 end

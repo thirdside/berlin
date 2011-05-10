@@ -26,8 +26,8 @@ fr:
     table_of_content: Table des matières
     welcome: Accueil
     tutorial: Tutoriel
-    request: Exemple de requête
-    response: Exemple de réponse
+    request: Requêtes
+    response: Réponse
   
   achievements:
     descriptions:
@@ -42,7 +42,7 @@ fr:
       user: Utilisateur
       game: Partie
       artificial_intelligence: Intelligence artificielle
-      doc: Doc
+      doc: Aide
       map: Carte
       achievement: Accomplissement
       victories_achievement: Accomplissement de victoires
@@ -81,8 +81,8 @@ fr:
         score: Pointage moyen
         won_games: Parties gagnées
         victory_percentage: Pourcentage de victoires
-        url_ready: URL - début
-        url_on_turn: URL - tour
+        url_ready: URL d'information
+        url_on_turn: URL de tour
         created_at: Créé le
       artificial_intelligence_game:
         score: Pointage

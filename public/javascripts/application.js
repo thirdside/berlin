@@ -1,12 +1,7 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
-function pickRandom (collection)
-{
-  return collection[ Math.floor ( Math.random() * collection.length ) ];
-}
-
 TS.NewGameHelper = Class.create(TS, {
-	initialize: function (map_container, map_select, available_ais, selected_ais, hidden_ais, create_button, map_path)
+	initialize: function (map_container, map_select, available_ais, selected_ais, hidden_ais, create_button, feel_lucky, map_path)
 	{
 		this.available_ais = $(available_ais);
 		this.selected_ais = $(selected_ais);
@@ -15,14 +10,28 @@ TS.NewGameHelper = Class.create(TS, {
 		this.map_path = map_path || "/maps/#{id}.json";
 		this.map_select = $(map_select);
 		this.create_button = $(create_button);
+		this.feel_lucky = $(feel_lucky);
 		
 		this.map_select.observe('change', this.onMapChange.bindAsEventListener(this));
+		this.feel_lucky.observe('click', this.onFeelLuckyClick.bindAsEventListener(this));
 		
 		Sortable.create('available_ais', {tag: 'div', dropOnEmpty: true, constraint: null, containment: ['available_ais', 'selected_ais']});
 		Sortable.create('selected_ais', {tag: 'div', dropOnEmpty: true, constraint: null, containment: ['available_ais', 'selected_ais'], onUpdate: this.onSelectedAIsChange.bindAsEventListener(this)});
 		
 		
 		this.updateMap(this.map_select.value);
+	},
+	
+	onFeelLuckyClick: function (e)
+	{
+	  e.stop();
+	  var previous = this.map_select.value;
+	  var options = this.map_select.childElements();
+	  var value = options[ Math.floor ( Math.random() * options.length ) ];
+    value.selected = true;
+    
+	  if (previous != value.value)
+	   this.onMapChange();
 	},
 	
 	onSelectedAIsChange: function (selected)
@@ -40,7 +49,7 @@ TS.NewGameHelper = Class.create(TS, {
 	
 	onMapChange: function (e)
 	{
-		this.updateMap(e.findElement().value);
+		this.updateMap(this.map_select.value);
 	},
 	
 	updateMap: function (id)

@@ -11,8 +11,10 @@ require 'yajl/json_gem'
 # Let's keep track of all played games
 @@games = {}
 
-get '/infos' do
+post '/infos' do
     create_or_update_game
+    
+    200
 end
 
 post '/onturn' do
@@ -35,7 +37,7 @@ def create_or_update_game
 
   if action == "game_over"
     # Release the game to avoid memory leaks
-    @@games[game_id] = nil
+    @@games.delete game_id
   elsif state
     # Now, we want to update the current state of the game with the new content
     game.update state

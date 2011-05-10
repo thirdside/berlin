@@ -75,7 +75,7 @@ en:
              yeild no soldiers and be worth no points.
            sections:
              owner_id:
-               title: Possession (owner_id)
+               title: Possession (player_id)
                content: |
                  The nodes can be free (empty) or occupied by a maximum of one AI. If more than one AI are standing on a node at the end of a turn,
                  there will be a combat to determine who will win the possession of the node.

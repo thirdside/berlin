@@ -31,6 +31,8 @@ fr:
         nous le demandera. Pour ce faire, l'approche choisie ici consiste à se créer une méthode <i>create_or_update_game</i>
         qui sera appelée via les deux urls. Une variable de classe, <i>@@games</i>, doit également être créée afin de garder
         trace de toutes les parties en cours. Nous utiliserons ici un Hash afin d'indexer les parties sur leur identifiant.
+        Remarquez que je termine également la fonction <i>/infos</i> par un <i>statut 200</i>, puisque c'est tout ce que nous
+        avons besoin de retourner à Berlin lors de l'appel à cet URL.
     
     analyse:
       title: Analyser les requêtes reçues

@@ -30,12 +30,12 @@ ActiveRecord::Base.establish_connection( config_yaml[ environment ] )
 end
 
 # models
-%w( game map artificial_intelligence artificial_intelligence_game award ).each do |model|
+%w( game map artificial_intelligence artificial_intelligence_game artificial_intelligence_timeout award ).each do |model|
   require ROOT + "/../app/models/#{model}"
 end
 
 # classes
-%w( game map path artificial_intelligence node node_type move ).each do |model|
+%w( game map path artificial_intelligence node node_type move exception ).each do |model|
   require ROOT + "/#{model}"
 end
 

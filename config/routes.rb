@@ -15,7 +15,7 @@ BerlinWeb::Application.routes.draw do
   
   match 'home' => 'welcome#index'
 
-  match 'doc' => 'doc#index'
+  match 'doc' => 'doc#doc'
   match 'tutorial' => 'doc#tutorial'
   match 'json_request' => 'doc#json_request'
   match 'json_response' => 'doc#json_response'

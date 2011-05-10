@@ -104,11 +104,76 @@ module Berlin
       def state! state
         @turns[@turn][:"#{state}_state"] = map.states
       end
+      
+      def start_game
+        # initializing responses and requests
+        rep = {}
+        req = {}
 
-      def end_of_game
+        @players.each do |player|
+          req[player.player_id] = Typhoeus::Request.new(player.url_info,
+            :method        => :post,
+            :headers       => {:Accept => "application/json"},
+            :timeout       => 30000,
+            :cache_timeout => 0,
+            :params        => {
+              :action=>'game_start',
+              :infos=>self.infos( player.player_id ).to_json,
+              :map=>map.to_hash.to_json,
+              :state=>map.states.to_json
+            }
+          )
+
+          puts req[player.player_id].inspect if @debug
+
+          req[player.player_id].on_complete do |response|
+            rep[player.player_id] = response
+          end
+
+          @hydra.queue( req[player.player_id] )
+        end
+
+        @hydra.run
+
+        players.each do |player|
+          unless rep[player.player_id].success?
+            # Save timeout
+            player.timeouts.create
+            
+            # Raise error
+            raise Berlin::Server::Exceptions::ArtificialIntelligenceNotResponding
+          end
+        end
+      end
+
+      def end_of_game        
+        # initializing requests
+        req = {}
+
+        @players.each do |player|
+          req[player.player_id] = Typhoeus::Request.new(player.url_info,
+            :method        => :post,
+            :headers       => {:Accept => "application/json"},
+            :timeout       => 0,
+            :cache_timeout => 0,
+            :params        => {
+              :action=>'game_over',
+              :infos=>self.infos( player.player_id ).to_json,
+              :map=>map.to_hash.to_json,
+              :state=>map.states.to_json
+            }
+          )
+
+          puts req[player.player_id].inspect if @debug
+
+          @hydra.queue( req[player.player_id] )
+        end
+
+        @hydra.run
+        
         # get the results
         results = ranking
-
+        
         # save information
         Game.create! do |game|
           game.map              = self.map
@@ -225,7 +290,9 @@ module Berlin
 
       def run
         raise 'No map?!' if map.nil?
-
+        
+        start_game
+        
         while @turn < map.maximum_number_of_turns
           players = alive_players
 

@@ -1,5 +1,5 @@
 class DocController < ApplicationController
-  def index
+  def doc
     @doc = I18n.t :doc
   end
   

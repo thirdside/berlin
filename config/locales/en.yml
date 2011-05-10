@@ -25,13 +25,16 @@ en:
     games_played: Games played
     table_of_content: Table of content
     welcome: Welcome
+    tutorial: Tutorial
+    request: Requests
+    response: Response
 
   activerecord:
     models:
       user: User
       game: Game
       artificial_intelligence: Artificial Intelligence
-      doc: Doc
+      doc: Help
       map: Map
       achievement: Achievement
       victories_achievement: Victories Achievement
@@ -69,7 +72,7 @@ en:
         language: Language
         score: Average score
         won_games: Won games
-        url_ready: Wakeup URL
+        url_ready: Info URL
         url_on_turn: On turn URL
         created_at: Created at
       artificial_intelligence_game:
@@ -85,7 +88,11 @@ en:
     new: New artificial intelligence
     available: Available artificial intelligences
     selected: Selected artificial intelligences
-
+  
+  maps:
+    last_game: "Last game played %{time} ago"
+    never_played: "This map has never been played"
+  
   games:
     feeling_lucky: Feelin lucky?
     rematch: Rematch

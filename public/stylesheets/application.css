@@ -178,11 +178,11 @@ div.content h3 {
   padding: 10px 0 5px 0;
 }
 
-div.content > p {
+div.content p {
   padding: 10px 20px;
 }
 
-div.content > p i {
+div.content p i {
   padding: 1px 5px;
   background: #f78d1d;
   color: #202020;
@@ -211,14 +211,14 @@ ul#menu > li > a {
     -moz-border-radius: 10px;
     padding: 2px 10px;
     outline: none;
-	cursor: pointer;
-	text-align: center;
-	text-decoration: none;
+	  cursor: pointer;
+	  text-align: center;
+	  text-decoration: none;
     text-shadow: 0 1px 1px rgba(0,0,0,.3);
 }
 
 ul#menu > li:hover > a, ul#menu > li.active > a {
-    background: #f78d1d;
+  background: #f78d1d;
 	background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#f47a20));
 	background: -moz-linear-gradient(top,  #faa51a,  #f47a20);
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20');
@@ -313,12 +313,16 @@ table.breakdown td h4 {
     margin-bottom: 5px;
 }
 
+table.breakdown td p {
+  padding: 0;
+  margin: 0;
+}
+
 table.large {
     color: #333333;
 }
 
 table.large thead th {
-    border-top: 1px solid #cccccc;
     background-color: #E1E1E1;
     font-weight: bold;
     text-align: left;
@@ -338,7 +342,6 @@ table.large tbody tr:hover td {
 }
 
 table.large th, table.large td {
-    border-bottom: 1px solid #cccccc;
     padding: 4px 6px;
 }
 
@@ -560,7 +563,7 @@ pre.code {
     margin-right: 10px;
 }
 
-ul.padded {
+.padded {
     padding: 0 0 0 10px;
     margin: 10px;
 }
