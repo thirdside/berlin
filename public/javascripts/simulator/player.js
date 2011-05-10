@@ -7,10 +7,10 @@
  */
 
 TS.Player = Class.create(TS, {
-	initialize: function ($super, id, color)
+	initialize: function ($super, id)
 	{
 		this.id = id;
-		this.color = color;
+		this.color = this._initPlayerColor(id);
 		
 		this.soldiers = 0;
 		this.cities = 0;
@@ -32,5 +32,25 @@ TS.Player = Class.create(TS, {
 					this.cities += 1;
 			}
 		}, this);
+	},
+	
+	/*
+	 * Get the player's color (for a known player)
+	 */
+	_initPlayerColor: function (playerId)
+	{
+		var color = '#FFFFFF';
+		
+		switch (playerId)
+		{
+			case 0: color = '#bd1550'; break;
+			case 1: color = '#e97f02'; break;
+			case 2: color = "#73797b"; break;
+			case 3: color = "#e32424"; break;
+			case 4: color = "#21bbbd"; break;
+			case 5: color = "#8a9b0f"; break;
+		}
+		
+		return color;
 	}	
 });

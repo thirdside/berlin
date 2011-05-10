@@ -1168,26 +1168,6 @@
 	},
 	
 	/*
-	 * Get the player's color (for a known player)
-	 */
-	_initPlayerColor: function (playerId)
-	{
-		var color = '#FFFFFF';
-		
-		switch (playerId)
-		{
-			case 0: color = '#bd1550'; break;
-			case 1: color = '#e97f02'; break;
-			case 2: color = "#73797b"; break;
-			case 3: color = "#e32424"; break;
-			case 4: color = "#21bbbd"; break;
-			case 5: color = "#8a9b0f"; break;
-		}
-		
-		return color;
-	},
-	
-	/*
 	 * 
 	 */
 	_getPlayerColor: function (playerId)
@@ -1195,20 +1175,6 @@
 		return (this.players == null || this.players[playerId] == null) ? '#FFFFFF' : this.players[playerId].color;
 	},
 	
-	/*
-	 * Initialize players data
-	 */
-	_initPlayers: function (playersInit)
-	{
-		var players = {};
-		
-		$A(playersInit).each(function(player) {
-			players[player.id] = new TS.Player(player.id, this._initPlayerColor(player.id));
-		}, this);
-		
-		return players;
-	},
-
 	/*
 	 * Get the state of the players
 	 */
@@ -1218,7 +1184,7 @@
 		var players = {};
 		
 		for (var i = 0; i < nbPlayers; i++)
-			players[i] = new TS.Player(i, this._initPlayerColor(i));
+			players[i] = new TS.Player(i);
 				
 		// synchronize the players with the map
 		Object.keys(players).each(function(playerId) {
