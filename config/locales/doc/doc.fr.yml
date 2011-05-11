@@ -127,24 +127,12 @@ fr:
             details:
               title: Détails de la requête envoyée
               content: |
-                <dl>
-                  <dt>Type</dt><dd>Post</dd>
-                  <dt>Contenu</dt><dd>JSON</dd>
-                  <dt>Paramètres envoyés</dt>
-                  <dd>
-                    <dl>
-                      <dt>self</dt><dd>Entier représentant votre identifiant unique pour cette partie</dd>
-                      <dt>game</dt><dd>String représentant l'identifiant unique de la partie</dd>
-                      <dt>json</dt><dd>Voir annexe 1 : RequestJSON</dd>
-                    </dl>
-                  </dd>
-                  <dt>Réponse attendue</dt>
-                  <dd>
-                    <dl>
-                      <dt>Statut</dt><dd>200 OK</dd>
-                    </dl>
-                  </dd>
-                </dl>
+                <ul class='padded'>
+                  <li>Type: Post</li>
+                  <li>Contenu: JSON</li>
+                  <li>Paramètres envoyés: <a href='/json_request'>voir ici</a></li>
+                  <li>Réponse attendue: 200 OK</li>
+                </ul>
         on_turn_url:
           title: onTurn URL
           sections:
@@ -158,23 +146,9 @@ fr:
             details:
               title: Détails de la requête envoyée
               content: |
-                <dl>
-                  <dt>Type</dt><dd>Post</dd>
-                  <dt>Contenu</dt><dd>JSON</dd>
-                  <dt>Paramètres envoyés</dt>
-                  <dd>
-                    <dl>
-                      <dt>self<dt><dd>Entier représentant votre identifiant unique pour cette partie</dd>
-                      <dt>game<dt><dd>String représentant l'identifiant unique de la partie</dd>
-                      <dt>turn<dt><dd>Entier représentant le tour actuel</dd>
-                      <dt>json<dt><dd>Json représentant l'état actuel de la partie ainsi que ses paramètres. Voir annexe 1 : RequestJSON</dd>
-                    </dl>
-                  </dd>
-                  <dt>Réponse attendue</dt>
-                  <dd>
-                    <dl>
-                      <dt>Statut<dt><dd>200 OK</dd>
-                      <dt>Body<dt><dd>Json représentant vos différents ordres pour le tour précisé en paramètre. Voir annexe 2 : ResponseJSON</dd>
-                    </dl>
-                  </dd>
-
+                <ul class='padded'>
+                  <li>Type: Post</li>
+                  <li>Contenu: JSON</li>
+                  <li>Paramètres envoyés: <a href='/json_request'>voir ici</a></li>
+                  <li>Réponse attendue: <a href='/json_response'>voir ici</a></li>
+                </ul>

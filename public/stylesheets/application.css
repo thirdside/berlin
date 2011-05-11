@@ -19,7 +19,6 @@ a {
     color: #f78d1d;
 }
 
-
 a:hover {
     text-decoration: underline;
 }
@@ -141,6 +140,36 @@ div#user-info > ul > li div.info {
 div#footer {
     color: #cccccc;
     padding: 10px 0;
+}
+
+ul.tabs {
+    list-style: none;
+    position: absolute;
+    right: 10px;
+    top: -25px;
+}
+
+ul.tabs li {
+    float: left;
+}
+
+ul.tabs li a {
+    display: block;
+    line-height: 16px;
+    width: 80px;
+    background-color: #dddddd;
+    margin: 3px 5px 0 0;
+    padding: 3px 10px 3px 10px;
+    text-align: center;
+    text-decoration: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+ul.tabs li.selected a, ul.tabs li a:hover {
+    margin-top: 0;
+    line-height: 19px;
+    background-color: #ffffff;
 }
 
 .right {
