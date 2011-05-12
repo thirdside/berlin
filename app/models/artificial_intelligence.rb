@@ -13,6 +13,7 @@ class ArtificialIntelligence < ActiveRecord::Base
   scope :ordered, :order=>"artificial_intelligences.name"
 
   validates :name, :presence=>true, :uniqueness=>true, :length => { :minimum => 1 }
+  validates :url, :presence=>true, :format => { :with => /^(http|https):\/\// }
   validates :language, :presence=>true, :inclusion=>LANGUAGES
 
   def score

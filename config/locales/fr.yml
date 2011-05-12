@@ -85,6 +85,13 @@ fr:
         created_at: Créé le
       artificial_intelligence_game:
         score: Pointage
+    errors:
+      models:
+        artificial_intelligence:
+          attributes:
+            url:
+              invalid: doit être valide et débuter par http:// ou https://
+
 
   support:
     array:
