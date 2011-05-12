@@ -211,6 +211,7 @@ TS.AIPlayback = Class.create(TS, {
 			var row = $(this.playerInfoName.interpolate(player));
 			row.down('.color').setStyle({"background-color": player.color});
 			row.down('.soldiers').update(player.soldiers)
+			row.down('.nodes').update(player.nodes);
 			row.down('.score').update(player.score);
 		}, this);
 	},
