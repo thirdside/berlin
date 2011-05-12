@@ -38,6 +38,14 @@
 
   #map
 
+  .liked
+    - unless @game.liked_by? current_user
+      - form_for Like.new, :html=>{:style=>"display: inline;"} do |f|
+        = f.hidden_field :likable_id, :value=>@game.id
+        = f.hidden_field :likable_type, :value=>@game.class.name
+        = submit_tag "#{Like.model_name.human}!"
+    = t('games.liked_that_game', :count=>@game.likes.count, :resource=>@game.class.name.downcase)
+
 :javascript
   document.observe("dom:loaded", function() {
     new TS.AIPlayback(

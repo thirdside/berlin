@@ -14,6 +14,7 @@
         %th= Map.model_name.human
         %th= Game.human_attribute_name :artificial_intelligence_games_count
         %th= Game.human_attribute_name :winner
+        %th= Like.model_name.human.pluralize
         %th.icon
 
     %tbody
@@ -24,6 +25,7 @@
           %td= link_to game.map.name, game.map
           %td= game.number_of_players
           %td= game.winners.map(&:name).to_sentence
+          %td= game.likes.count
           %td.icon= link_to_show game
 
   = paginate @games

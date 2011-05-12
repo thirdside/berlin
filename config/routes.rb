@@ -1,7 +1,7 @@
 BerlinWeb::Application.routes.draw do
   devise_for :users
 
-  resources :maps
+  resources :maps, :users, :likes
 
   resources :games do
     collection do
@@ -14,8 +14,6 @@ BerlinWeb::Application.routes.draw do
       get :ping
     end
   end
-
-  resources :users
   
   match 'home' => 'welcome#index'
 

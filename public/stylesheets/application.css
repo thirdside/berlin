@@ -619,6 +619,10 @@ ul.padded li {
     color: #333333;
 }
 
+.liked {
+    margin: 10px 0 0 0;
+}
+
 .clear {
     clear: both;
 }

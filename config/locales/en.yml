@@ -26,8 +26,8 @@ en:
     table_of_content: Table of content
     welcome: Welcome
     tutorial: Tutorial
-    request: Requests
-    response: Response
+    json_request: Requests
+    json_response: Response
 
   activerecord:
     models:
@@ -100,6 +100,10 @@ en:
     success: The game has started! The result should appears here within few seconds...
     failure: There has been an error with the game you asked. We have been noticed of the error.
     problem: "There's a problem with the config you asked. Please check again."
+    liked_that_game:
+      zero: "Be the first to like that game!"
+      one: "1 player liked that game!"
+      other: "%{count} players liked that game!"
   
   intro:
     quote_01: "Beside being awesome, Berlin is a web-based electronic turn-by-turn multiplayer artificial intelligence strategy board game."

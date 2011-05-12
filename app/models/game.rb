@@ -5,6 +5,8 @@ class Game < ActiveRecord::Base
   has_many :artificial_intelligence_games, :dependent=>:destroy
   has_many :artificial_intelligences, :through=>:artificial_intelligence_games
 
+  include Likable
+
   def number_of_players
     artificial_intelligence_games.count
   end
