@@ -11,7 +11,7 @@
         %th
         %th= ArtificialIntelligence.model_name.human
         %th= Game.human_attribute_name :number_of_soldiers
-        %th= Game.human_attribute_name :cities
+        %th= Game.human_attribute_name :nodes
         %th= Game.human_attribute_name :points
     %tbody
       - @game.artificial_intelligence_games.each do |artificial_intelligence_game|
@@ -19,7 +19,7 @@
           %td.color.icon
           %td= link_to artificial_intelligence_game.artificial_intelligence.name, artificial_intelligence_game.artificial_intelligence
           %td.soldiers
-          %td.cities
+          %td.nodes
           %td.score
 
 #progress_bar_container

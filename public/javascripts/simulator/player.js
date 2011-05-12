@@ -13,12 +13,14 @@ TS.Player = Class.create(TS, {
 		this.color = this._initPlayerColor(id);
 		
 		this.soldiers = 0;
+		this.nodes = 0;
 		this.score = 0;
 	},
 	
 	sync: function (map)
 	{
 		this.soldiers = 0;
+		this.nodes = 0;
 		this.score = 0;
 		
 		Object.keys(map.nodes).each(function(nodeId) {
@@ -27,6 +29,10 @@ TS.Player = Class.create(TS, {
 			// sync score
 			if (this.id == node.playerId)
 				this.score += node.value;
+				
+			// sync nodes
+			if (this.id == node.playerId)
+				this.nodes += 1;
 		
 			// sync soldiers
 			var movesIds = node.players.keys();

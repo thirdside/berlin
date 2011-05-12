@@ -190,7 +190,11 @@
 				combatObject.blurColor = '#000';
 			} else if (this.map.getNodeManoAMano(data.to)) {
 				combatObject.text = "Mano a mano!";
-				combatObject.textAttrs.fill = '#ffffff';														
+				combatObject.textAttrs.fill = '#ffffff';
+			} else if (this.map.getLastManStanding(data.to)[0]) {
+				combatObject.text = "Last man standing!";
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.getLastManStanding(data.to)[1]);
+				combatObject.blurColor = '#000';
 			} else if (this.map.getNodeCombat(data.to)) {
 				combatObject.text = "fight!";
 				combatObject.textAttrs.fill = '#ffffff';
@@ -198,7 +202,9 @@
 
 			layer.objects.push(combatObject);
 			
-			var combatAnimations = this._createCombatAnimations(combatObject);
+			var combatAnimations = this.map.getNodeCombat(data.to) ?
+				this._createCombatAnimations(combatObject) :
+				this._createCombatAnimations2(combatObject);
 			
 			this._syncAnimationLayerObject(layer, combatObject.id, combatAnimations);
 			
@@ -887,7 +893,79 @@
 		};
 
 		return animations;
-	},		
+	},
+	
+	
+	/*
+	 * Create combat animations
+	 */
+	_createCombatAnimations2: function (combatObject)
+	{
+		var animations =
+		{
+			'forward_arrival':
+			{
+				'start': {
+					'x': combatObject.position.x,
+					'y': combatObject.position.y,
+					'scale': '1, 1',
+					'opacity': 1
+				},
+				'end': {
+					'scale': '0.5, 0.5',
+					'opacity': 1
+				},
+				'length': this.stepTime
+			},
+			
+			'forward_departure':
+			{
+				'start': {
+					'x': combatObject.position.x,
+					'y': combatObject.position.y,
+					'scale': '0.5, 0.5',
+					'opacity': 1
+				},
+				'end': {
+					'scale': '0.0001, 0.0001',
+					'opacity': 0
+				},
+				'length': this.stepTime
+			},
+			
+			'backward_arrival':
+			{
+				'start': {
+					'x': combatObject.position.x,
+					'y': combatObject.position.y,
+					'scale': '0.0001, 0.0001',
+					'opacity': 0
+				},
+				'end': {
+					'scale': '0.5, 0.5',
+					'opacity': 1
+				},
+				'length': this.stepTime
+			},
+			
+			'backward_departure':
+			{
+				'start': {
+					'x': combatObject.position.x,
+					'y': combatObject.position.y,
+					'scale': '0.5, 0.5',
+					'opacity': 1
+				},
+				'end': {
+					'scale': '1, 1',
+					'opacity': 0
+				},
+				'length': this.stepTime
+			}			
+		};
+
+		return animations;
+	},			
 	
 	/*
 	 * Create a node object

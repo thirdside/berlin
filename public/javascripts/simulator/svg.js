@@ -307,17 +307,20 @@
 	_createCombatObject: function (object, attrs)
 	{
 		// create the combat graphic
-		var image = this.raphael.image(
-			attrs.img.src,
-			attrs.x - attrs.img.width / 2,
-			attrs.y - attrs.img.height / 2,
-			attrs.img.width,
-			attrs.img.height);
+		if (attrs.img != null) {
+			var image = this.raphael.image(
+				attrs.img.src,
+				attrs.x - attrs.img.width / 2,
+				attrs.y - attrs.img.height / 2,
+				attrs.img.width,
+				attrs.img.height);
+			
+			image.attr({
+				'scale': attrs['scale'],
+				'opacity': attrs['opacity']
+			});
+		}
 		
-		image.attr({
-			'scale': attrs['scale'],
-			'opacity': attrs['opacity']
-		});
 
 		// draw blurry back
 		var blurryText = this.raphael.text(attrs.x, attrs.y, object.text);
@@ -335,7 +338,10 @@
 		text.attr(object.textAttrs);
 
 		var combat = this.raphael.set();
-		combat.push(image, text, blurryText);
+		combat.push(text, blurryText);
+		
+		if (attrs.img != null)
+			combat.push(image);
 
 		return combat;
 	},	
