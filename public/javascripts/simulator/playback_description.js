@@ -190,7 +190,11 @@
 				combatObject.blurColor = '#000';
 			} else if (this.map.getNodeManoAMano(data.to)) {
 				combatObject.text = "Mano a mano!";
-				combatObject.textAttrs.fill = '#ffffff';														
+				combatObject.textAttrs.fill = '#ffffff';
+			} else if (this.map.getLastManStanding(data.to)[0]) {
+				combatObject.text = "Last man standing!";
+				combatObject.textAttrs.fill = this._getPlayerColor(this.map.getLastManStanding(data.to)[1]);
+				combatObject.blurColor = '#000';
 			} else if (this.map.getNodeCombat(data.to)) {
 				combatObject.text = "fight!";
 				combatObject.textAttrs.fill = '#ffffff';

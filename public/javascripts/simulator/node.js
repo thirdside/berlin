@@ -207,6 +207,36 @@ TS.NodeGraph = Class.create(TS, {
 		return even;
 	},
 	
+	getLastManStanding: function(id) {
+		var node = this.nodes[id];
+		var playersIds = node.players.keys();
+		
+		if (playersIds.size() < 2)
+			return false;
+			
+		var highest = -1;
+		var secondHighest = -1;
+		var winner = -1;
+		
+		playersIds.each(function (playerId) {
+			var soldiers = node.players.get(playerId);
+			
+			if (soldiers > highest)
+			{
+				secondHighest = highest;
+				highest = soldiers;
+				winner = playerId;
+			}
+			
+			else if (soldiers > secondHighest)
+			{
+				secondHighest = soldiers;
+			}
+		}, this);
+		
+		return [(highest - secondHighest) == 1, winner];
+	},
+	
 	getNodeCombat: function(id) {
 		var node = this.nodes[id];
 		var playersIds = node.players.keys();
