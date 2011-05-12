@@ -1,5 +1,5 @@
-.right
-  = link_to t('titles.doc'), doc_path, :class=>:button
-  = link_to t('titles.tutorial'), tutorial_path, :class=>:button
-  = link_to t('titles.request'), json_request_path, :class=>:button
-  = link_to t('titles.response'), json_response_path, :class=>:button
+%ul.tabs
+  %li{:class=>'/doc' == request.path ? 'selected' : nil}= link_to t('titles.doc'), doc_path
+  %li{:class=>'/tutorial' == request.path ? 'selected' : nil}= link_to t('titles.tutorial'), tutorial_path
+  %li{:class=>'/json_request' == request.path ? 'selected' : nil}= link_to t('titles.request'), json_request_path
+  %li{:class=>'/json_response' == request.path ? 'selected' : nil}= link_to t('titles.response'), json_response_path
