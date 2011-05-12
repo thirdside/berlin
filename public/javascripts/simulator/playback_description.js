@@ -202,7 +202,9 @@
 
 			layer.objects.push(combatObject);
 			
-			var combatAnimations = this._createCombatAnimations(combatObject);
+			var combatAnimations = this.map.getNodeCombat(data.to) ?
+				this._createCombatAnimations(combatObject) :
+				this._createCombatAnimations2(combatObject);
 			
 			this._syncAnimationLayerObject(layer, combatObject.id, combatAnimations);
 			
@@ -891,7 +893,79 @@
 		};
 
 		return animations;
-	},		
+	},
+	
+	
+	/*
+	 * Create combat animations
+	 */
+	_createCombatAnimations2: function (combatObject)
+	{
+		var animations =
+		{
+			'forward_arrival':
+			{
+				'start': {
+					'x': combatObject.position.x,
+					'y': combatObject.position.y,
+					'scale': '1, 1',
+					'opacity': 1
+				},
+				'end': {
+					'scale': '0.5, 0.5',
+					'opacity': 1
+				},
+				'length': this.stepTime
+			},
+			
+			'forward_departure':
+			{
+				'start': {
+					'x': combatObject.position.x,
+					'y': combatObject.position.y,
+					'scale': '0.5, 0.5',
+					'opacity': 1
+				},
+				'end': {
+					'scale': '0.0001, 0.0001',
+					'opacity': 0
+				},
+				'length': this.stepTime
+			},
+			
+			'backward_arrival':
+			{
+				'start': {
+					'x': combatObject.position.x,
+					'y': combatObject.position.y,
+					'scale': '0.0001, 0.0001',
+					'opacity': 0
+				},
+				'end': {
+					'scale': '0.5, 0.5',
+					'opacity': 1
+				},
+				'length': this.stepTime
+			},
+			
+			'backward_departure':
+			{
+				'start': {
+					'x': combatObject.position.x,
+					'y': combatObject.position.y,
+					'scale': '0.5, 0.5',
+					'opacity': 1
+				},
+				'end': {
+					'scale': '1, 1',
+					'opacity': 0
+				},
+				'length': this.stepTime
+			}			
+		};
+
+		return animations;
+	},			
 	
 	/*
 	 * Create a node object
