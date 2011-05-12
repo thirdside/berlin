@@ -9,7 +9,11 @@ BerlinWeb::Application.routes.draw do
     end
   end
 
-  resources :artificial_intelligences
+  resources :artificial_intelligences do
+    member do
+      get :ping
+    end
+  end
 
   resources :users
   

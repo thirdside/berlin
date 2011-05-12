@@ -111,7 +111,7 @@ module Berlin
         req = {}
 
         @players.each do |player|
-          req[player.player_id] = Typhoeus::Request.new(player.url_info,
+          req[player.player_id] = Typhoeus::Request.new(player.url,
             :method        => :post,
             :headers       => {:Accept => "application/json"},
             :timeout       => 30000,
@@ -151,7 +151,7 @@ module Berlin
         req = {}
 
         @players.each do |player|
-          req[player.player_id] = Typhoeus::Request.new(player.url_info,
+          req[player.player_id] = Typhoeus::Request.new(player.url,
             :method        => :post,
             :headers       => {:Accept => "application/json"},
             :timeout       => 0,
@@ -248,12 +248,13 @@ module Berlin
         req = {}
 
         players.each do |player|
-          req[player.player_id] = Typhoeus::Request.new(player.url_on_turn,
+          req[player.player_id] = Typhoeus::Request.new(player.url,
             :method        => :post,
             :headers       => {:Accept => "application/json"},
             :timeout       => map.time_limit_per_turn,
             :cache_timeout => 0,
             :params        => {
+              :action=>'turn',
               :infos=>self.infos( player.player_id ).to_json,
               :map=>map.to_hash.to_json,
               :state=>map.states.to_json

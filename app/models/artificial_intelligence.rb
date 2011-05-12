@@ -23,4 +23,7 @@ class ArtificialIntelligence < ActiveRecord::Base
     self.artificial_intelligence_games.winners.count
   end
 
+  def ping
+    Net::HTTP.post_form(URI.parse( self.url ), {'action' => 'ping'})
+  end
 end

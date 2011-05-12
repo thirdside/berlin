@@ -14,4 +14,14 @@ class ArtificialIntelligencesController < InheritedResources::Base
     create!
   end
 
+  def ping
+    @artificial_intelligence = ArtificialIntelligence.find(params[:id])
+
+    begin
+      redirect_to @artificial_intelligence, :notice => @artificial_intelligence.ping
+    rescue Exception => e
+      redirect_to @artificial_intelligence, :alert => e.inspect
+    end
+  end
+
 end

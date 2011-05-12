@@ -72,8 +72,7 @@ en:
         language: Language
         score: Average score
         won_games: Won games
-        url_ready: Info URL
-        url_on_turn: On turn URL
+        url: URL
         created_at: Created at
       artificial_intelligence_game:
         score: Score

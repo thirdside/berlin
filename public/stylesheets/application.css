@@ -225,7 +225,7 @@ ul#menu {
 
 ul#menu li {
     display: inline-block;
-    margin-right: 20px;
+    margin-right: 10px;
     position: relative;
     padding: 0 0 15px;
 }

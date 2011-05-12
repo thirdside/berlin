@@ -16,35 +16,26 @@ fr:
         "yet another json library", nous aidera à analyser et créer les différents messages JSON échangés.
     
     urls:
-      title: URLs
+      title: URL
       text: |
-        Tel que spécifié dans la doc de Berlin, tout serveur se doit de répondre à deux URLs. Grâce à Sinatra, la tâche
-        nous est grandement simplifiée. Le premier, <i>/infos</i>, nous servira à inscrire une nouvelle partie ainsi qu'à
-        la détruite le moment venue, alors que le deuxième, <i>/onturn</i>, nous servira à recevoir de Berlin
-        les informations de la partie, tour après tour, ainsi qu'à lui communiquer les mouvements que nous désirons faire.
-        Nous déclarons donc les deux URLs de la manière suivante :
+        Tel que spécifié dans la doc de Berlin, toute intelligence artificielle se doit de répondre à un URL. Grâce à Sinatra, la tâche
+        nous est grandement simplifiée. Dans cet exemple, l'url sera directement à la racine du serveur. Voici donc, sans plus attendre :
     
     create_games:
       title: Créer et mémoriser les parties
       text: |
-        Maintenant que nous possédons nos deux URLs, nous aurons besoin de créer une nouvelle partie chaque fois qu'on
-        nous le demandera. Pour ce faire, l'approche choisie ici consiste à se créer une méthode <i>create_or_update_game</i>
-        qui sera appelée via les deux urls. Une variable de classe, <i>@@games</i>, doit également être créée afin de garder
+        Maintenant que nous possédons notre URL, nous aurons besoin de créer une nouvelle partie chaque fois qu'on
+        nous le demandera. Pour ce faire, l'approche choisie ici consiste à se créer une méthode <i>create_or_update_game</i>.
+        Une variable de classe, <i>@@games</i>, doit également être créée afin de garder
         trace de toutes les parties en cours. Nous utiliserons ici un Hash afin d'indexer les parties sur leur identifiant.
-        Remarquez que je termine également la fonction <i>/infos</i> par un <i>statut 200</i>, puisque c'est tout ce que nous
-        avons besoin de retourner à Berlin lors de l'appel à cet URL.
     
     analyse:
       title: Analyser les requêtes reçues
       text: |
-        Les différentes requêtes sont décortiquées dans les annexes, je vous laisse donc le soin de prendre note de toute
-        l'information mise à votre disposition. Comme il vous est possible de le constater, les deux requêtes sont en soit
-        très semblable, ce qui a motivé notre choix de n'utiliser qu'une seule méthode. Vous receverez donc quatre différents
-        paramètres dont l'un, <i>infos</i>, contient un identifiant unique pour la partie en cours. Nous allons donc, dans
+        Chaque requête reçue est composé d'exactement quatre paramètres dont l'un, <i>infos</i>, contient un identifiant unique
+        pour la partie en cours. Nous allons donc, dans
         un premier temps, vérifier s'il existe une partie portant cet identifiant. Si non, nous la créons en lui passant
-        ce qui sera plus tard de l'information qui lui sera utile. S'il s'agit d'un appel sur l'url <i>/onturn</i>, la
-        requête contiendra également un paramètre <i>state</i> qui nous servira à mettre à jour l'état de la partie. On termine
-        le tout en retournant la partie courante. Le code est assez simple, je vous laisse donc y jeter un coup d'oeil avant
+        ce qui sera plus tard de l'information qui lui sera utile. Le code est assez simple, je vous laisse donc y jeter un coup d'oeil avant
         de continuer.
       
     game_class:
@@ -77,13 +68,19 @@ fr:
         en point de chacun des noeuds, nous n'en tiendrons pas compte dans le présent exemple. Pour les besoins
         de la cause, nous nous en tiendrons à des mouvements tout à faire aléatoires, vous laissant le plaisir d'imaginer
         la meilleure des intelligences artificielles. La classe <i>Game</i> aura donc la responsabilité de déterminer pour
-        nous les meilleurs mouvements à faire, et nous ne devons pas oublier de modifier la méthode <i>/onturn</i> afin
-        de communiquer le tout au server de Berlin.
-    
+        nous les meilleurs mouvements à faire.
+
+    last_details:
+      title: Derniers détails
+      text: |
+        Nous achevons! Ne reste plus qu'à finaliser le tout afin de répondre à toutes les exigences de la doc. Entre autre,
+        il ne faut pas oublier de répondre au serveur en fonction du type de requêtes que l'on reçoit! Heureusement,
+        encore ici, Sinatra nous facilite un peu les choses... Voici donc ce qui a été fait :
+
     conclusion:
       title: Conclusion
       text: |
-        C'est tout. Nous avons donc bâti un object de partie, une carte, des noeuds et des chemins. Nous avons analysé le tout
+        C'est tout! Nous avons donc bâti un object de partie, une carte, des noeuds et des chemins. Nous avons analysé le tout
         et nous avons fait part à Berlin des mouvements que nous désirions faire. Après avoir effectuer les mouvements
         de tous les joueurs, Berlin nous réenverra une nouvelle requête, notre carte sera mise à jour, de
         nouveaux mouvements seront calculés, etc. Ne vous reste plus qu'à exposer votre code sur un quelconque

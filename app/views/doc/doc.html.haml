@@ -1,7 +1,7 @@
 - @doc.each_with_index do |(key, section), index|
   .content{:id=>key}
     - if index.zero?
-      = render :partial => '/doc/shared/menu'
+      = render :partial => '/layouts/menu', :locals => {:paths=>['doc', 'tutorial', 'json_request', 'json_response']}
     
     %h2= section[:title]
 

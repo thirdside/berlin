@@ -1,7 +1,7 @@
 .content
-  = render :partial => '/doc/shared/menu'
-  
-  %h2= t('titles.request')
+  = render :partial => '/layouts/menu', :locals => {:paths=>['doc', 'tutorial', 'json_request', 'json_response']}
+
+  %h2= t('titles.json_request')
   
   %p 
     Vous trouvez ici un exemple des requêtes que vous enverra Berlin. Vous y trouverez toute l'information requise
@@ -9,19 +9,9 @@
     requêtes que vous enverra Berlin sont de type POST et les paramètres sont envoyés individuellement, de telle sorte
     qu'ils sont accessiblent, par exemple en PHP, avec <i>$_POST['infos']</i>, ou encore avec Ruby on Rails, avec <i>params['infos']</i>.
   
-  %h3 Requête d'information
-  
-  %p
-    La première requête, appelée <i>requête d'information</i>, vous est envoyée en début et à la fin de chacune de vos parties. Envoyé à votre
-    votre URL d'information (ex: /infos), elle a pour but de vous avertir de la création ou de la fin d'une partie. Vous avez 30
-    secondes pour répondre avec un <i>status 200</i>. Bien que Berlin ne se serve de cette requête que pour s'assurer
-    que votre serveur est vivant et prêt au combat, nous vous envoyons quand même toute l'information utile à l'analyse
-    de la partie. Vous pouvez donc déjà commencer à choisir vos prochains mouvements si votre langage le permet. Nous envoyons
-    également cette requête en fin de partie afin de vous permettre de libérer de la mémoire si vous en avez besoin.
-  
   %pre.code
     :preserve
-      "action": "game_start" | "game_over",
+      "action": "game_start" | "turn" | "game_over" | "ping",
       
       "infos": {
         "game_id": "7c7905c6-2423-4a91-b5e7-44ff10cddd5d",
@@ -61,58 +51,4 @@
         {"node_id": 2, "player_id": null, "number_of_soldiers": 0},
         {"node_id": 3, "player_id": null, "number_of_soldiers": 0},
         {"node_id": 4, "player_id": 1, "number_of_soldiers": 24}
-      ]
-  
-  %h3 Requête de tour
-  
-  %p
-    Pratiquement identique à la première requête, la <i>requête de tour</i> vous est envoyé à chaque tour. Elle se différencie de
-    la requête d'information en ce sens qu'elle ne possède pas le paramètre action, et possède un paramètre state mis à jour
-    en fonctin des mouvements de chacun. Théoriquement, si vous gardez vos objets de manière persistante, vous pourriez
-    qu'actualiser l'état de la carte en fonction du paramètre state, mais nous préférons réenvoyer toute l'information de
-    manière à supporter un plus vaste éventail de langages et de plateformes. Veuillez cependant noter que jamais une carte
-    ne va changer en cours de partie. Le paramètre <i>maximum_number_of_turns</i> détermine, en microsecondes, le temps
-    limite vous étant octroyé pour nous répondre avec les mouvements que vous désirez effectuer. Un exemple de réponse
-    attendue est illustré <a href='/json_response'>ici</a>.
-  
-  %pre.code
-    :preserve
-      "infos": {
-        "game_id": "7c7905c6-2423-4a91-b5e7-44ff10cddd5d",
-        "current_turn": 3,
-        "maximum_number_of_turns": 10,
-        "number_of_players": 2,
-        "time_limit_per_turn": 5000,
-        "directed": false,
-        "player_id": 5
-      },
-      
-      "map": {
-        "types": [
-          {"name": "node", "points": 0, "number_of_soldiers": 0},
-          {"name": "city", "points": 1, "number_of_soldiers": 1}
-        ],
-        
-        "nodes": [
-          {"id": 1, "type": "city"},
-          {"id": 2, "type": "node"},
-          {"id": 3, "type": "node"},
-          {"id": 4, "type": "city"}
-        ],
-          
-        "paths": [
-          {"from": 1, "to": 2},
-          {"from": 2, "to": 3},
-          {"from": 3, "to": 4},
-          {"from": 1, "to": 3},
-          {"from": 1, "to": 4},
-          {"from": 2, "to": 4}
-        ]
-      },
-      
-      "state": [
-        {"node_id": 1, "player_id": 0, "number_of_soldiers": 28},
-        {"node_id": 2, "player_id": 0, "number_of_soldiers": 6},
-        {"node_id": 3, "player_id": 0, "number_of_soldiers": 4},
-        {"node_id": 4, "player_id": 1, "number_of_soldiers": 9}
       ]

@@ -26,8 +26,8 @@ fr:
     table_of_content: Table des matières
     welcome: Accueil
     tutorial: Tutoriel
-    request: Requêtes
-    response: Réponse
+    json_request: Requête
+    json_response: Réponse
   
   achievements:
     descriptions:
@@ -81,8 +81,7 @@ fr:
         score: Pointage moyen
         won_games: Parties gagnées
         victory_percentage: Pourcentage de victoires
-        url_ready: URL d'information
-        url_on_turn: URL de tour
+        url: URL
         created_at: Créé le
       artificial_intelligence_game:
         score: Pointage
@@ -103,6 +102,7 @@ fr:
     new: Nouvelle intelligence artificielle
     available: Intelligences artificielles disponibles
     selected: Intelligences artificielles sélectionnées
+    ping: Ping
 
   games:
     feeling_lucky: Un peu de chance?

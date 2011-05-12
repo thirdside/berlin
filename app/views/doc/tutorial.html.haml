@@ -1,5 +1,5 @@
 .content
-  = render :partial => '/doc/shared/menu'
+  = render :partial => '/layouts/menu', :locals => {:paths=>['doc', 'tutorial', 'json_request', 'json_response']}
 
   %h2= t('titles.tutorial')
   
@@ -21,11 +21,7 @@
   
   %pre.code
     :preserve
-      post '/infos' do
-        
-      end
-
-      post '/onturn' do
+      post '/' do
         
       end
   
@@ -37,13 +33,7 @@
     :preserve
       @@games = {}
 
-      get '/infos' do
-        create_or_update_game
-        
-        200
-      end
-
-      post '/onturn' do
+      post '/' do
         create_or_update_game
       end
       
@@ -62,7 +52,7 @@
         map = JSON.parse( params[:map] )
         infos = JSON.parse( params[:infos] )
         state = JSON.parse( params[:state] )
-        action = params[:action] ? params[:action] : nil
+        action = params[:action]
         
         # Then, let's see if we can find that game. If not, register it.
         game_id = infos['game_id']
@@ -223,7 +213,26 @@
           end
         end
       end
-  
+
+  %h3= t('tutorial.last_details.title')
+
+  %p= raw t('tutorial.last_details.text')
+
+  %pre.code
+    :preserve
+      post '/' do
+        if ['turn', 'game_start', 'game_over'].include? params[:action]
+          game = create_or_update_game
+
+          if params[:action] == 'turn'
+            # Respond with a json of our moves
+            return game.turn_moves.to_json
+          end
+        end
+
+        200
+      end
+
   %h3= t('tutorial.conclusion.title')
   
   %p= raw t('tutorial.conclusion.text')
@@ -243,16 +252,18 @@
       # Let's keep track of all played games
       @@games = {}
 
-      post '/infos' do
-          create_or_update_game
-          
-          200
-      end
+      post '/' do
+        if ['turn', 'game_start', 'game_over'].include? params[:action]
+          game = create_or_update_game
 
-      post '/onturn' do
-        game = create_or_update_game
-        # Respond with a json of our moves
-        game.turn_moves.to_json
+          if params[:action] == 'turn'
+            # Respond with a json of our moves
+            return game.turn_moves.to_json
+          end
+        end
+
+        # For every other type of request, respond with 200 OK
+        200
       end
 
       def create_or_update_game
@@ -260,7 +271,7 @@
         map = JSON.parse( params[:map] )
         infos = JSON.parse( params[:infos] )
         state = JSON.parse( params[:state] )
-        action = params[:action] ? params[:action] : nil
+        action = params[:action]
         
         # Then, let's see if we can find that game. If not, register it.
         game_id = infos['game_id']

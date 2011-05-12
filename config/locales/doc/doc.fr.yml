@@ -114,41 +114,38 @@ fr:
     communication:
       title: Communications
       sections:
-        ready_url:
-          title: Info URL
-          sections:
-            what_it_is:
-              title: Qu'est-ce que c'est?
-              content: |
-                Pour chaque IA, vous devez nous fournir ce qu'on appelle le Info URL. Nous envoyons une requête à cet URL avant chaque
-                partie afin de nous assurer que votre serveur est bel et bien fonctionnel. Votre seul objectif est de nous retourner
-                un statut 200 OK. Nous en profitons au passage pour vous envoyer un premier apperçu du plateau de jeu, ce qui vous permettera
-                dès lors de commencer à penser aux stratégies que vous utiliserez.
-            details:
-              title: Détails de la requête envoyée
-              content: |
-                <ul class='padded'>
-                  <li>Type: Post</li>
-                  <li>Contenu: JSON</li>
-                  <li>Paramètres envoyés: <a href='/json_request'>voir ici</a></li>
-                  <li>Réponse attendue: 200 OK</li>
-                </ul>
-        on_turn_url:
-          title: onTurn URL
-          sections:
-            what_it_is:
-              title: Qu'est-ce que c'est?
-              content: |
-                Lors d'une partie, à chaque nouveau tour, Berlin vous enverra le nouvel état du jeu sur ce qu'on appelle le onTurn URL. Puisqu'à cette étape,
-                votre serveur est considéré comme actif, toute requête restant sans réponse ou dont le temps de réponse dépasserait le délais
-                permis dans les règles de la partie sera interprétée comme si vous n'aviez aucun ordre à donner pour ce tour. Les différents règles pour la
-                partie sont également réenvoyées afin de permettre l'existence de serveurs stateless.
-            details:
-              title: Détails de la requête envoyée
-              content: |
-                <ul class='padded'>
-                  <li>Type: Post</li>
-                  <li>Contenu: JSON</li>
-                  <li>Paramètres envoyés: <a href='/json_request'>voir ici</a></li>
-                  <li>Réponse attendue: <a href='/json_response'>voir ici</a></li>
-                </ul>
+        what_it_is:
+          title: HTTP POST
+          content: |
+            Pour chaque IA, vous devez nous fournir un URL avec lequel nous pourrons communiquer par le biais de requêtes HTTP. Une requête
+            est envoyé au début, à chaque tour ainsi qu'à la fin de chaque partie. La réponse attendue varie en fonction du paramètre
+            <i>action</i>.
+        turn:
+          title: turn
+          content: |
+            Un paramètre d'action fixé à <i>turn</i> signifie que vous vous devez de nous répondre par vos mouvements pour une partie donnée.
+        game_start:
+          title: game_start
+          content: |
+            Lorsque fixé à <i>game_start</i>, cela signifie que vous êtes invité à vous joindre à une nouvelle partie. Un statut de type
+            200 OK est attendue en guise de réponse. Vous remarquerez que puisque vous recevez au passage toute l'information utile
+            à la partie, vous pouvez d'ores et déjà commencer à calculer vos futurs mouvements.
+        game_over:
+          title: game_over
+          content: |
+            Une action définie à <i>game_over</i> signifie la fin d'une partie. Vous pouvez donc libérer la mémoire utilisée. Un statut de type
+            200 OK est attendue en guise de réponse.
+        ping:
+          title: ping
+          content: |
+            Une requête <i>ping</i> ne sert qu'à déterminer si votre intelligence artificielle est en vie. Un statut de type
+            200 OK est attendue en guise de réponse.
+        details:
+          title: Détails des requêtes envoyées
+          content: |
+            <ul class='padded'>
+              <li>Type: Post</li>
+              <li>Contenu: JSON</li>
+              <li>Paramètres envoyés: <a href='/json_request'>voir ici</a></li>
+              <li>Réponse attendue: <a href='/json_response'>voir ici</a></li>
+            </ul>

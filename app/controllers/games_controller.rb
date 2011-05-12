@@ -1,6 +1,3 @@
-require 'net/http'
-require 'uri'
-
 class GamesController < InheritedResources::Base
 
   actions :index, :show, :new, :create

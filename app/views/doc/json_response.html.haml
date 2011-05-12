@@ -1,10 +1,13 @@
 .content
-  = render :partial => '/doc/shared/menu'  
+  = render :partial => '/layouts/menu', :locals => {:paths=>['doc', 'tutorial', 'json_request', 'json_response']}
   
-  %h2= t('titles.response')
-  
+  %h2= t('titles.json_response')
+
   %p
-    Afin de nous communiquer vos mouvements, Berlin s'attend simplement à lire dans le corps de la page un JSON formatté selon
+    Pour toutes requêtes dont le paramètre <i>action</i> est fixé à <i>game_start</i>, <i>game_over</i> ou <i>ping</i>,
+    un simple statut <i>200 OK</i> est nécessaire. En revanche, lorsqu'il s'agit d'une requête dont le paramètre <i>action</i>
+    est fixé à <i>turn</i>, vous vous devez de nous faire part des mouvements que vous désirez effectuer.
+    Afin de nous les communiquer, Berlin s'attend simplement à lire dans le corps de la page un JSON formatté selon
     l'exemple suivant. Il s'agit d'un tableau contenant la liste de tous vos déplacements contenant l'identifiant du noeud
     d'origine, celui du noeud d'arrivé, ainsi que le nombre de soldats que vous désirez déplacer. Un mouvement est considéré
     valide par Berlin si vous posséder assez de soldat sur le noeud d'origine, si le nombre de soldats en déplacement à

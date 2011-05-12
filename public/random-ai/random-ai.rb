@@ -11,16 +11,18 @@ require 'yajl/json_gem'
 # Let's keep track of all played games
 @@games = {}
 
-post '/infos' do
-    create_or_update_game
-    
-    200
-end
+post '/' do
+  if ['turn', 'game_start', 'game_over'].include? params[:action]
+    game = create_or_update_game
 
-post '/onturn' do
-  game = create_or_update_game
-  # Respond with a json of our moves
-  game.turn_moves.to_json
+    if params[:action] == 'turn'
+      # Respond with a json of our moves
+      return game.turn_moves.to_json
+    end
+  end
+
+  # For every other type of request, respond with 200 OK
+  200
 end
 
 def create_or_update_game
@@ -28,8 +30,8 @@ def create_or_update_game
   map = JSON.parse( params[:map] )
   infos = JSON.parse( params[:infos] )
   state = JSON.parse( params[:state] )
-  action = params[:action] ? params[:action] : nil
-  
+  action = params[:action]
+
   # Then, let's see if we can find that game. If not, register it.
   game_id = infos['game_id']
   @@games[game_id] ||= Game.new game_id, map, infos
@@ -37,12 +39,12 @@ def create_or_update_game
 
   if action == "game_over"
     # Release the game to avoid memory leaks
-    @@games.delete game_id
+    @@games[game_id] = nil
   elsif state
     # Now, we want to update the current state of the game with the new content
     game.update state
   end
-  
+
   game
 end
 
@@ -85,7 +87,7 @@ end
 class Map
   attr_accessor :nodes
   attr_reader :player_id
-  
+
   def initialize map, infos
     @player_id  = infos['player_id']
     @nodes      = {}
@@ -148,7 +150,7 @@ end
 # nodes are adjacent, how much points worth a node, etc.
 class Node
   attr_accessor :id, :player_id, :number_of_soldiers
-  
+
   def initialize id
     @id                 = id
     @number_of_soldiers = 0
