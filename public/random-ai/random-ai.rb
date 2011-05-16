@@ -19,6 +19,8 @@ post '/' do
       # Respond with a json of our moves
       return game.turn_moves.to_json
     end
+  else
+    p params.inspect
   end
 
   # For every other type of request, respond with 200 OK

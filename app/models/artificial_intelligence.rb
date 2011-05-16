@@ -25,6 +25,46 @@ class ArtificialIntelligence < ActiveRecord::Base
   end
 
   def ping
-    Net::HTTP.post_form(URI.parse( self.url ), {'action' => 'ping'})
+    Net::HTTP.post_form(URI.parse( self.url ),
+        "action" => "ping",
+        "infos" => {
+          "game_id" => "7c7905c6-2423-4a91-b5e7-44ff10cddd5d",
+          "current_turn" => nil,
+          "maximum_number_of_turns" => 10,
+          "number_of_players" => 2,
+          "time_limit_per_turn" => 5000,
+          "directed" => false,
+          "player_id" => nil
+        }.to_json,
+
+        "map" => {
+          "types" => [
+            {"name" => "node", "points" => 0, "number_of_soldiers" => 0},
+            {"name" => "city", "points" => 1, "number_of_soldiers" => 1}
+          ],
+          
+          "nodes" => [
+            {"id" => 1, "type" => "city"},
+            {"id" => 2, "type" => "node"},
+            {"id" => 3, "type" => "node"},
+            {"id" => 4, "type" => "city"}
+          ],
+      
+          "paths" => [
+            {"from" => 1, "to" => 2},
+            {"from" => 2, "to" => 3},
+            {"from" => 3, "to" => 4},
+            {"from" => 1, "to" => 3},
+            {"from" => 1, "to" => 4},
+            {"from" => 2, "to" => 4}
+          ]
+        }.to_json,
+
+        "state" => [
+          {"node_id" => 1, "player_id" => 0,    "number_of_soldiers" => 12},
+          {"node_id" => 2, "player_id" => nil,  "number_of_soldiers" => 0},
+          {"node_id" => 3, "player_id" => nil,  "number_of_soldiers" => 0},
+          {"node_id" => 4, "player_id" => 1,    "number_of_soldiers" => 16}
+        ].to_json)
   end
 end

@@ -76,7 +76,17 @@ en:
         created_at: Created at
       artificial_intelligence_game:
         score: Score
-
+  
+  date:
+    formats:
+      default: "%d-%m-%Y"
+      short: "%b %d"
+      long: "%B %d, %Y"
+  
+  time:
+    formats:
+      long: "%d-%m-%Y %H:%m"
+  
   views:
     pagination:
       previous: "&laquo; "

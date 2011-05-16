@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   has_many :awards, :through=>:artificial_intelligences
   has_many :games, :dependent=>:nullify
   has_many :likes, :dependent=>:destroy
+  has_many :notifications, :dependent=>:destroy
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, :lockable and :timeoutable

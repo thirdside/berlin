@@ -1,8 +1,15 @@
 BerlinWeb::Application.routes.draw do
   devise_for :users
 
-  resources :maps, :users, :likes
-
+  resources :maps, :likes, :notifications
+  
+  resources :users do
+    member do
+      get :artificial_intelligences
+      get :games
+    end
+  end
+  
   resources :games do
     collection do
       get :random

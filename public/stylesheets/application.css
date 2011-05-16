@@ -137,6 +137,10 @@ div#user-info > ul > li div.info {
     font-size: 25px;
 }
 
+div#user-info > ul > li div.info a {
+    color: #ffffff;
+}
+
 div#footer {
     color: #cccccc;
     padding: 10px 0;

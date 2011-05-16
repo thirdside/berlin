@@ -1,0 +1,10 @@
+.content
+  .right
+    = link_to t('games.new'), new_game_path, :class=>:button
+  
+  %h2
+    = @user.username
+    = ":"
+    = t('titles.all_games')
+
+  = render :partial=>'/games/list', :locals=>{:resources=>@games}

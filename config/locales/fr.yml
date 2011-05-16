@@ -36,7 +36,10 @@ fr:
     names:
       victories_achievement:
         first_victory: "1ère victoire!"
-      
+  
+  notifications:
+    game: "<a href='/games/%{id}'>Une nouvelle partie a eu lieu!</a>"
+  
   activerecord:
     models:
       user: Utilisateur
@@ -47,7 +50,9 @@ fr:
       achievement: Accomplissement
       victories_achievement: Accomplissement de victoires
       games_played_achievement: Accomplissement de parties jouées
-      award: Trophée
+      award: Médaille
+      notification: Message
+      like: J'aime
     attributes:
       user:
         login: Nom d'utilisateur ou courriel
@@ -91,7 +96,16 @@ fr:
           attributes:
             url:
               invalid: doit être valide et débuter par http:// ou https://
-
+  
+  date:
+    formats:
+      default: "%d-%m-%Y"
+      short: "%b %d"
+      long: "%B %d, %Y"
+  
+  time:
+    formats:
+      long: "%d-%m-%Y %H:%m"
 
   support:
     array:
@@ -121,7 +135,7 @@ fr:
     problem: Il y a un problème avec la configuration de la partie demandée. Merci de revérifier.
     liked_that_game:
       zero: "Soyez le premier a aimer cette partie!"
-      one: "%{count} joueur ont aimé cette partie!"
+      one: "%{count} joueur a aimé cette partie!"
       other: "%{count} joueurs ont aimé cette partie!"
 
   intro:

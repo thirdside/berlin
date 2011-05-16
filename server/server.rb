@@ -25,12 +25,12 @@ config_yaml = YAML::load( config_file )
 ActiveRecord::Base.establish_connection( config_yaml[ environment ] )
 
 # lib
-%w( awardable ).each do |model|
+%w( awardable likable ).each do |model|
   require ROOT + "/../lib/#{model}"
 end
 
 # models
-%w( game map artificial_intelligence artificial_intelligence_game artificial_intelligence_timeout award ).each do |model|
+%w( game map artificial_intelligence like artificial_intelligence_game notification artificial_intelligence_timeout award ).each do |model|
   require ROOT + "/../app/models/#{model}"
 end
 

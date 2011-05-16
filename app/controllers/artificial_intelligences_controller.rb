@@ -1,5 +1,7 @@
 class ArtificialIntelligencesController < InheritedResources::Base
-
+  
+  belongs_to :user, :optional => true
+  
   actions :index, :show, :new, :create
 
   before_filter :authenticate_user!, :only=>[:new, :create]

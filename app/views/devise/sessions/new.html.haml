@@ -2,7 +2,7 @@
   %h2= t('devise.keywords.sign_in')
 
   = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
-
+    = hidden_field_tag :return_to, params[:return_to]
     = devise_error_messages!
 
     .field

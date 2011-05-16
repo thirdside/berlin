@@ -23,7 +23,7 @@
                               'simulator/simulator',
                               :cache=>true
     = csrf_meta_tag
-
+    
   %body
     #wrapper
       #header
@@ -40,7 +40,7 @@
 
         - unless user_signed_in?
           .right
-            = link_to t('devise.keywords.sign_in'), new_session_path( :user )
+            = link_to t('devise.keywords.sign_in'), new_session_path( :user, :return_to=>request.fullpath )
             = link_to t('devise.keywords.register'), new_registration_path( :user )
 
       #main

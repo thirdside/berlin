@@ -6,6 +6,8 @@ class Game < ActiveRecord::Base
   has_many :artificial_intelligences, :through=>:artificial_intelligence_games
 
   include Likable
+  
+  after_create :send_notification
 
   def number_of_players
     artificial_intelligence_games.count
@@ -14,4 +16,11 @@ class Game < ActiveRecord::Base
   def winners
     self.artificial_intelligence_games.winners.includes(:artificial_intelligence).map(&:artificial_intelligence)
   end
+  
+  protected
+    def send_notification
+      self.artificial_intelligences.map(&:user_id).uniq.each do |user|
+        Notification.push user, self
+      end
+    end
 end

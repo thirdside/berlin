@@ -45,7 +45,7 @@ class GamesController < InheritedResources::Base
           url += "?#{BERLIN_SERVER[:params][:map]}=#{map.id}"
           url += ais.map{ |ai| "&#{BERLIN_SERVER[:params][:ais]}[]=#{ai.id}" }.join
           url += "&user_id=#{current_user.id}"
-          rep = Net::HTTP.get_response( URI.parse( url ) )
+          rep  = Net::HTTP.get_response( URI.parse( url ) )
       end
     rescue Exception => e
       redirect_to( new_game_path, :alert=>e.inspect ) and return
