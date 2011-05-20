@@ -65,6 +65,6 @@ class ArtificialIntelligence < ActiveRecord::Base
           {"node_id" => 2, "player_id" => nil,  "number_of_soldiers" => 0},
           {"node_id" => 3, "player_id" => nil,  "number_of_soldiers" => 0},
           {"node_id" => 4, "player_id" => 1,    "number_of_soldiers" => 16}
-        ].to_json)
+        ].to_json).body
   end
 end
