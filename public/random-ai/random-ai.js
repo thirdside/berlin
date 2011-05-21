@@ -7,16 +7,11 @@ var sys = require("sys"),
 
 
 function RandomAI() {
-	this.initialize = function (options)
+	this.initialize = function ()
 	{
-		this.options = {
-			verbose: true,
-			port: 8080
-		};
-		
 		this.games = {};
 		
-		this.server = http.createServer(this.onRequest.bind(this)).listen(this.options.port);
+		this.server = http.createServer(this.onRequest.bind(this)).listen(4567);
 		v("Berlin Random AI Server Started");
 	}
 	
