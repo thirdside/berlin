@@ -34,7 +34,7 @@ class ArtificialIntelligence < ActiveRecord::Base
           "number_of_players" => 2,
           "time_limit_per_turn" => 5000,
           "directed" => false,
-          "player_id" => nil
+          "player_id" => 1
         }.to_json,
 
         "map" => {

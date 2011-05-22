@@ -196,14 +196,24 @@ div.content {
     position: relative;
 }
 
-div.content .right {
-    top: 10px;
+div.content .buttons {
+  height: 25px;
+}
+
+div.content .buttons a {
+  float: right;
+  margin-left: 8px;
 }
 
 div.content h2 {
-    color: #343434;
-    padding: 0 0 10px;
-    text-shadow: 2px 2px 5px #cccccc;
+    color: #202020;
+    padding: 0 20px 10px 20px;
+    text-shadow: 2px 2px 5px #f47a20;
+    
+    background: url(/images/h1.png) no-repeat;
+    margin: 5px 0 10px -20px;
+    height: 23px;
+    width: 965px;
 }
 
 div.content h3 {

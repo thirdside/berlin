@@ -1,6 +1,6 @@
 .content
   - if user_signed_in?
-    .right
+    .buttons
       = link_to t('games.rematch'), games_path( 'game[map_id]'=>@game.map_id, 'game[artificial_intelligence_ids]'=>@game.artificial_intelligence_ids ), :class=>:button, :method=>:post
 
   %h2= @game.map.name
@@ -26,7 +26,7 @@
   #progress_bar
 
 .content
-  .right#controls
+  .buttons#controls
     %input#rewind{:type=>:submit, :value=>"<<"}
     %input#back{:type=>:submit, :value=>"<"}
     %input#play{:type=>:submit, :value=>t('controls.play')}

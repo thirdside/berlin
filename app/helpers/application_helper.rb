@@ -5,7 +5,6 @@ module ApplicationHelper
     temp[Game.model_name]                   = games_path
     temp[Map.model_name]                    = maps_path
     temp[User.model_name]                   = users_path
-    temp[Doc.model_name]                    = doc_path
     temp
   end
 
