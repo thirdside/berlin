@@ -7,16 +7,11 @@ var sys = require("sys"),
 
 
 function RandomAI() {
-	this.initialize = function (options)
+	this.initialize = function ()
 	{
-		this.options = {
-			verbose: true,
-			port: 8080
-		};
-		
 		this.games = {};
 		
-		this.server = http.createServer(this.onRequest.bind(this)).listen(this.options.port);
+		this.server = http.createServer(this.onRequest.bind(this)).listen(4567);
 		v("Berlin Random AI Server Started");
 	}
 	
@@ -24,27 +19,27 @@ function RandomAI() {
 	{
 		var uri = url.parse(request.url).pathname;
 		v("New request: " + uri);
-		if (uri === "/onturn")
-		{
-			this.onTurn(request, response);
-		} else if (uri === "/infos")
-		{
-			this.onInfos(request, response);
-		}
-		response.writeHead(200, {'Content-Type': 'application/json'});
-	}
-	
-	this.onTurn = function (request, response)
-	{
+		
 		this.postHandler(request, function(request_data)
 		{
-			var game = this.createOrUpdateGame(request_data);
-			var moves_json = JSON.stringify(game.turnMoves());
-			response.write(moves_json);
-			v("Moves for this turn: " + moves_json);
+			if (request_data.action && request_data.action == "ping")
+			{
+				v("PING")
+			} else 
+			{
+				if (request_data.action == "turn")
+				{
+					var game = this.createOrUpdateGame(request_data);
+					var moves_json = JSON.stringify(game.turnMoves());
+					response.write(moves_json);
+					v("Moves for this turn: " + moves_json);
+				}
+			}
 			
 			response.end();
-	    }.bind(this));
+		}.bind(this));
+		
+		response.writeHead(200, {'Content-Type': 'application/json'});
 	}
 	
 	this.createOrUpdateGame = function (request)
@@ -65,7 +60,7 @@ function RandomAI() {
 		}
 		if (action == "game_over")
 		{
-			
+			this.games[game_id] = null;
 		} else if (state)
 		{
 			game.update(state);
