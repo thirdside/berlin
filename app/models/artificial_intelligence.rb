@@ -15,7 +15,9 @@ class ArtificialIntelligence < ActiveRecord::Base
   validates :name, :presence=>true, :uniqueness=>true, :length => { :minimum => 1 }
   validates :url, :presence=>true, :format => { :with => /^(http|https):\/\// }
   validates :language, :presence=>true, :inclusion=>LANGUAGES
-
+  
+  before_save :parse_url
+  
   def score
     self.artificial_intelligence_games.map(&:score).to_stat.average
   end
@@ -67,4 +69,9 @@ class ArtificialIntelligence < ActiveRecord::Base
           {"node_id" => 4, "player_id" => 2,    "number_of_soldiers" => 16}
         ].to_json).body
   end
+  
+  protected
+    def parse_url
+      self.url << '/' unless self.url.end_with?( '/' )
+    end
 end
