@@ -16,8 +16,6 @@ class ArtificialIntelligence < ActiveRecord::Base
   validates :url, :presence=>true, :format => { :with => /^(http|https):\/\// }
   validates :language, :presence=>true, :inclusion=>LANGUAGES
   
-  before_save :parse_url
-  
   def score
     self.artificial_intelligence_games.map(&:score).to_stat.average
   end
@@ -25,9 +23,14 @@ class ArtificialIntelligence < ActiveRecord::Base
   def won_games
     self.artificial_intelligence_games.winners.count
   end
+  
+  def parsed_url
+    u = URI.parse( self.url )
+    u.path.empty? ? URI.parse( self.url + "/" ) : u
+  end
 
   def ping
-    Net::HTTP.post_form(URI.parse( self.url ),
+    Net::HTTP.post_form(self.parsed_url,
         "action" => "ping",
         "infos" => {
           "game_id" => "7c7905c6-2423-4a91-b5e7-44ff10cddd5d",
@@ -69,9 +72,4 @@ class ArtificialIntelligence < ActiveRecord::Base
           {"node_id" => 4, "player_id" => 2,    "number_of_soldiers" => 16}
         ].to_json).body
   end
-  
-  protected
-    def parse_url
-      self.url << '/' unless self.url.end_with?( '/' )
-    end
 end
