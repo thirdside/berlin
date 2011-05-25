@@ -1,8 +1,6 @@
 class ArtificialIntelligencesController < InheritedResources::Base
   
   belongs_to :user, :optional => true
-  
-  actions :index, :show, :new, :create
 
   before_filter :authenticate_user!, :only=>[:new, :create]
 
@@ -14,6 +12,18 @@ class ArtificialIntelligencesController < InheritedResources::Base
     params[:artificial_intelligence][:user_id] = current_user.id
 
     create!
+  end
+  
+  def update
+    @artificial_intelligence = ArtificialIntelligence.find(params[:id])
+    
+    if current_user.id == @artificial_intelligence.user_id
+      if @artificial_intelligence.update_attributes(params[:artificial_intelligence])
+        redirect_to @artificial_intelligence, :notice => t('activerecord.messages.update') and return
+      end
+    end
+    
+    render :edit
   end
 
   def ping

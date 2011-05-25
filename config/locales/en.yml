@@ -6,6 +6,7 @@ en:
     no_result: No result
     statistics: Statistics
     history: History
+    back: Back
 
   helpers:
     submit:
@@ -76,6 +77,14 @@ en:
         created_at: Created at
       artificial_intelligence_game:
         score: Score
+    errors:
+      models:
+        artificial_intelligence:
+          attributes:
+            url:
+              invalid: must starts with http:// ou https://
+    messages:
+      update: "Modifications have been saved with succes"
   
   date:
     formats:

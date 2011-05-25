@@ -1,0 +1,21 @@
+.content
+  .buttons
+    = link_to t('common.back'), @artificial_intelligence, :class=>:button
+  
+  %h2= @artificial_intelligence.name
+  
+  - form_for @artificial_intelligence do |ai|
+
+    = errors_for @artificial_intelligence
+
+    .field
+      = ai.label :name
+      = ai.text_field :name
+    .field
+      = ai.label :url
+      = ai.text_field :url
+    .field
+      = ai.label :language
+      = ai.select :language, ArtificialIntelligence::LANGUAGES
+    .field.nolabel
+      = ai.submit

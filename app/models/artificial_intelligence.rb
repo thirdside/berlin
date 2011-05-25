@@ -39,8 +39,8 @@ class ArtificialIntelligence < ActiveRecord::Base
 
         "map" => {
           "types" => [
-            {"name" => "node", "points" => 0, "number_of_soldiers" => 0},
-            {"name" => "city", "points" => 1, "number_of_soldiers" => 1}
+            {"name" => "node", "points" => 0, "soldiers_per_turn" => 0},
+            {"name" => "city", "points" => 1, "soldiers_per_turn" => 1}
           ],
           
           "nodes" => [
@@ -61,10 +61,10 @@ class ArtificialIntelligence < ActiveRecord::Base
         }.to_json,
 
         "state" => [
-          {"node_id" => 1, "player_id" => 0,    "number_of_soldiers" => 12},
+          {"node_id" => 1, "player_id" => 1,    "number_of_soldiers" => 16},
           {"node_id" => 2, "player_id" => nil,  "number_of_soldiers" => 0},
           {"node_id" => 3, "player_id" => nil,  "number_of_soldiers" => 0},
-          {"node_id" => 4, "player_id" => 1,    "number_of_soldiers" => 16}
+          {"node_id" => 4, "player_id" => 2,    "number_of_soldiers" => 16}
         ].to_json).body
   end
 end

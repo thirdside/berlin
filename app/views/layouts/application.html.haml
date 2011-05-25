@@ -40,7 +40,7 @@
         %li= link_to 'Wiki', "http://#{ I18n.locale == :en ? "" : "#{I18n.locale}." }wiki.berlin.thirdside.ca", :target => '_blank'
 
         - unless user_signed_in?
-          .buttons
+          .devise_links
             = link_to t('devise.keywords.sign_in'), new_session_path( :user, :return_to=>request.fullpath )
             = link_to t('devise.keywords.register'), new_registration_path( :user )
 

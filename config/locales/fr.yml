@@ -6,11 +6,13 @@ fr:
     no_result: Aucun résultat
     statistics: Statistiques
     history: Historique
+    back: Retour
   
   helpers:
     submit:
       create: Créer
       update: Confirmer les changements
+      edit: Éditer
   
   controls:
     play: Jouer
@@ -96,6 +98,9 @@ fr:
           attributes:
             url:
               invalid: doit être valide et débuter par http:// ou https://
+    messages:
+      update: "Modifications effectuées avec succès"
+      
   
   date:
     formats:

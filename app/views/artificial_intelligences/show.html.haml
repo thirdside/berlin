@@ -1,5 +1,8 @@
 .content  
   .buttons
+    - if current_user == @artificial_intelligence.user
+      = link_to t('helpers.submit.edit'), edit_artificial_intelligence_path( @artificial_intelligence ), :class=>:button
+      
     = link_to t('games.new'), new_game_path( :artificial_intelligence_id => @artificial_intelligence.id ), :class=>:button
     = link_to t('artificial_intelligences.ping'), ping_artificial_intelligence_path( @artificial_intelligence ), :class=>:button
 
@@ -13,6 +16,10 @@
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :user
         %td= link_to @artificial_intelligence.user.username, @artificial_intelligence.user
+      - if current_user == @artificial_intelligence.user
+        %tr
+          %td.label= ArtificialIntelligence.human_attribute_name :url
+          %td= @artificial_intelligence.url
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :language
         %td= @artificial_intelligence.language
@@ -24,13 +31,13 @@
         %td= @artificial_intelligence.won_games
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :victory_percentage
-        %td= @artificial_intelligence.won_games.percentage_of @artificial_intelligence.artificial_intelligence_games.count
+        %td= @artificial_intelligence.won_games.percentage_of( @artificial_intelligence.artificial_intelligence_games.count ).to_decimals
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :score
         %td= show_score( @artificial_intelligence.score )
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :created_at
-        %td= @artificial_intelligence.created_at
+        %td= l( @artificial_intelligence.created_at, :format=>:long )
 
 .content
   = render :partial => '/awards/list', :locals=>{:awards=>@artificial_intelligence.awards}
