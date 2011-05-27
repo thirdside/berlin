@@ -13,6 +13,7 @@ fr:
       create: Créer
       update: Confirmer les changements
       edit: Éditer
+      send: Envoyer
   
   controls:
     play: Jouer

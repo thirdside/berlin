@@ -19,6 +19,7 @@ BerlinWeb::Application.routes.draw do
   resources :artificial_intelligences do
     member do
       get :ping
+      post :ping
     end
   end
   

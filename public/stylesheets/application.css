@@ -40,6 +40,11 @@ a:hover {
     border: 1px solid #990000;
 }
 
+.flash.message {
+    background-color: #ccccff;
+    border: 1px solid #000099;
+}
+
 dl {
     padding: 4px;
 }
@@ -475,6 +480,11 @@ form .field {
     height: 28px;
 }
 
+form .field.textarea {
+    line-height: auto;
+    height: auto;
+}
+
 form .field.nolabel {
     margin-left: 50%;
     padding-left: 10px;
@@ -493,7 +503,7 @@ form .field.text {
     line-height: 14px;
 }
 
-input[type='text'], input[type='password'], select {
+input[type='text'], input[type='password'], select, textarea {
     padding: 4px;
     width: 200px;
     border-radius: 4px;
@@ -505,6 +515,11 @@ input[type='text'], input[type='password'], select {
     outline: none;
     color: #333333;
     font-family: 'Arial', sans-serif;
+}
+
+textarea {
+    width: 400px;
+    height: 150px;
 }
 
 input[type='checkbox'] {

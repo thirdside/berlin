@@ -71,7 +71,9 @@ module Berlin
 
       def move!
         @turns[@turn][:moves].each do |move|
-          map.move! move
+          if map.valid_move? move
+            map.move! move
+          end
         end
       end
 
