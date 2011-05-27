@@ -63,7 +63,7 @@ module Berlin
         JSON.parse( moves ).each do |move|
           move = Berlin::Server::Move.parse( player_id, move )
 
-          if map.valid_move? move
+          if map.valid_move? @turn, move
             @turns[@turn][:moves] << move
           end
         end
@@ -71,9 +71,7 @@ module Berlin
 
       def move!
         @turns[@turn][:moves].each do |move|
-          if map.valid_move? move
-            map.move! move
-          end
+          map.move! move
         end
       end
 

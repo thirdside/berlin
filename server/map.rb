@@ -12,7 +12,10 @@ module Berlin
 
         # parse json to get extra variables
         parsed = JSON.parse( self.json )
-
+        
+        # keep track of asked moves
+        @moves = Hash.new{ |h,k| h[k] = Hash.new{ |hh,kk| hh[kk] = Hash.new{ |hhh,kkk| hhh[kkk] = 0 } } }
+        
         # parsed from json
         @maximum_number_of_turns  = parsed['infos']['maximum_number_of_turns']  || 100
         @number_of_players        = parsed['infos']['number_of_players']        || []
@@ -103,7 +106,7 @@ module Berlin
         @types[id]
       end
 
-      def valid_move? move
+      def valid_move? turn, move
         node1 = self.find_node move.from
         node2 = self.find_node move.to
 
@@ -118,7 +121,13 @@ module Berlin
 
         # Player has enough soldiers on from node?
         return false unless node1.number_of_soldiers_for( move.player_id ) >= move.number_of_soldiers
-
+        
+        # Player didn't asked for too many moves from that node?
+        return false unless node1.number_of_soldiers_for( move.player_id ) >= @moves[turn][move.player_id][move.from] + move.number_of_soldiers
+        
+        ## Keep track of the move
+        @moves[turn][move.player_id][move.from] += move.number_of_soldiers
+        
         true
       end
 
