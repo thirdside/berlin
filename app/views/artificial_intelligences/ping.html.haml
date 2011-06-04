@@ -1,0 +1,28 @@
+- if @response
+  .flash.message
+    = @response
+
+.content
+  .buttons
+    = link_to t('common.back'), @artificial_intelligence, :class=>:button
+  
+  %h2= t('titles.ping')
+  
+  - form_tag ping_artificial_intelligence_path do
+    
+    = errors_for @artificial_intelligence
+    
+    .field
+      = label :ping, :action
+      = text_field :ping, :action, :value=>@ping['action']
+    .field.textarea
+      = label :ping, :infos
+      = text_area :ping, :infos, :value=>@ping['infos']
+    .field.textarea
+      = label :ping, :map
+      = text_area :ping, :map, :value=>@ping['map']
+    .field.textarea
+      = label :ping, :state
+      = text_area :ping, :state, :value=>@ping['state']
+    .field.nolabel
+      = submit_tag t('helpers.submit.send')

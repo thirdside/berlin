@@ -10,8 +10,10 @@ en:
 
   helpers:
     submit:
-      create: "Create %{model}"
-      update: "Confirm changes to %{model}"
+      create: Create
+      update: Confirm changes
+      edit: Edit
+      send: Send
   
   controls:
     play: Play

@@ -2,9 +2,9 @@
   .buttons
     - if current_user == @artificial_intelligence.user
       = link_to t('helpers.submit.edit'), edit_artificial_intelligence_path( @artificial_intelligence ), :class=>:button
+      = link_to t('artificial_intelligences.ping'), ping_artificial_intelligence_path( @artificial_intelligence ), :class=>:button
       
     = link_to t('games.new'), new_game_path( :artificial_intelligence_id => @artificial_intelligence.id ), :class=>:button
-    = link_to t('artificial_intelligences.ping'), ping_artificial_intelligence_path( @artificial_intelligence ), :class=>:button
 
   %h2= @artificial_intelligence.name
 
