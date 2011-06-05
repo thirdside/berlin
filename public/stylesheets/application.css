@@ -193,13 +193,14 @@ ul.tabs li.selected a, ul.tabs li a:hover {
 }
 
 div.content {
-    background-color: #ffffff;
+    background: url(/images/content.gif) #EFE8D3;
     padding: 10px;
     margin: 5px 0 5px 0;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     position: relative;
+    text-shadow: 1px 1px 0 #F5F2E8;
 }
 
 div.devise_links {
@@ -220,13 +221,15 @@ div.content .buttons a {
 }
 
 div.content h2 {
-    color: #202020;
+    color: #fff;
     padding: 0 20px 10px 20px;
-    text-shadow: 2px 2px 5px #f47a20;
-    
-    background: url(/images/h1.png) no-repeat;
+    text-shadow: 2px 2px 5px #000000;
+    font-size: 23px;
+    line-height: 52px;
+    font-weight: normal;    
+    background: url(/images/ribbon.png) no-repeat;
     margin: 5px 0 10px -20px;
-    height: 23px;
+    height: 52px;
     width: 965px;
 }
 
@@ -319,7 +322,7 @@ ul#menu li ul li a:hover {
 }
 
 blockquote.quote {
-    background: #fff url(/images/quote.png) top left no-repeat;
+    background: url(/images/quote.png) top left no-repeat;
     padding: 5px 5px 5px 50px;
     margin: 15px;
     letter-spacing: 1px;
@@ -334,12 +337,12 @@ blockquote.quote .signature {
 
 table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
     empty-cells: show;
+    border-spacing: 1px 0px;
 }
 
 table.breakdown {
-    border-collapse: separate;
     margin-top: 20px;
 }
 
@@ -347,6 +350,7 @@ table.breakdown td {
     padding: 8px;
     background: #343434;
     color: #fdfdfd;
+    text-shadow: none;
     border-radius: 5px;
     vertical-align: top;
     letter-spacing: 0.1px;
@@ -380,22 +384,18 @@ table.large {
 }
 
 table.large thead th {
-    background-color: #E1E1E1;
     font-weight: bold;
     text-align: left;
-}
-
-table.large tbody tr:nth-child(odd) {
-    background-color: #ffffff;
-}
-
-table.large tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+    color: #e07106;
+    font-size: 15px;
+    border-bottom: 1px dashed #D5CAA8;
 }
 
 table.large tbody tr:hover td {
+    text-shadow: none;
     background-color: #333333;
     color: #ffffff;
+    border-color: #333333;
 }
 
 table.large th, table.large td {
@@ -403,8 +403,9 @@ table.large th, table.large td {
 }
 
 table.large td {
-    border-right: 1px dotted #cccccc;
     line-height: 20px;
+    border-bottom: 1px dashed #D5CAA8;
+    border-top: 1px dashed #F5F2E9;
 }
 
 table.large td.label {

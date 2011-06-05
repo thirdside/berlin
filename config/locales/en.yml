@@ -60,6 +60,7 @@ en:
         best_artificial_intelligence: Best artificial intelligence
       game:
         id: "#"
+        number_of_players: Nombre de joueurs
         victory: Victory
         time_start: Time
         artificial_intelligence_games_count: Artificial intelligences

@@ -58,7 +58,7 @@ fr:
       like: J'aime
     attributes:
       user:
-        login: Nom d'utilisateur ou courriel
+        login: "Nom d'utilisateur ou courriel"
         username: Nom d'utilisateur
         email: Courriel
         remember_me: Se souvenir
@@ -73,6 +73,7 @@ fr:
         best_artificial_intelligence: Meilleure intelligence artificielle
       game:
         id: "#"
+        number_of_players: Nombre de joueurs
         victory: Victoire
         time_start: Début
         artificial_intelligence_games_count: Intelligences artificielles

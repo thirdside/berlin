@@ -8,6 +8,9 @@
       = select :game, :map_id, options_from_collection_for_select( Map.all, :id, :name, params[:map_id] )
       = link_to t('games.feeling_lucky'), "", :id=>"feel_lucky"
     .field
+      = label :game, :number_of_players
+      %span#number_of_players
+    .field
       .label
         = t('artificial_intelligences.available')
       = t('artificial_intelligences.selected')
@@ -25,7 +28,9 @@
     .field.nolabel
       = f.submit
 .content
+  %h2= Map.model_name.human
+  
   #map
 
 :javascript
-  new TS.NewGameHelper('map', 'game_map_id', 'available_ais', 'selecte_ais', 'hidden_fields', 'game_submit', 'feel_lucky');
+  new TS.NewGameHelper('map', 'game_map_id', 'available_ais', 'selecte_ais', 'hidden_fields', 'game_submit', 'feel_lucky', null, 'number_of_players');
