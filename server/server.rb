@@ -25,7 +25,7 @@ config_yaml = YAML::load( config_file )
 ActiveRecord::Base.establish_connection( config_yaml[ environment ] )
 
 # lib
-%w( awardable likable ).each do |model|
+%w( awardable likable player ).each do |model|
   require ROOT + "/../lib/#{model}"
 end
 
