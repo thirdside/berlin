@@ -36,7 +36,7 @@ end
 
 # classes
 %w( game map path artificial_intelligence node node_type move exception ).each do |model|
-  require ROOT + "/#{model}"
+  require ROOT + "/lib/#{model}"
 end
 
 # achievements
