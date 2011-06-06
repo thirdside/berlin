@@ -19,3 +19,5 @@
       = ai.select :language, ArtificialIntelligence::LANGUAGES
     .field.nolabel
       = ai.submit
+    .field.nolabel
+      = link_to t('helpers.submit.destroy'), @artificial_intelligence, :method=>:delete, :confirm=>t('confirmation.deletion')

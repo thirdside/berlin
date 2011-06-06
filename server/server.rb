@@ -50,6 +50,7 @@ get '/fight' do
       game = Berlin::Server::Game.new
       game.map = Berlin::Server::Map.find( params[:map_id] )
       game.players = Berlin::Server::ArtificialIntelligence.find( params[:ai_ids] )
+      game.is_practice = params[:is_practice]
       game.user_id = params[:user_id]
       game.debug = params[:debug]
       game.init

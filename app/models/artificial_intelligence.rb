@@ -3,6 +3,7 @@ class ArtificialIntelligence < ActiveRecord::Base
   LANGUAGES = %w(Ruby PHP Python C/C++ Lua JavaScript C# Go Java Other)
 
   include Awardable
+  include Player
 
   belongs_to :user, :counter_cache=>true
   
@@ -16,12 +17,8 @@ class ArtificialIntelligence < ActiveRecord::Base
   validates :url, :presence=>true, :format => { :with => /^(http|https):\/\// }
   validates :language, :presence=>true, :inclusion=>LANGUAGES
   
-  def score
-    self.artificial_intelligence_games.map(&:score).to_stat.average
-  end
-
-  def won_games
-    self.artificial_intelligence_games.winners.count
+  def belongs_to? user
+    self.user_id == user.id
   end
   
   def parsed_url

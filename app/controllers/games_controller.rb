@@ -8,6 +8,10 @@ class GamesController < InheritedResources::Base
 
   has_scope :order, :default => "games.id DESC"
   
+  def index
+    @games = Game.officials
+  end
+  
   def show
     @game = Game.find(params[:id])
 
@@ -40,11 +44,12 @@ class GamesController < InheritedResources::Base
 
       case BERLIN_SERVER[:protocol]
         when 'http'
-          # Format : /fight?map_id=X&ai_ids[]=Y&ai_ids[]=Z
+          # Format : /fight?map_id=X&ai_ids[]=Y&ai_ids[]=Z&is_practice=TRUE|FALSE
           url  = BERLIN_SERVER[:url].dup
           url += "?#{BERLIN_SERVER[:params][:map]}=#{map.id}"
           url += ais.map{ |ai| "&#{BERLIN_SERVER[:params][:ais]}[]=#{ai.id}" }.join
           url += "&user_id=#{current_user.id}"
+          url += "&is_practice=#{params[:game][:is_practice]}"
           rep  = Net::HTTP.get_response( URI.parse( url ) )
       end
     rescue Exception => e

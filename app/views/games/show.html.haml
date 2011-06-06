@@ -1,7 +1,7 @@
 .content
   - if user_signed_in?
     .buttons
-      = link_to t('games.rematch'), games_path( 'game[map_id]'=>@game.map_id, 'game[artificial_intelligence_ids]'=>@game.artificial_intelligence_ids ), :class=>:button, :method=>:post
+      = link_to t('games.rematch'), games_path( 'game[map_id]'=>@game.map_id, 'game[artificial_intelligence_ids]'=>@game.artificial_intelligence_ids, 'game[is_practice]'=>@game.is_practice ), :class=>:button, :method=>:post
 
   %h2= @game.map.name
 

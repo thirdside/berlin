@@ -14,16 +14,34 @@ class ArtificialIntelligencesController < InheritedResources::Base
     create!
   end
   
+  def destroy
+    @artificial_intelligence = ArtificialIntelligence.find(params[:id])
+    
+    if @artificial_intelligence.belongs_to? current_user
+      destroy!
+    else
+      redirect_to :action=>:index
+    end
+  end
+  
+  def edit
+    @artificial_intelligence = ArtificialIntelligence.find(params[:id])
+    
+    if @artificial_intelligence.belongs_to? current_user
+      edit!
+    else
+      redirect_to :action=>:index
+    end
+  end
+  
   def update
     @artificial_intelligence = ArtificialIntelligence.find(params[:id])
     
-    if current_user.id == @artificial_intelligence.user_id
-      if @artificial_intelligence.update_attributes(params[:artificial_intelligence])
-        redirect_to @artificial_intelligence, :notice => t('activerecord.messages.update') and return
-      end
+    if @artificial_intelligence.belongs_to? current_user
+      update!
+    else
+      render :edit
     end
-    
-    render :edit
   end
 
   def ping

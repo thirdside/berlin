@@ -1,6 +1,6 @@
 .content  
   .buttons
-    - if current_user == @artificial_intelligence.user
+    - if @artificial_intelligence.belongs_to? current_user
       = link_to t('helpers.submit.edit'), edit_artificial_intelligence_path( @artificial_intelligence ), :class=>:button
       = link_to t('artificial_intelligences.ping'), ping_artificial_intelligence_path( @artificial_intelligence ), :class=>:button
       
@@ -25,13 +25,13 @@
         %td= @artificial_intelligence.language
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :artificial_intelligence_games_count
-        %td= @artificial_intelligence.artificial_intelligence_games.count
+        %td= @artificial_intelligence.games_played
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :won_games
         %td= @artificial_intelligence.won_games
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :victory_percentage
-        %td= @artificial_intelligence.won_games.percentage_of( @artificial_intelligence.artificial_intelligence_games.count ).to_decimals
+        %td= @artificial_intelligence.victory_percentage
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :score
         %td= show_score( @artificial_intelligence.score )
@@ -55,7 +55,7 @@
 
         // Data
         {
-          ai1: [#{@artificial_intelligence.artificial_intelligence_games.map{|x|(x.score * 100).to_i}.join(',')}]
+          ai1: [#{@artificial_intelligence.artificial_intelligence_games.for_official_games.map{|x|(x.score * 100).to_i}.join(',')}]
         },
 
         // Options
@@ -81,20 +81,20 @@
     };
 
 .content
-  %h2= t('titles.games_played')
-
+  %h2= t('titles.official_games')
+  
   %table.large
     %thead
       %tr
         %th= Game.human_attribute_name :id
         %th= Game.human_attribute_name :time_start
         %th= Map.model_name.human
-        %th= Game.human_attribute_name :artificial_intelligence_games_count
+        %th= Game.human_attribute_name :number_of_players
         %th= ArtificialIntelligenceGame.human_attribute_name :score
         %th.icon
 
     %tbody
-      - @artificial_intelligence.artificial_intelligence_games.order("created_at DESC").each do |artificial_intelligence_game|
+      - @artificial_intelligence.artificial_intelligence_games.for_official_games.ordered.each do |artificial_intelligence_game|
         %tr
           %td= artificial_intelligence_game.game.id
           %td= artificial_intelligence_game.game.time_start
@@ -102,3 +102,27 @@
           %td= artificial_intelligence_game.game.number_of_players
           %td= show_score artificial_intelligence_game.score
           %td.icon= link_to_show artificial_intelligence_game.game
+
+- if @artificial_intelligence.belongs_to? current_user
+  .content
+    %h2= t('titles.practice_games')
+    
+    %table.large
+      %thead
+        %tr
+          %th= Game.human_attribute_name :id
+          %th= Game.human_attribute_name :time_start
+          %th= Map.model_name.human
+          %th= Game.human_attribute_name :number_of_players
+          %th= ArtificialIntelligenceGame.human_attribute_name :score
+          %th.icon
+
+      %tbody
+        - @artificial_intelligence.artificial_intelligence_games.for_practice_games.ordered.each do |artificial_intelligence_game|
+          %tr
+            %td= artificial_intelligence_game.game.id
+            %td= artificial_intelligence_game.game.time_start
+            %td= link_to artificial_intelligence_game.game.map.name, artificial_intelligence_game.game.map
+            %td= artificial_intelligence_game.game.number_of_players
+            %td= show_score artificial_intelligence_game.score
+            %td.icon= link_to_show artificial_intelligence_game.game

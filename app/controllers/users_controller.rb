@@ -15,9 +15,4 @@ class UsersController < InheritedResources::Base
     
     @games = @user.games
   end
-  
-  protected
-    def collection
-      @users ||= end_of_association_chain.page(params[:page])
-    end
 end

@@ -14,13 +14,13 @@
       %td= user.artificial_intelligences.count
     %tr
       %td.label= ArtificialIntelligence.human_attribute_name :artificial_intelligence_games_count
-      %td= user.artificial_intelligence_games.count
+      %td= user.games_played
     %tr
       %td.label= ArtificialIntelligence.human_attribute_name :won_games
-      %td= user.artificial_intelligence_games.winners.count
+      %td= user.won_games
     %tr
       %td.label= ArtificialIntelligence.human_attribute_name :victory_percentage
-      %td= user.artificial_intelligence_games.winners.count.percentage_of( user.artificial_intelligence_games.count ).to_decimals
+      %td= user.victory_percentage
     %tr
       %td.label= ArtificialIntelligence.human_attribute_name :score
       %td= show_score user.score

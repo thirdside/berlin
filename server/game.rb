@@ -178,6 +178,7 @@ module Berlin
         Game.create! do |game|
           game.map              = self.map
           game.user_id          = self.user_id
+          game.is_practice      = self.is_practice
           game.time_start       = @time_start
           game.time_end         = Time.now
           game.number_of_turns  = @turn

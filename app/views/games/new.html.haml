@@ -2,18 +2,23 @@
   %h2= t('games.new')
 
   - form_for @game do |f|
+    
     #hidden_fields
+    
     .field
       = label :game, :map_id, Map.model_name.human
       = select :game, :map_id, options_from_collection_for_select( Map.all, :id, :name, params[:map_id] )
       = link_to t('games.feeling_lucky'), "", :id=>"feel_lucky"
+    
     .field
       = label :game, :number_of_players
       %span#number_of_players
+    
     .field
       .label
         = t('artificial_intelligences.available')
       = t('artificial_intelligences.selected')
+    
     .field
       .label
         .data-container#available_ais
@@ -25,8 +30,14 @@
           .row{:id=>"artificial_intelligence_#{@selected_ai.id}"}
             = @selected_ai.name
     .clear
+    
+    .field
+      = label :game, :is_practice
+      = check_box :game, :is_practice
+    
     .field.nolabel
       = f.submit
+
 .content
   %h2= Map.model_name.human
   

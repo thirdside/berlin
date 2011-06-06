@@ -7,6 +7,10 @@ class Game < ActiveRecord::Base
 
   include Likable
   
+  scope :ordered, order("games.created_at DESC")
+  scope :practices, where("games.is_practice IS TRUE")
+  scope :officials, where("games.is_practice IS NOT TRUE")
+  
   after_create :send_notification
 
   def number_of_players

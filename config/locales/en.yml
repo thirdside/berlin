@@ -12,6 +12,7 @@ en:
     submit:
       create: Create
       update: Confirm changes
+      destroy: Destroy
       edit: Edit
       send: Send
   
@@ -25,13 +26,17 @@ en:
     all_artificial_intelligences: List of all artificial intelligences
     artificial_intelligences: Artificial intelligences
     all_games: List of all games played
-    games_played: Games played
+    official_games: Games played
+    practice_games: Practices
     table_of_content: Table of content
     welcome: Welcome
     tutorial: Tutorial
     json_request: Requests
     json_response: Response
-
+  
+  confirmation:
+    deletion: Do you really want to delete that resource?
+  
   activerecord:
     models:
       user: User
@@ -61,13 +66,14 @@ en:
         best_artificial_intelligence: Best artificial intelligence
       game:
         id: "#"
-        number_of_players: Nombre de joueurs
+        number_of_players: Number of players
         victory: Victory
         time_start: Time
         artificial_intelligence_games_count: Artificial intelligences
         winner: Winner
         number_of_soldiers: Soldiers
         points: Points
+        is_practice: Practice
       artificial_intelligence:
         short_model_name: IA
         id: "#"

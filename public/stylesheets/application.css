@@ -607,6 +607,7 @@ pre.code {
     overflow: hidden;
     text-align: left;
     z-index: 100;
+    text-shadow: none;
 }
 
 .data-container div.row:hover {
