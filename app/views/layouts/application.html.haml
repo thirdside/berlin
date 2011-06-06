@@ -35,12 +35,16 @@
 
       %ul#menu
         %li{:class=>controller.controller_name == "welcome" ? "active" : nil}= link_to( I18n.t( "titles.welcome" ), root_path )
+        
         - menu.each do |model, url|
           %li{:class=>controller.controller_name == model.tableize ? 'active' : nil}= link_to model.human.pluralize, url
+        
         %li= link_to 'Wiki', "http://#{ I18n.locale == :en ? "" : "#{I18n.locale}." }wiki.berlin.thirdside.ca", :target => '_blank'
-
-        - unless user_signed_in?
-          .devise_links
+        
+        .devise_links
+          - if user_signed_in?
+            = link_to t('devise.keywords.log_out'), destroy_user_session_path
+          - else
             = link_to t('devise.keywords.sign_in'), new_session_path( :user, :return_to=>request.fullpath )
             = link_to t('devise.keywords.register'), new_registration_path( :user )
 

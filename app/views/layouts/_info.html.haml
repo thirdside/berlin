@@ -1,18 +1,10 @@
 #user-info
   %ul
-    %li.data
-    
-      %ul
-        %li= link_to current_user.username, current_user
-        %li= request.remote_ip
-        %li= link_to t('devise.keywords.log_out'), destroy_user_session_path
-    
     %li
       .title
         = Notification.model_name.human.pluralize
       .info
         = link_to current_user.notifications.unread.count, notifications_path
-    
     %li
       .title
         = ArtificialIntelligence.human_attribute_name :short_model_name

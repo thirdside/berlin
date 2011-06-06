@@ -89,6 +89,7 @@ div#main {
 div#header {
     padding: 20px 0 10px 0;
     position: relative;
+    margin-bottom: 10px;
 }
 
 div#header h1 {
@@ -344,6 +345,7 @@ table {
 
 table.breakdown {
     margin-top: 20px;
+    border-spacing: 10px 0px;
 }
 
 table.breakdown td {
@@ -387,7 +389,7 @@ table.large thead th {
     font-weight: bold;
     text-align: left;
     color: #e07106;
-    font-size: 15px;
+    font-size: 16px;
     border-bottom: 1px dashed #D5CAA8;
 }
 

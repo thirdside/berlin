@@ -60,6 +60,7 @@ fr:
       user:
         login: "Nom d'utilisateur ou courriel"
         username: Nom d'utilisateur
+        current_ip_address: Adresse IP
         email: Courriel
         remember_me: Se souvenir
         password: Mot de passe
