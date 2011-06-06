@@ -257,9 +257,8 @@ ul#menu {
 
 ul#menu li {
     display: inline-block;
-    margin-right: 10px;
+    margin: 0 10px 15px 0;
     position: relative;
-    padding: 0 0 15px;
 }
 
 ul#menu > li > a {
