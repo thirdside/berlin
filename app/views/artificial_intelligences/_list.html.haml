@@ -14,8 +14,8 @@
     %tbody
       - resources.each do |resource|
         %tr
-          %td= resource.name
+          %td= link_to resource.name, resource
           %td= link_to resource.user.username, resource.user
-          %td.centered= resource.games_played
-          %td.centered= resource.won_games
+          %td= resource.games_played
+          %td= resource.won_games
           %td.icon= link_to_show resource

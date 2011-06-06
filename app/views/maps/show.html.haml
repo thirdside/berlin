@@ -11,7 +11,7 @@
         %td= @map.version
       %tr
         %td.label= Map.human_attribute_name :games_count
-        %td= @map.games.count
+        %td= @map.games.officials.count
       %tr
         %td.label= Map.human_attribute_name :best_artificial_intelligence
         %td
@@ -44,7 +44,7 @@
       %tr
         %th= Game.human_attribute_name :id
         %th= Game.human_attribute_name :time_start
-        %th= Game.human_attribute_name :artificial_intelligence_games_count
+        %th= Game.human_attribute_name :number_of_players
         %th= Game.human_attribute_name :winner
         %th.icon
 

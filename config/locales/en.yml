@@ -75,7 +75,7 @@ en:
         points: Points
         is_practice: Practice
       artificial_intelligence:
-        short_model_name: IA
+        short_model_name: AI
         id: "#"
         name: Name
         user: User

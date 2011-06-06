@@ -14,7 +14,7 @@
       .title
         = Game.model_name.human.pluralize
       .info
-        = link_to current_user.artificial_intelligence_games.count, games_user_path( current_user )
+        = link_to current_user.games_played, games_user_path( current_user )
     %li
       .title
         = ArtificialIntelligenceGame.human_attribute_name :score
