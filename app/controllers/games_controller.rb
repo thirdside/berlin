@@ -43,7 +43,7 @@ class GamesController < InheritedResources::Base
       ais = ArtificialIntelligence.find(params[:game][:artificial_intelligence_ids])
 
       case BERLIN_SERVER[:protocol]
-        when 'http'
+        when :http
           # Format : /fight?map_id=X&ai_ids[]=Y&ai_ids[]=Z&is_practice=TRUE|FALSE
           url  = BERLIN_SERVER[:url].dup
           url += "?#{BERLIN_SERVER[:params][:map]}=#{map.id}"

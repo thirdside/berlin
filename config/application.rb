@@ -47,7 +47,7 @@ module BerlinWeb
 end
 
 BERLIN_SERVER = {
-  :protocol => 'http',
+  :protocol => :http,
   :url      => 'http://localhost:3010/fight',
   :params   => {
     :map => 'map_id',
