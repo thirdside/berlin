@@ -3,7 +3,7 @@ class WelcomeController < ApplicationController
     @signatures = [
       "NASA Engineer",
       "Dr. House",
-      "Ted - 'Winter is coming'",
+      "Eddard Stark - 'Winter is coming'",
       "Barack Obama",
       "Capt'n Picard",
       "Spock",
