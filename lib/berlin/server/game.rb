@@ -2,12 +2,11 @@ module Berlin
   module Server
     class Game < Game
       after_initialize :build
-      
       attr_accessor :uuid, :turn, :moves, :players, :debug
-
+      
       def build
         # game id
-        @uuid = UUIDTools::UUID.random_create.to_s
+        @uuid = UUIDTools::UUID.timestamp_create.to_s
 
         # times
         @time_start = Time.now

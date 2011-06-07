@@ -39,35 +39,15 @@ class GamesController < InheritedResources::Base
     rep = nil
 
     begin
-      map = Map.find(params[:game][:map_id])
-      ais = ArtificialIntelligence.find(params[:game][:artificial_intelligence_ids])
-
-      case BERLIN_SERVER[:protocol]
-        when :http
-          # Format : /fight?map_id=X&ai_ids[]=Y&ai_ids[]=Z&is_practice=TRUE|FALSE
-          url  = BERLIN_SERVER[:url].dup
-          url += "?#{BERLIN_SERVER[:params][:map]}=#{map.id}"
-          url += ais.map{ |ai| "&#{BERLIN_SERVER[:params][:ais]}[]=#{ai.id}" }.join
-          url += "&user_id=#{current_user.id}"
-          url += "&is_practice=#{params[:game][:is_practice]}"
-          rep  = Net::HTTP.get_response( URI.parse( url ) )
-      end
+      Game.delay.start_new_game( :debug => params[:debug],
+                          :user_id => current_user.id,
+                          :is_practice => params[:game][:is_practice],
+                          :ais_ids => params[:game][:artificial_intelligence_ids], 
+                          :map_id => params[:game][:map_id] )
     rescue Exception => e
       redirect_to( new_game_path, :alert=>e.inspect ) and return
     end
 
-    case rep
-      when Net::HTTPSuccess
-        redirect_to games_path, :notice=>I18n.t('games.success')
-      else
-        case rep
-          when Net::HTTPForbidden
-            err = I18n.t('games.problem')
-          else
-            err = I18n.t('games.failure')
-        end
-
-        redirect_to new_game_path, :alert=>err
-    end
+    redirect_to games_path, :notice=>I18n.t('games.success')
   end
 end

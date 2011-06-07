@@ -4,4 +4,10 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
+begin
+  require 'delayed/tasks'
+rescue LoadError
+  STDERR.puts "Rn `bundle install` to install delayed_job"
+end
+
 BerlinWeb::Application.load_tasks

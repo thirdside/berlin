@@ -21,6 +21,17 @@ class Game < ActiveRecord::Base
     self.artificial_intelligence_games.winners.includes(:artificial_intelligence).map(&:artificial_intelligence)
   end
   
+  def self.start_new_game option
+    game = Berlin::Server::Game.new
+    game.map = Berlin::Server::Map.find( options[:map_id] )
+    game.players = Berlin::Server::ArtificialIntelligence.find( options[:ais_ids] )
+    game.is_practice = options[:is_practice]
+    game.user_id = options[:user_id]
+    game.debug = options[:debug]
+    game.init
+    game.run
+  end
+  
   protected
     def send_notification
       self.artificial_intelligences.map(&:user_id).uniq.each do |user|
