@@ -21,7 +21,7 @@ class Game < ActiveRecord::Base
     self.artificial_intelligence_games.winners.includes(:artificial_intelligence).map(&:artificial_intelligence)
   end
   
-  def self.start_new_game option
+  def self.start_new_game options
     game = Berlin::Server::Game.new
     game.map = Berlin::Server::Map.find( options[:map_id] )
     game.players = Berlin::Server::ArtificialIntelligence.find( options[:ais_ids] )
