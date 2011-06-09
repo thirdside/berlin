@@ -25,7 +25,14 @@ module Berlin
         @turn = 0
       end
 
-      def init
+      def init options
+        # initializing options
+        self.map = Berlin::Server::Map.find( options[:map_id] )
+        self.players = Berlin::Server::ArtificialIntelligence.find( options[:ais_ids] )
+        self.is_practice = options[:is_practice]
+        self.user_id = options[:user_id]
+        self.debug = options[:debug]
+        
         # set player_id for each player
         @players.each_with_index do |player, index|
           player.player_id = index

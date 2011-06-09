@@ -12,6 +12,6 @@ gem 'haml'
 gem 'has_scope'
 gem 'utilities', "0.0.7"
 gem 'kaminari'
-gem "delayed_job",  :git => 'git://github.com/collectiveidea/delayed_job.git'
+gem "delayed_job"
 gem 'uuidtools'
 gem "typhoeus"

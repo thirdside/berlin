@@ -36,8 +36,6 @@ class GamesController < InheritedResources::Base
   end
 
   def create
-    rep = nil
-
     begin
       Game.delay.start_new_game( :debug => params[:debug],
                           :user_id => current_user.id,

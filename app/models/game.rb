@@ -23,12 +23,7 @@ class Game < ActiveRecord::Base
   
   def self.start_new_game options
     game = Berlin::Server::Game.new
-    game.map = Berlin::Server::Map.find( options[:map_id] )
-    game.players = Berlin::Server::ArtificialIntelligence.find( options[:ais_ids] )
-    game.is_practice = options[:is_practice]
-    game.user_id = options[:user_id]
-    game.debug = options[:debug]
-    game.init
+    game.init( options )
     game.run
   end
   
