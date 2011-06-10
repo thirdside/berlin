@@ -14,7 +14,7 @@ class Game < ActiveRecord::Base
   after_create :send_notification
 
   def number_of_players
-    artificial_intelligence_games.count
+    artificial_intelligence_games_count
   end
 
   def winners

@@ -2,6 +2,11 @@
   %h2= Notification.model_name.human.pluralize
   
   %table.large
+    %thead
+      %tr
+        %th= Notification.model_name.human.pluralize
+        %th
+        %th
     %tbody
       - @notifications.ordered.each do |notification|
         %tr{:class => notification.read_at.nil? ? 'new' : nil}
@@ -9,3 +14,5 @@
             = raw t("notifications.#{notification.notifiable_type.downcase}", :id=>notification.notifiable_id)
           %td.date
             = l( notification.time, :format=>:long )
+          %td.icon
+            = link_to_show notification

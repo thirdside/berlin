@@ -17,8 +17,8 @@
         %td= link_to game.map.name, game.map
         %td= game.number_of_players
         %td= raw game.winners.map{ |ai| link_to( ai.name, ai ) }.to_sentence
-        %td= game.likes.count
+        %td= game.likes_count
         %td.icon= link_to_show game
 
-- if Game.respond_to? :current_page
-  = paginate @gamesAI2
+- if @games.respond_to? :current_page
+  = paginate @games

@@ -4,12 +4,10 @@ class GamesController < InheritedResources::Base
 
   before_filter :authenticate_user!, :only=>[:new, :create]
 
-  include Pageable
-
   has_scope :order, :default => "games.id DESC"
   
   def index
-    @games = Game.officials
+    @games = Game.officials.page( params[:page] )
   end
   
   def show
