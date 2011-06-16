@@ -18,7 +18,7 @@ class ArtificialIntelligence < ActiveRecord::Base
   validates :language, :presence=>true, :inclusion=>LANGUAGES
   
   def belongs_to? user
-    self.user_id == user.id
+    self.user_id == user.id rescue false
   end
   
   def parsed_url
