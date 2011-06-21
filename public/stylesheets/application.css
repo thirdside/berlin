@@ -418,12 +418,12 @@ table.large td:last-child {
 }
 
 table.large th.icon, table td.icon {
+    padding-top: 8px;
     width: 16px;
 }
 
 table.large th.icon a, table td.icon a {
     position: relative;
-    top: 2px;
 }
 
 .centered {

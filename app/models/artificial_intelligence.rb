@@ -11,7 +11,8 @@ class ArtificialIntelligence < ActiveRecord::Base
   has_many :artificial_intelligence_games, :dependent=>:destroy
   has_many :games, :through=>:artificial_intelligence_games
 
-  scope :ordered, :order=>"artificial_intelligences.name"
+  scope :ordered, order("artificial_intelligences.name")
+  scope :active, where("artificial_intelligences.is_active IS TRUE")
 
   validates :name, :presence=>true, :uniqueness=>true, :length => { :minimum => 1 }
   validates :url, :presence=>true, :format => { :with => /^(http|https):\/\// }
@@ -24,5 +25,9 @@ class ArtificialIntelligence < ActiveRecord::Base
   def parsed_url
     u = URI.parse( self.url )
     u.path.empty? ? URI.parse( self.url + "/" ) : u
+  end
+  
+  def activity_icon
+    self.is_active ? "light-green.png" : "light-red.png"
   end
 end

@@ -7,6 +7,8 @@ fr:
     statistics: Statistiques
     history: Historique
     back: Retour
+    yes: Oui
+    no: Non
   
   helpers:
     submit:
@@ -93,6 +95,7 @@ fr:
         name: Nom
         user: Utilisateur
         artificial_intelligence_games_count: Parties jouées
+        is_active: Active
         language: Langage
         score: Pointage moyen
         won_games: Parties gagnées

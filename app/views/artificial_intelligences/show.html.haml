@@ -16,10 +16,15 @@
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :user
         %td= link_to @artificial_intelligence.user.username, @artificial_intelligence.user
-      - if current_user == @artificial_intelligence.user
+      
+      - if @artificial_intelligence.belongs_to?( current_user )
         %tr
           %td.label= ArtificialIntelligence.human_attribute_name :url
           %td= @artificial_intelligence.url
+      
+      %tr
+        %td.label= ArtificialIntelligence.human_attribute_name :is_active
+        %td= @artificial_intelligence.is_active
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :language
         %td= @artificial_intelligence.language

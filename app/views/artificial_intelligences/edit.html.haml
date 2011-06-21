@@ -15,6 +15,9 @@
       = ai.label :url
       = ai.text_field :url
     .field
+      = ai.label :is_active
+      = ai.check_box :is_active
+    .field
       = ai.label :language
       = ai.select :language, ArtificialIntelligence::LANGUAGES
     .field.nolabel

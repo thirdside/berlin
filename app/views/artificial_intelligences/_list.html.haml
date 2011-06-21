@@ -5,6 +5,7 @@
   %table.large
     %thead
       %tr
+        %th.icon
         %th= ArtificialIntelligence.human_attribute_name :name
         %th= User.model_name.human
         %th= ArtificialIntelligence.human_attribute_name :artificial_intelligence_games_count
@@ -14,6 +15,7 @@
     %tbody
       - resources.each do |resource|
         %tr
+          %td.icon= image_tag( resource.activity_icon )
           %td= link_to resource.name, resource
           %td= link_to resource.user.username, resource.user
           %td= resource.games_played
