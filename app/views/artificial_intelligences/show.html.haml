@@ -60,7 +60,7 @@
 
         // Data
         {
-          ai1: [#{@artificial_intelligence.artificial_intelligence_games.for_official_games.map{|x|(x.score * 100).to_i}.join(',')}]
+          ai1: [#{@artificial_intelligence.artificial_intelligence_games.for_official_games.recent.map{|x|(x.score * 100).to_i}.join(',')}]
         },
 
         // Options
@@ -80,7 +80,7 @@
           markers :               "value",
           meanline :              { 'stroke-width': '0px', stroke: '#000' },
           draw_axis :             false,
-          labels :                [#{@artificial_intelligence.game_ids.join(',')}],
+          labels :                [#{@artificial_intelligence.game_ids.slice(-30, 30).join(',')}],
           hide_empty_label_grid : true
         });
     };
@@ -99,7 +99,7 @@
         %th.icon
 
     %tbody
-      - @artificial_intelligence.artificial_intelligence_games.for_official_games.ordered.each do |artificial_intelligence_game|
+      - @artificial_intelligence.artificial_intelligence_games.for_official_games.recent.each do |artificial_intelligence_game|
         %tr
           %td= artificial_intelligence_game.game.id
           %td= artificial_intelligence_game.game.time_start
@@ -123,7 +123,7 @@
           %th.icon
 
       %tbody
-        - @artificial_intelligence.artificial_intelligence_games.for_practice_games.ordered.each do |artificial_intelligence_game|
+        - @artificial_intelligence.artificial_intelligence_games.for_practice_games.recent.each do |artificial_intelligence_game|
           %tr
             %td= artificial_intelligence_game.game.id
             %td= artificial_intelligence_game.game.time_start

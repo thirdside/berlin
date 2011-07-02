@@ -8,7 +8,8 @@ class ArtificialIntelligenceGame < ActiveRecord::Base
   scope :ordered, order("artificial_intelligence_games.created_at DESC")
   scope :winners, where("artificial_intelligence_games.winner IS TRUE")
   scope :for_official_games, includes(:game).where("games.is_practice IS NOT TRUE")
-  scope :for_practice_games, includes(:game).where("games.is_practice IS TRUE")  
+  scope :for_practice_games, includes(:game).where("games.is_practice IS TRUE")
+  scope :recent, lambda{ |n = 30| ordered.limit( n ) } 
   
   def date
     self.created_at.to_date

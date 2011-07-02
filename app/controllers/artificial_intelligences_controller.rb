@@ -7,7 +7,11 @@ class ArtificialIntelligencesController < InheritedResources::Base
   include Pageable
 
   has_scope :order, :default => "artificial_intelligences.id DESC"
-
+  
+  def show
+    @artificial_intelligence = ArtificialIntelligence.find(params[:id])
+  end
+  
   def create
     params[:artificial_intelligence][:user_id] = current_user.id
 

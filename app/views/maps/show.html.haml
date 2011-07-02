@@ -54,7 +54,7 @@
           %td= game.id
           %td= game.time_start
           %td= game.number_of_players
-          %td= game.winners.map(&:name).to_sentence
+          %td= raw game.winners.map{ |ai| link_to( ai.name, ai ) }.to_sentence
           %td.icon= link_to_show game
 
   = paginate @games, :params=>{:anchor=>'games'}
