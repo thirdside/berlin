@@ -14,5 +14,3 @@
             = raw t("notifications.#{notification.notifiable_type.downcase}", :id=>notification.notifiable_id)
           %td.date
             = l( notification.time, :format=>:long )
-          %td.icon
-            = link_to_show notification

@@ -123,7 +123,7 @@ class Berlin::Server::Map < Map
     # Player didn't asked for too many moves from that node?
     return false unless node1.number_of_soldiers_for( move.player_id ) >= @moves[turn][move.player_id][move.from] + move.number_of_soldiers
     
-    ## Keep track of the move
+    # Keep track of the move
     @moves[turn][move.player_id][move.from] += move.number_of_soldiers
     
     true

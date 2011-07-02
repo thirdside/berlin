@@ -1,8 +1,9 @@
 module Berlin
   module Server
     class Game < Game
-      after_initialize :build
       attr_accessor :uuid, :turn, :moves, :players, :debug
+      
+      after_initialize :build
       
       def build
         # game id
@@ -18,6 +19,9 @@ module Berlin
         # @turns => {1=>{:moves=>[], :spawns=>[], :init_state=>state, :post_state=>state}}
         @turns = Hash.new{ |h,k| h[k] = Hash.new{ |hh,kk| hh[kk] = [] } }
         
+        # keep track of asked moves
+        @moves = Hash.new{ |h,k| h[k] = Hash.new{ |hh,kk| hh[kk] = Hash.new{ |hhh,kkk| hhh[kkk] = Hash.new{ |hhhh,kkkk| hhhh[kkkk] = 0 } } } }
+        
         # Hydra is the gem used to communicate with players
         @hydra = Typhoeus::Hydra.new
         
@@ -27,11 +31,11 @@ module Berlin
 
       def init options
         # initializing options
-        self.map = Berlin::Server::Map.find( options[:map_id] )
-        self.players = Berlin::Server::ArtificialIntelligence.find( options[:ais_ids] )
-        self.is_practice = options[:is_practice]
-        self.user_id = options[:user_id]
-        self.debug = options[:debug]
+        self.map          = Berlin::Server::Map.find( options[:map_id] )
+        self.players      = Berlin::Server::ArtificialIntelligence.find( options[:ais_ids] )
+        self.is_practice  = options[:is_practice]
+        self.user_id      = options[:user_id]
+        self.debug        = options[:debug]
         
         # set player_id for each player
         @players.each_with_index do |player, index|
@@ -61,21 +65,29 @@ module Berlin
 
       def alive_players
         @players.select do |player|
-          map.number_of_soldiers_for( player.player_id ) > 0 || map.number_of_nodes_for( player.player_id ) > 0
+          map.number_of_nodes_for( player.player_id ) > 0
         end
       end
 
       def register_moves player_id, moves
         JSON.parse( moves ).each do |move|
-          move = Berlin::Server::Move.parse( player_id, move )
-
-          if map.valid_move? @turn, move
-            @turns[@turn][:moves] << move
-          end
+          @moves[@turn][player_id][move['from']][move['to']] += move['number_of_soldiers'].to_i
         end
       end
 
       def move!
+        @moves[@turn].each do |player_id, from_nodes|
+          from_nodes.each do |from_node, to_nodes|
+            to_nodes.each do |to_node, number_of_soldiers|
+              move = Berlin::Server::Move.new player_id, from_node, to_node, number_of_soldiers
+              
+              if map.valid_move? @turn, move
+                @turns[@turn][:moves] << move
+              end
+            end
+          end
+        end
+        
         @turns[@turn][:moves].each do |move|
           map.move! move
         end
@@ -152,8 +164,7 @@ module Berlin
         end
       end
 
-      def end_of_game        
-        # initializing requests
+      def end_of_game
         req = {}
 
         @players.each do |player|
@@ -297,7 +308,7 @@ module Berlin
       end
 
       def run
-        raise 'No map?!' if map.nil?
+        raise Berlin::Server::Exceptions::NoMap if map.nil?
         
         start_game
         
