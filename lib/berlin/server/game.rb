@@ -1,8 +1,9 @@
 module Berlin
   module Server
     class Game < Game
-      after_initialize :build
       attr_accessor :uuid, :turn, :moves, :players, :debug
+      
+      after_initialize :build
       
       def build
         # game id
@@ -27,11 +28,11 @@ module Berlin
 
       def init options
         # initializing options
-        self.map = Berlin::Server::Map.find( options[:map_id] )
-        self.players = Berlin::Server::ArtificialIntelligence.find( options[:ais_ids] )
-        self.is_practice = options[:is_practice]
-        self.user_id = options[:user_id]
-        self.debug = options[:debug]
+        self.map          = Berlin::Server::Map.find( options[:map_id] )
+        self.players      = Berlin::Server::ArtificialIntelligence.find( options[:ais_ids] )
+        self.is_practice  = options[:is_practice]
+        self.user_id      = options[:user_id]
+        self.debug        = options[:debug]
         
         # set player_id for each player
         @players.each_with_index do |player, index|
@@ -61,7 +62,7 @@ module Berlin
 
       def alive_players
         @players.select do |player|
-          map.number_of_soldiers_for( player.player_id ) > 0 || map.number_of_nodes_for( player.player_id ) > 0
+          map.number_of_nodes_for( player.player_id ) > 0
         end
       end
 
