@@ -4,7 +4,7 @@
 # documentation.
 worker_processes 1
 working_directory "/home/berlin/sites/berlin.thirdside.ca"
-listen ".socket", :backlog => 64
+listen "/home/berlin/sites/berlin.thirdside.ca/tmp/sockets/berlin.thirdside.ca.socket", :backlog => 64
 timeout 30
 user 'www-data', 'www-data'
 pid "/home/berlin/sites/berlin.thirdside.ca/tmp/pids/unicorn.pid"
