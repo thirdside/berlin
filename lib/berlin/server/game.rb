@@ -38,7 +38,7 @@ module Berlin
         self.debug        = options[:debug]
         
         # set player_id for each player
-        @players.each_with_index do |player, index|
+        @players.shuffle.each_with_index do |player, index|
           player.player_id = index
         end
 
