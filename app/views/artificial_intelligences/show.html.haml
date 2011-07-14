@@ -80,7 +80,7 @@
           markers :               "value",
           meanline :              { 'stroke-width': '0px', stroke: '#000' },
           draw_axis :             false,
-          labels :                [#{@artificial_intelligence.game_ids.slice(-30, 30).join(',')}],
+          labels :                [#{@artificial_intelligence.game_ids.reverse.take(30).join(',')}],
           hide_empty_label_grid : true
         });
     };
