@@ -15,3 +15,5 @@ gem 'kaminari'
 gem "delayed_job"
 gem 'uuidtools'
 gem "typhoeus"
+
+gem 'unicorn'
