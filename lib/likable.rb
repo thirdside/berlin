@@ -1,10 +1,6 @@
 module Likable
-  module ClassMethods
-    ActiveRecord::Base.has_many :likes, :as=>:likable
-  end
-
   def self.included base
-    base.extend( ClassMethods )
+    base.has_many :likes, :as=>:likable
   end
 
   def liked_by? user

@@ -1,11 +1,7 @@
 module Awardable
-  module ClassMethods
-    ActiveRecord::Base.has_many :awards, :as => :awardable, :dependent => :destroy
-    ActiveRecord::Base.has_many :achievements, :through => :awards
-  end
-
   def self.included base
-    base.extend( ClassMethods )
+    base.has_many :awards, :as => :awardable, :dependent => :destroy
+    base.has_many :achievements, :through => :awards
   end
 
   def award achievement
