@@ -2,15 +2,16 @@ test:
   adapter: mysql2
   database: berlin_test
   username: root
-  password: password
+  password: 
   pool: 5
   timeout: 5000
 
 development:
   adapter: mysql2
   database: berlin_development
+  host: localhost
   username: root
-  password: password
+  password: 
   pool: 5
   timeout: 5000
 
@@ -18,6 +19,6 @@ production:
   adapter: mysql2
   database: berlin
   username: berlin
-  password: uc6AhJienor9Ta8zai
+  password: Ohth8omah6aish4kei6oaPhaip9ahb3A
   pool: 5
 
