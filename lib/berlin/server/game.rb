@@ -133,7 +133,6 @@ module Berlin
             :method        => :post,
             :headers       => {:Accept => "application/json"},
             :timeout       => 30000,
-            :cache_timeout => 0,
             :params        => {
               :action=>'game_start',
               :infos=>self.infos( player.player_id ).to_json,
@@ -172,7 +171,6 @@ module Berlin
             :method        => :post,
             :headers       => {:Accept => "application/json"},
             :timeout       => 0,
-            :cache_timeout => 0,
             :params        => {
               :action=>'game_over',
               :infos=>self.infos( player.player_id ).to_json,
@@ -270,7 +268,6 @@ module Berlin
             :method        => :post,
             :headers       => {:Accept => "application/json"},
             :timeout       => map.time_limit_per_turn,
-            :cache_timeout => 0,
             :params        => {
               :action=>'turn',
               :infos=>self.infos( player.player_id ).to_json,
