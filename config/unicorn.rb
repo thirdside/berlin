@@ -1,13 +1,40 @@
-# Launch using unicorn_rails -c config/unicorn.rb -D
+app_path = File.expand_path("..", File.dirname(__FILE__))
 
-# See http://unicorn.bogomips.org/Unicorn/Configurator.html for complete
-# documentation.
-worker_processes 1
-working_directory "/home/berlin/sites/berlin.thirdside.ca"
-listen "/home/berlin/sites/berlin.thirdside.ca/tmp/sockets/berlin.thirdside.ca.socket", :backlog => 64
+# Set unicorn options
+worker_processes 2
+preload_app true
 timeout 30
-user 'berlin', 'berlin'
-pid "/home/berlin/sites/berlin.thirdside.ca/tmp/pids/unicorn.pid"
-stderr_path "/home/berlin/sites/berlin.thirdside.ca/log/unicorn.stderr.log"
-stdout_path "/home/berlin/sites/berlin.thirdside.ca/log/unicorn.stdout.log"
-preload_app false
+listen "#{app_path}/tmp/sockets/unicorn.sock", :backlog => 64
+
+# Spawn unicorn master worker for user apps (group: apps)
+#user 'berlin', 'berlin' 
+
+# Fill path to your app
+working_directory app_path
+
+# Should be 'production' by default, otherwise use other env 
+rails_env = ENV['RAILS_ENV'] || 'production'
+
+# Log everything to one file
+stderr_path "log/unicorn.log"
+stdout_path "log/unicorn.log"
+
+# Set master PID location
+pid "#{app_path}/tmp/pids/unicorn.pid"
+
+before_fork do |server, worker|
+  ActiveRecord::Base.connection.disconnect!
+
+  old_pid = "#{server.config[:pid]}.oldbin"
+  if File.exists?(old_pid) && server.pid != old_pid
+    begin
+      Process.kill("QUIT", File.read(old_pid).to_i)
+    rescue Errno::ENOENT, Errno::ESRCH
+      # someone else did our job for us
+    end
+  end
+end
+
+after_fork do |server, worker|
+  ActiveRecord::Base.establish_connection
+end

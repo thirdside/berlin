@@ -16,4 +16,11 @@ gem "delayed_job"
 gem 'uuidtools'
 gem "typhoeus"
 
+group :development do
+  gem 'capistrano'
+  gem 'capistrano-unicorn'
+end
+
 gem 'unicorn'
+gem 'foreman'
+
