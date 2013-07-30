@@ -53,11 +53,11 @@
     // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection.
     var swfVersionStr = "10.2.0";
     // To use express install, set to playerProductInstall.swf, otherwise the empty string.
-    var flashvars = {};
+    var flashvars = {map: "#{map_path(@game.map, :format=>:json)}", history: "#{game_path(@game, :format=>:json)}"};
     var params = {};
     params.quality = "high";
-    params.bgcolor = "202020";
-    params.allowscriptaccess = "sameDomain";
+    params.bgcolor = "#202020";
+    params.allowscriptaccess = "always";
     params.allowfullscreen = "true";
     var attributes = {};
     attributes.id = "berlin-client";
