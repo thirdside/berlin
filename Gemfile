@@ -13,12 +13,14 @@ gem 'has_scope'
 gem 'utilities', "0.0.7"
 gem 'kaminari'
 gem "delayed_job"
+gem 'delayed_job_active_record'
 gem 'uuidtools'
 gem "typhoeus"
 
 group :development do
   gem 'capistrano'
   gem 'capistrano-unicorn'
+  gem 'sqlite3'
 end
 
 gem 'unicorn'

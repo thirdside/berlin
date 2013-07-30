@@ -6,11 +6,11 @@ class Game < ActiveRecord::Base
   has_many :artificial_intelligences, :through=>:artificial_intelligence_games
 
   include Likable
-  
+
   scope :ordered, order("games.created_at DESC")
-  scope :practices, where("games.is_practice IS TRUE")
-  scope :officials, where("games.is_practice IS NOT TRUE")
-  
+  scope :practices, where(:is_practice => true)
+  scope :officials, where(:is_practice => false)
+
   after_create :send_notification
 
   def number_of_players
@@ -20,13 +20,13 @@ class Game < ActiveRecord::Base
   def winners
     self.artificial_intelligence_games.winners.includes(:artificial_intelligence).map(&:artificial_intelligence)
   end
-  
+
   def self.start_new_game options
     game = Berlin::Server::Game.new
     game.init( options )
     game.run
   end
-  
+
   protected
     def send_notification
       self.artificial_intelligences.map(&:user_id).uniq.each do |user|

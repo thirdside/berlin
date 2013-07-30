@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
-  
+
   include Player
-  
+
   has_many :artificial_intelligences, :dependent=>:destroy
   has_many :artificial_intelligence_games, :through=>:artificial_intelligences
   has_many :awards, :through=>:artificial_intelligences
@@ -23,6 +23,10 @@ class User < ActiveRecord::Base
 
   def game_ids
     self.artificial_intelligence_games.map(&:game_id).uniq
+  end
+
+  def game_client
+    :flash
   end
 
   protected

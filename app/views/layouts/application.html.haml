@@ -22,7 +22,7 @@
                               'simulator/playback',
                               'simulator/simulator'
     = csrf_meta_tag
-    
+
   %body
     #wrapper
       #header
@@ -34,12 +34,12 @@
 
       %ul#menu
         %li{:class=>controller.controller_name == "welcome" ? "active" : nil}= link_to( I18n.t( "titles.welcome" ), root_path )
-        
+
         - menu.each do |model, url|
           %li{:class=>controller.controller_name == model.tableize ? 'active' : nil}= link_to model.human.pluralize, url
-        
+
         %li= link_to 'Wiki', "http://#{ I18n.locale == :en ? "" : "#{I18n.locale}." }wiki.berlin.thirdside.ca", :target => '_blank'
-        
+
         .devise_links
           - if user_signed_in?
             = link_to t('devise.keywords.log_out'), destroy_user_session_path
@@ -48,7 +48,7 @@
             = link_to t('devise.keywords.register'), new_registration_path( :user )
 
       #main
-        
+
         - flash.each do |flash, message|
           .flash{:class=>flash}= message
 
@@ -64,7 +64,7 @@
             - classes << locale
             - classes << 'active' if locale == I18n.locale
             = link_to '', {:locale=>locale}, :class=>classes
-  
+
   :javascript
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', "UA-22636792-1"]);

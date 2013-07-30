@@ -6,27 +6,27 @@ class ArtificialIntelligence < ActiveRecord::Base
   include Player
 
   belongs_to :user, :counter_cache=>true
-  
+
   has_many :timeouts, :class_name=> "ArtificialIntelligenceTimeout", :dependent=>:destroy
   has_many :artificial_intelligence_games, :dependent=>:destroy
   has_many :games, :through=>:artificial_intelligence_games
 
   scope :ordered, order("artificial_intelligences.name")
-  scope :active, where("artificial_intelligences.is_active IS TRUE")
+  scope :active, where(:is_active => true)
 
   validates :name, :presence=>true, :uniqueness=>true, :length => { :minimum => 1 }
   validates :url, :presence=>true, :format => { :with => /^(http|https):\/\// }
   validates :language, :presence=>true, :inclusion=>LANGUAGES
-  
+
   def belongs_to? user
     self.user_id == user.id rescue false
   end
-  
+
   def parsed_url
     u = URI.parse( self.url )
     u.path.empty? ? URI.parse( self.url + "/" ) : u
   end
-  
+
   def activity_icon
     self.is_active ? "light-green.png" : "light-red.png"
   end
