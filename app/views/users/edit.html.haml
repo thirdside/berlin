@@ -1,0 +1,17 @@
+.content
+  .buttons
+    = link_to t('common.back'), @user, :class=>:button
+  
+  %h2= @user.username
+  
+  - form_for @user do |u|
+
+    = errors_for @user
+
+    .field
+      = u.label :game_client
+      = u.select :game_client, ["flash", "canvas"]
+    .field.nolabel
+      = u.submit
+    .field.nolabel
+      = link_to t('helpers.submit.destroy'), @user, :method=>:delete, :confirm=>t('confirmation.deletion')

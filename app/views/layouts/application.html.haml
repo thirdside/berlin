@@ -43,6 +43,7 @@
 
         .devise_links
           - if user_signed_in?
+            = link_to t('common.profile'), edit_user_path(current_user)
             = link_to t('devise.keywords.log_out'), destroy_user_session_path
           - else
             = link_to t('devise.keywords.sign_in'), new_session_path( :user, :return_to=>request.fullpath )

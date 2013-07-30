@@ -17,16 +17,12 @@ class User < ActiveRecord::Base
   attr_accessor :login
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :login, :username, :email, :password, :password_confirmation, :remember_me
+  attr_accessible :login, :username, :email, :password, :password_confirmation, :remember_me, :game_client
 
   validates :username, :presence=>true, :uniqueness=>true, :length => { :minimum => 4, :maximum => 100 }
 
   def game_ids
     self.artificial_intelligence_games.map(&:game_id).uniq
-  end
-
-  def game_client
-    :flash
   end
 
   protected

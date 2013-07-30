@@ -3,6 +3,7 @@
 
 fr:
   common:
+    profile: Profile
     no_result: Aucun résultat
     statistics: Statistiques
     history: Historique
@@ -69,6 +70,7 @@ fr:
         username: Nom d'utilisateur
         current_ip_address: Adresse IP
         email: Courriel
+        game_client: Client
         remember_me: Se souvenir
         password: Mot de passe
         password_confirmation: Confirmation du mot de passe

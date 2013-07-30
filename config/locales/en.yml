@@ -3,6 +3,7 @@
 
 en:
   common:
+    profile: Profile
     no_result: No result
     statistics: Statistics
     history: History
