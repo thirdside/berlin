@@ -37,6 +37,7 @@
   %h2#turns= "0/10"
 
   #map
+    #flash-content
 
   .liked
     - if current_user
@@ -47,17 +48,40 @@
           = submit_tag "#{Like.model_name.human}!"
       = t('games.liked_that_game', :count=>@game.likes.count, :resource=>@game.class.name.downcase)
 
-:javascript
-  document.observe("dom:loaded", function() {
-    new TS.AIPlayback(
-      {
-        "map": "map",
-        "controls": "controls",
-        "player_list": "player-list",
-        "progress_bar": "progress_bar",
-        "turns": "turns"
-      },
-      "#{map_path(@game.map, :format=>:json)}",
-      "#{game_path(@game, :format=>:json)}"
-    );
-  });
+- if current_user.try(:game_client) == :flash
+  :javascript
+    // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection.
+    var swfVersionStr = "10.2.0";
+    // To use express install, set to playerProductInstall.swf, otherwise the empty string.
+    var flashvars = {};
+    var params = {};
+    params.quality = "high";
+    params.bgcolor = "202020";
+    params.allowscriptaccess = "sameDomain";
+    params.allowfullscreen = "true";
+    var attributes = {};
+    attributes.id = "berlin-client";
+    attributes.name = "berlin-client";
+    attributes.align = "middle";
+    swfobject.embedSWF(
+        "/berlin-client.swf", "flash-content",
+        "960", "500",
+        swfVersionStr, null,
+        flashvars, params, attributes);
+    // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
+    swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+- else
+  :javascript
+    document.observe("dom:loaded", function() {
+      new TS.AIPlayback(
+        {
+          "map": "map",
+          "controls": "controls",
+          "player_list": "player-list",
+          "progress_bar": "progress_bar",
+          "turns": "turns"
+        },
+        "#{map_path(@game.map, :format=>:json)}",
+        "#{game_path(@game, :format=>:json)}"
+      );
+    });
