@@ -34,6 +34,7 @@ class Game < ActiveRecord::Base
 
     def ensure_is_practice_is_set
       self.is_practice = false if self.is_practice.nil?
+      nil
     end
 
     def send_notification
