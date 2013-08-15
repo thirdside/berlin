@@ -49,8 +49,8 @@ TS.Playback = Class.create(TS, {
 
 		var data =
 		{
-			currentTurn: turnNumber || 0,
-			nbTurns: maxTurns || 0,
+			currentTurn: Math.ceil(turnNumber || 0),
+			nbTurns: Math.ceil(maxTurns || 0)
 		};
 
 		this.progressTurns.update(format.interpolate(data));
@@ -224,7 +224,7 @@ TS.AIPlayback = Class.create(TS.Playback, {
 		var currentTurn = (this.turnNumber / this.playbackDescription.simulatioGameRatio) || 0
 		var nbTurns = (this.getMaxTurn() / this.playbackDescription.simulatioGameRatio) || 0
 
-		this.updateProgressTurns(currentTurn, maxTurns);
+		this.updateProgressTurns(currentTurn, nbTurns);
 	},
 
 	/*
