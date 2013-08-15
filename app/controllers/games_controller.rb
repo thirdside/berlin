@@ -7,7 +7,11 @@ class GamesController < InheritedResources::Base
   has_scope :order, :default => "games.id DESC"
   
   def index
-    @games = Game.officials.page( params[:page] )
+    @games = if current_user
+      Game.for_user( current_user )
+    else
+      Game.officials
+    end.page( params[:page] )
   end
   
   def show

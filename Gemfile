@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'rails', '~>3.0.9'
 gem 'mysql2', '0.2.7'
@@ -14,7 +14,7 @@ gem 'utilities', "0.0.7"
 gem 'kaminari'
 gem "delayed_job"
 gem 'delayed_job_active_record'
-gem 'uuidtools'
+gem 'uuidtools', '2.1.2'
 gem "typhoeus"
 
 group :development do

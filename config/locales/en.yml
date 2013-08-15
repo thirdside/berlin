@@ -8,6 +8,7 @@ en:
     statistics: Statistics
     history: History
     back: Back
+    info: Information
 
   helpers:
     submit:

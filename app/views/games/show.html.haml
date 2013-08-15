@@ -8,8 +8,35 @@
   %table.large
     %thead
       %tr
+        %th(colspan=2)= t('common.info')
+    %tbody
+      %tr
+        %td.label= Game.human_attribute_name :id
+        %td= @game.id
+      %tr
+        %td.label= Game.human_attribute_name :time_start
+        %td= l( @game.time_start, :format=>:long )
+      %tr
+        %td.label= Map.model_name.human
+        %td= link_to @game.map.name, @game.map
+      %tr
+        %td.label= Game.human_attribute_name :number_of_players
+        %td= @game.number_of_players
+      %tr
+        %td.label= Game.human_attribute_name :winner
+        %td= raw @game.winners.map{ |ai| link_to( ai.name, ai ) }.to_sentence
+      %tr
+        %td.label= Like.model_name.human.pluralize
+        %td= @game.likes_count
+
+.content
+  %h2= ArtificialIntelligence.model_name.human.pluralize
+
+  %table.large
+    %thead
+      %tr
         %th
-        %th= ArtificialIntelligence.model_name.human
+        %th= ArtificialIntelligence.human_attribute_name :name
         %th= Game.human_attribute_name :number_of_soldiers
         %th= Game.human_attribute_name :nodes
         %th= Game.human_attribute_name :points
