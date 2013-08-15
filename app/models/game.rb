@@ -10,6 +10,7 @@ class Game < ActiveRecord::Base
   scope :ordered, order("games.created_at DESC")
   scope :practices, where(:is_practice => true)
   scope :officials, where(:is_practice => false)
+  scope :for_user, lambda { |user| where("is_practice = ? OR (is_practice = ? AND user_id = ?)", false, true, user.try(:id)) }
 
   after_create :send_notification
 
