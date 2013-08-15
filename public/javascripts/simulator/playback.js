@@ -35,7 +35,7 @@ TS.Playback = Class.create(TS, {
 	/*
 	 * Update the progress bar
 	 */
-	updateProgressPrecent: function (percent)
+	updateProgressPercent: function (percent)
 	{
 		this.progressBar.setStyle("width: #{percent}%".interpolate({percent: percent}));
 	},
