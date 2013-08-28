@@ -9,7 +9,7 @@ body {
     padding: 0;
     margin: 0;
     background-color: #343434;
-    background-image: url(/images/background.jpg);
+    background-image: url(/assets/background.jpg);
     background-repeat: repeat-x;
     color: #333333;
 }
@@ -80,7 +80,7 @@ div#wrapper {
 
 div#main {
     padding: 15px 20px 15px 20px;
-    background-image: url(/images/transparent.png);
+    background-image: url(/assets/transparent.png);
     border-radius: 15px;
     -moz-border-radius: 15px;
     -webkit-border-radius: 15px;
@@ -99,7 +99,7 @@ div#header h1 {
     text-shadow: 1px 1px 10px #000;
     font-size: 50px;
     /*
-    background-image: url(/images/tank.png);
+    background-image: url(/assets/tank.png);
     background-repeat: no-repeat;
     background-position: 184px 16px;
     */
@@ -110,7 +110,7 @@ div#user-info {
     right: 0;
     height: 46px;
     top: 20px;
-    background-image: url(/images/transparent.png);
+    background-image: url(/assets/transparent.png);
     border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
@@ -194,7 +194,7 @@ ul.tabs li.selected a, ul.tabs li a:hover {
 }
 
 div.content {
-    background: url(/images/content.gif) #EFE8D3;
+    background: url(/assets/content.gif) #EFE8D3;
     padding: 10px;
     margin: 5px 0 5px 0;
     border-radius: 5px;
@@ -227,8 +227,8 @@ div.content h2 {
     text-shadow: 2px 2px 5px #000000;
     font-size: 23px;
     line-height: 52px;
-    font-weight: normal;    
-    background: url(/images/ribbon.png) no-repeat;
+    font-weight: normal;
+    background: url(/assets/ribbon.png) no-repeat;
     margin: 5px 0 10px -20px;
     height: 52px;
     width: 965px;
@@ -322,7 +322,7 @@ ul#menu li ul li a:hover {
 }
 
 blockquote.quote {
-    background: url(/images/quote.png) top left no-repeat;
+    background: url(/assets/quote.png) top left no-repeat;
     padding: 5px 5px 5px 50px;
     margin: 15px;
     letter-spacing: 1px;
@@ -688,7 +688,7 @@ ul.padded li {
     display: block;
     float: left;
     margin: 0 0 0 5px;
-    background-image: url(/images/flags.jpg);
+    background-image: url(/assets/flags.jpg);
     background-repeat: no-repeat;
     width: 16px;
     height: 11px;

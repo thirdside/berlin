@@ -9,16 +9,16 @@
 		"tile_background": false,
 		"translate": {"x": 0, "y": 0}
 	},
-	
+
 	"images": [
-		{"name": "background", "src": "/images/simulator/background2.png"},
-		{"name": "city1", "src": "/images/simulator/city1.png"},
-		{"name": "city2", "src": "/images/simulator/city2.png"},
-		{"name": "city3", "src": "/images/simulator/city3.png"},
-		{"name": "node", "src": "/images/simulator/node.png"},
-		{"name": "army1", "src": "/images/simulator/army1.png"},
-		{"name": "army1_backward", "src": "/images/simulator/army1_backward.png"},
-		{"name": "combat", "src": "/images/simulator/combat.png"}
+		{"name": "background", "src": "/assets/simulator/background2.png"},
+		{"name": "city1", "src": "/assets/simulator/city1.png"},
+		{"name": "city2", "src": "/assets/simulator/city2.png"},
+		{"name": "city3", "src": "/assets/simulator/city3.png"},
+		{"name": "node", "src": "/assets/simulator/node.png"},
+		{"name": "army1", "src": "/assets/simulator/army1.png"},
+		{"name": "army1_backward", "src": "/assets/simulator/army1_backward.png"},
+		{"name": "combat", "src": "/assets/simulator/combat.png"}
 	],
 
 	"types": [
@@ -31,27 +31,27 @@
 		{"id":  2, "type": "city", "x": 30, "y": 10},
 		{"id":  3, "type": "city", "x": 10, "y": 30},
 		{"id":  4, "type": "city", "x": 30, "y": 30},
-		
+
 		{"id":  5, "type": "city", "x": 90, "y": 10},
 		{"id":  6, "type": "city", "x": 70, "y": 10},
 		{"id":  7, "type": "city", "x": 90, "y": 30},
 		{"id":  8, "type": "city", "x": 70, "y": 30},
-		
+
 		{"id":  9, "type": "city", "x": 10, "y": 90},
 		{"id": 10, "type": "city", "x": 10, "y": 70},
 		{"id": 11, "type": "city", "x": 30, "y": 90},
 		{"id": 12, "type": "city", "x": 30, "y": 70},
-		
+
 		{"id": 13, "type": "city", "x": 90, "y": 90},
 		{"id": 14, "type": "city", "x": 70, "y": 90},
 		{"id": 15, "type": "city", "x": 90, "y": 70},
 		{"id": 16, "type": "city", "x": 70, "y": 70},
-		
+
 		{"id": 17, "type": "node", "x": 25, "y": 50},
 		{"id": 18, "type": "node", "x": 75, "y": 50},
 		{"id": 19, "type": "node", "x": 40, "y": 50},
 		{"id": 20, "type": "node", "x": 60, "y": 50},
-		
+
 		{"id": 21, "type": "node", "x": 50, "y": 25},
 		{"id": 22, "type": "node", "x": 50, "y": 75},
 		{"id": 23, "type": "node", "x": 50, "y": 40},
@@ -64,25 +64,25 @@
 		{"from": 2, "to": 3, "control_ratio": 0},
 		{"from": 2, "to": 4, "control_ratio": 0},
 		{"from": 3, "to": 4, "control_ratio": 0},
-		
+
 		{"from": 5, "to": 6, "control_ratio": 0},
 		{"from": 5, "to": 7, "control_ratio": 0},
 		{"from": 6, "to": 7, "control_ratio": 0},
 		{"from": 6, "to": 8, "control_ratio": 0},
 		{"from": 7, "to": 8, "control_ratio": 0},
-		
+
 		{"from":  9, "to": 10, "control_ratio": 0},
 		{"from":  9, "to": 11, "control_ratio": 0},
 		{"from": 10, "to": 11, "control_ratio": 0},
 		{"from": 10, "to": 12, "control_ratio": 0},
 		{"from": 11, "to": 12, "control_ratio": 0},
-		
+
 		{"from": 13, "to": 14, "control_ratio": 0},
 		{"from": 13, "to": 15, "control_ratio": 0},
 		{"from": 14, "to": 15, "control_ratio": 0},
 		{"from": 14, "to": 16, "control_ratio": 0},
 		{"from": 15, "to": 16, "control_ratio": 0},
-		
+
 		{"from":  4, "to": 19, "control_ratio": 0},
 		{"from":  4, "to": 23, "control_ratio": 0},
 		{"from":  8, "to": 20, "control_ratio": 0},
@@ -91,12 +91,12 @@
 		{"from": 12, "to": 24, "control_ratio": 0},
 		{"from": 16, "to": 24, "control_ratio": 0},
 		{"from": 16, "to": 20, "control_ratio": 0},
-		
+
 		{"from": 17, "to": 19, "control_ratio": 0},
 		{"from": 18, "to": 20, "control_ratio": 0},
 		{"from": 21, "to": 23, "control_ratio": 0},
 		{"from": 22, "to": 24, "control_ratio": 0},
-		
+
 		{"from":  3, "to": 17, "control_ratio": 0},
 		{"from": 10, "to": 17, "control_ratio": 0},
 		{"from":  7, "to": 18, "control_ratio": 0},
@@ -116,7 +116,7 @@
 				{"node": 13, "number_of_soldiers": 3}
 			]
 		},
-		
+
 		"4": {
 			"0": [
 				{"node": 1, "number_of_soldiers": 5}

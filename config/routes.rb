@@ -2,14 +2,14 @@ BerlinWeb::Application.routes.draw do
   devise_for :users
 
   resources :maps, :likes, :notifications
-  
+
   resources :users do
     member do
       get :artificial_intelligences
       get :games
     end
   end
-  
+
   resources :games do
     collection do
       get :random
@@ -22,13 +22,13 @@ BerlinWeb::Application.routes.draw do
       post :ping
     end
   end
-  
-  match 'home' => 'welcome#index'
 
-  match 'doc' => 'doc#doc'
-  match 'tutorial' => 'doc#tutorial'
-  match 'json_request' => 'doc#json_request'
-  match 'json_response' => 'doc#json_response'
+  get 'home', :to => 'welcome#index'
+
+  get 'doc',            :to => 'doc#doc'
+  get 'tutorial',       :to => 'doc#tutorial'
+  get 'json_request',   :to => 'doc#json_request'
+  get 'json_response',  :to => 'doc#json_response'
 
   root :to => "welcome#index"
 end

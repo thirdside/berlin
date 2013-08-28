@@ -13,15 +13,15 @@
 		$super(container, position, size, translate);
 		this.raphael = Raphael(this.position.x, this.position.y, this.size.width, this.size.height);
 		container.insert(this.raphael.canvas);
-		
+
 		this.objects = {};
 	},
-	
+
 	clear: function ()
 	{
 		this.raphael.clear();
 	},
-	
+
 	addObject: function (object, attrs)
 	{
 		if (object.type == 'spawn')
@@ -39,26 +39,26 @@
 		else if (object.type == 'move')
 			this.objects[object.id] = this._createMoveObject(object, attrs);
 		else if (object.type == 'moveText')
-			this.objects[object.id] = this._createMoveTextObject(object, attrs);			
+			this.objects[object.id] = this._createMoveTextObject(object, attrs);
 		else if (object.type == 'combat')
 			this.objects[object.id] = this._createCombatObject(object, attrs);
 		else if (object.type == 'chart')
-			this.objects[object.id] = this._createChartObject(object, attrs);			
+			this.objects[object.id] = this._createChartObject(object, attrs);
 	},
-	
+
 	addAnimation: function (id, attrs, length)
 	{
 		if (Object.keys(attrs).length != 0) {
 			if (attrs.start)
 				attrs.start = null;
-			
+
 			if (attrs['animateAlong'])
 				this._animateAlong(this.objects[id], attrs['animateAlong'], length);
-			
+
 			this.objects[id].animate(attrs, length);
 		}
 	},
-	
+
 	_createBackgroundObject: function (img, tile)
 	{
 		if (!tile)
@@ -66,7 +66,7 @@
 			this.raphael.image(img.src, 0, 0, img.width, img.height);
 			return;
 		}
-		
+
 		for (var i = 0; i < 6; i++) //todo: don't haaaaaaardcode.
 			this.raphael.image(
 				img.src,
@@ -76,7 +76,7 @@
 				img.height
 			);
 	},
-	
+
 	_createPathObject: function (from, to, controlRatio)
 	{
 		options = {
@@ -88,10 +88,10 @@
 			opacity: 0.1,
 			dashes: '5,5'
 		};
-		
+
 		// format and data of the path
 		var pathFormat = "M #{from.x} #{from.y} Q #{control.x} #{control.y} #{to.x} #{to.y}";
-		
+
 		var data =
 		{
 		    'from': from,
@@ -100,7 +100,7 @@
 		};
 
 		var pathData = pathFormat.interpolate(data);
-		
+
 		// draw the blurry path
 		var blurryPath = this.raphael.path(pathData);
 		blurryPath.attr({
@@ -109,9 +109,9 @@
 			'stroke-linejoin': 	options.lineJoin,
 			'stroke-dasharray': options.dashes,
 			'opacity':			options.blurryOpacity
-		});		
+		});
 		blurryPath.blur(1);
-		
+
 		return blurryPath;
 	},
 
@@ -119,7 +119,7 @@
 	{
 		// draw blurry back
 		var blurryText = this.raphael.text(attrs.x, attrs.y, attrs.count);
-		
+
 		blurryText.attr({
 			'font': attrs.font,
 			'font-weight': attrs.fontWeight,
@@ -127,13 +127,13 @@
 			'fill': attrs.blurColor,
 			'opacity': attrs.opacity
 		});
-		
+
 		blurryText.blur(2);
-		
-		
+
+
 		// draw text
 		var text = this.raphael.text(attrs.x, attrs.y, attrs.count);
-		
+
 		text.attr({
 			'font': attrs.font,
 			'font-weight': attrs.fontWeight,
@@ -141,18 +141,18 @@
 			'fill': attrs.fill,
 			'opacity': attrs.opacity
 		});
-		
+
 		var set = this.raphael.set();
 		set.push(text, blurryText);
-		
+
 		return set;
-	},	
+	},
 
 	_createSpawnObject: function (count, attrs)
 	{
 		// draw blurry back
 		var blurryText = this.raphael.text(attrs.x, attrs.y, count);
-		
+
 		blurryText.attr({
 			'font': attrs.font,
 			'font-weight': attrs.fontWeight,
@@ -160,13 +160,13 @@
 			'fill': attrs.blurColor,
 			'opacity': attrs.opacity
 		});
-		
+
 		blurryText.blur(2);
-		
-		
+
+
 		// draw text
 		var text = this.raphael.text(attrs.x, attrs.y, count);
-		
+
 		text.attr({
 			'font': attrs.font,
 			'font-weight': attrs.fontWeight,
@@ -174,28 +174,28 @@
 			'fill': attrs.fill,
 			'opacity': attrs.opacity
 		});
-		
+
 		var set = this.raphael.set();
 		set.push(text, blurryText);
-		
+
 		return set;
 	},
-	
+
 	_createCityObject: function (attrs)
 	{
 		// colorize
 		var circlePosition = {
 			x: attrs.x + attrs.width / 2,
 			y: attrs.y + attrs.height / 2
-		};		
-		
+		};
+
 		var circle = this.raphael.circle(circlePosition.x, circlePosition.y, attrs.radius + 10);
 		circle.attr({
 			'opacity': 1,
 			'fill': attrs.color,
 			'stroke': 'none'
 		});
-		
+
 		// draw the city
 		var image = this.raphael.image(
 			attrs.img.src,
@@ -204,30 +204,30 @@
 			attrs.width,
 			attrs.height
 		);
-		
+
 		if (attrs.color == '#FFFFFF')
 		{
 			circle.remove();
 			return image;
 		}
-		
+
 		var city = this.raphael.set();
 		city.push(image, circle);
-		
+
 		return city;
 	},
-	
+
 	_createNodeObject: function (attrs)
 	{
 		// colorize
 		var circlePosition = {
 			x: attrs.x + attrs.width / 2,
 			y: attrs.y + attrs.height / 2
-		};		
-		
+		};
+
 		var circle = this.raphael.circle(circlePosition.x, circlePosition.y, attrs.radius + 5);
 		circle.attr({'opacity': 1, 'fill': attrs.color, 'stroke': 'none'});
-		
+
 		var image = this.raphael.image(
 			attrs.img.src,
 			attrs.x,
@@ -235,19 +235,19 @@
 			attrs.width,
 			attrs.height
 		);
-		
+
 		if (attrs.color == '#FFFFFF')
 		{
 			circle.remove();
 			return image;
 		}
-		
+
 		var node = this.raphael.set();
 		node.push(image, circle);
-		
+
 		return node;
 	},
-	
+
 	_createMoveObject: function (object, attrs)
 	{
 		// get the position
@@ -255,7 +255,7 @@
 			x: object.from.x,
 			y: object.from.y
 		};
-		
+
 		// create the background circle
 		var circle = this.raphael.circle(position.x, position.y, object.radius);
 		circle.attr({
@@ -263,47 +263,48 @@
 			'fill': object.color,
 			'stroke': 'none'
 		});
-		
+
 		var move = this.raphael.set();
 
 		move.push(circle);
-		//move.push(army);	
+		//move.push(army);
 		return move;
 	},
-	
+
 	_createChartObject: function (object, attrs)
 	{
 		// create the chart
+		debugger
 		var chart = this.raphael.g.piechart(
 			object.position.x,
 			object.position.y,
 			object.radius,
 			object.data.clone(),
 			{legend: [], legendpos: 'west', legendcolor: '#fff', colors: object.colors});
-		
+
 		chart.attr({'opacity': attrs.opacity});
-	
+
 		return chart;
-	},	
-	
+	},
+
 	_createMoveTextObject: function (object, attrs)
 	{
 		// get the position
 		var position = (attrs['setPositionFromPath']) ? this._getPositionFromPath(attrs['setPositionFromPath']) : {
 			x: object.from.x,
 			y: object.from.y
-		};		
-		
+		};
+
         // create the soldiers count
 		var textAttrs = object.countAttrs;
 		textAttrs.x = position.x;
-		textAttrs.y = position.y;		
+		textAttrs.y = position.y;
 		textAttrs.opacity = attrs['opacity'];
 		textAttrs.count = object.count;
-		
+
 		return this._createSoldiersObject(textAttrs);
-	},	
-	
+	},
+
 	_createCombatObject: function (object, attrs)
 	{
 		// create the combat graphic
@@ -314,13 +315,13 @@
 				attrs.y - attrs.img.height / 2,
 				attrs.img.width,
 				attrs.img.height);
-			
+
 			image.attr({
 				'scale': attrs['scale'],
 				'opacity': attrs['opacity']
 			});
 		}
-		
+
 
 		// draw blurry back
 		var blurryText = this.raphael.text(attrs.x, attrs.y, object.text);
@@ -332,50 +333,50 @@
 			'fill': object.blurColor
 		});
 		blurryText.blur(3);
-			
+
 		// create the combat quote
 		var text = this.raphael.text(attrs.x, attrs.y, object.text);
 		text.attr(object.textAttrs);
 
 		var combat = this.raphael.set();
 		combat.push(text, blurryText);
-		
+
 		if (attrs.img != null)
 			combat.push(image);
 
 		return combat;
-	},	
-	
+	},
+
 	_animateAlong: function (object, attrs, length)
 	{
 		// get the full path
 		var path = this.raphael.path(attrs['path']);
-		
+
 		// prepare the partial path
 		var pathLength = path.getTotalLength();
 		var sub = path.getSubpath(attrs['start'] * pathLength, attrs['end'] * pathLength);
-		
+
 		// remove the full path
 		path.remove();
-		
+
 		object.animateAlong(sub, length, attrs['rotate']);
 	},
-	
+
 	_getPositionFromPath: function (data)
 	{
 		// get the full path
 		var path = this.raphael.path(data['path']);
-		
+
 		// prepare the partial path
 		var pathLength = path.getTotalLength();
 		var position = path.getPointAtLength(path.getTotalLength() * data['at']);
-		
+
 		// remove the full path
 		path.remove();
-		
+
 		return position;
 	},
-	
+
 	_getRotationFromPath: function (pathData, positionPourc, reverse)
 	{
 		// prepare the path
@@ -393,9 +394,9 @@
 			x: positionEnd.x - positionBegin.x,
 			y: positionEnd.y - positionBegin.y
 		}
-		
+
 		var angleRad = Math.atan2(vector.y, vector.x);
-		
+
 		return angleRad * (180 / Math.PI);
 	}
 });

@@ -5,13 +5,13 @@
 .content
   .buttons
     = link_to t('common.back'), @artificial_intelligence, :class=>:button
-  
+
   %h2= t('titles.ping')
-  
-  - form_tag ping_artificial_intelligence_path do
-    
+
+  = form_tag ping_artificial_intelligence_path do
+
     = errors_for @artificial_intelligence
-    
+
     .field
       = label :ping, :action
       = text_field :ping, :action, :value=>@ping['action']
