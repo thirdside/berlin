@@ -1,4 +1,4 @@
-class Berlin::Server::NodeType      
+class Berlin::Server::NodeType
   attr_accessor :name, :points, :soldiers_per_turn
 
   def self.parse json
@@ -18,6 +18,6 @@ class Berlin::Server::NodeType
   end
 
   def to_hash
-    {:name=>@name, :points=>@points, :soldiers_per_turn=>@soldiers_per_turn}
+    {:name => @name, :points => @points, :soldiers_per_turn => @soldiers_per_turn}
   end
 end

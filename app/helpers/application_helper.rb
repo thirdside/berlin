@@ -1,10 +1,10 @@
 module ApplicationHelper
   def menu
     temp = {}
-    temp[ArtificialIntelligence.model_name] = artificial_intelligences_path
-    temp[Game.model_name]                   = games_path
-    temp[Map.model_name]                    = maps_path
-    temp[User.model_name]                   = users_path
+    temp[ArtificialIntelligence] = artificial_intelligences_path
+    temp[Game]                   = games_path
+    temp[Map]                    = maps_path
+    temp[User]                   = users_path
     temp
   end
 
@@ -13,10 +13,10 @@ module ApplicationHelper
       html = ""
 
       model.errors.full_messages.each do |error|
-        html << content_tag( :li, error, {:class=>:error}, false )
+        html << content_tag( :li, error, {:class => :error}, false )
       end
 
-      content_tag( :ul, html, {:class=>:errors}, false )
+      content_tag( :ul, html, {:class => :errors}, false )
     end
   end
 end

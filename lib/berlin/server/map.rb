@@ -10,10 +10,10 @@ class Berlin::Server::Map < Map
 
     # parse json to get extra variables
     parsed = JSON.parse( self.json )
-    
+
     # keep track of asked moves
     @moves = Hash.new{ |h,k| h[k] = Hash.new{ |hh,kk| hh[kk] = Hash.new{ |hhh,kkk| hhh[kkk] = 0 } } }
-    
+
     # parsed from json
     @maximum_number_of_turns  = parsed['infos']['maximum_number_of_turns']  || 100
     @number_of_players        = parsed['infos']['number_of_players']        || []
@@ -40,7 +40,7 @@ class Berlin::Server::Map < Map
 
       if node1 && node2
         node1.adjacents << node2
-        
+
         unless directed?
           node2.adjacents << node1
         end
@@ -52,7 +52,7 @@ class Berlin::Server::Map < Map
   def init players
     @setup[players.size.to_s].each do |player_id, nodes|
       player_id = player_id.to_i
-      
+
       nodes.each do |node|
         find_node( node['node'] ).owner = player_id
         find_node( node['node'] ).add_soldiers player_id, node['number_of_soldiers']
@@ -62,9 +62,9 @@ class Berlin::Server::Map < Map
 
   def to_hash
     {
-        :types=>@types.values.map(&:to_hash),
-        :nodes=>@nodes.map(&:to_hash),
-        :paths=>@paths.map(&:to_hash)
+        :types => @types.values.map(&:to_hash),
+        :nodes => @nodes.map(&:to_hash),
+        :paths => @paths.map(&:to_hash)
     }
   end
 
@@ -119,20 +119,20 @@ class Berlin::Server::Map < Map
 
     # Player has enough soldiers on from node?
     return false unless node1.number_of_soldiers_for( move.player_id ) >= move.number_of_soldiers
-    
+
     # Player didn't asked for too many moves from that node?
     return false unless node1.number_of_soldiers_for( move.player_id ) >= @moves[turn][move.player_id][move.from] + move.number_of_soldiers
-    
+
     # Keep track of the move
     @moves[turn][move.player_id][move.from] += move.number_of_soldiers
-    
+
     true
   end
 
   def move! move
     node1 = self.find_node move.from
     node2 = self.find_node move.to
-    
+
     # remove soldiers from the from node
     node1.remove_soldiers move.player_id, move.number_of_soldiers
     # add soldiers to the to node

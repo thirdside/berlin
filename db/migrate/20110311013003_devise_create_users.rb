@@ -3,10 +3,10 @@ class DeviseCreateUsers < ActiveRecord::Migration
     create_table :users  do |t|
       t.string :username
       t.string :email
-      t.string :locale, :limit=>5
-      t.integer :artificial_intelligences_count, :default=>0
-      t.boolean :is_admin, :default=>false
-      
+      t.string :locale, :limit => 5
+      t.integer :artificial_intelligences_count, :default => 0
+      t.boolean :is_admin, :default => false
+
       t.database_authenticatable :null => false
       t.recoverable
       t.rememberable

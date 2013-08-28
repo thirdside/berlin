@@ -14,7 +14,7 @@
     - @games.ordered.each do |game|
       %tr
         %td= game.id
-        %td= l( game.time_start, :format=>:long )
+        %td= l( game.time_start, :format => :long )
         %td= link_to game.map.name, game.map
         %td= game.number_of_players
         %td= game.number_of_turns

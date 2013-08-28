@@ -1,16 +1,16 @@
 class Game < ActiveRecord::Base
-  belongs_to :map, :counter_cache=>true
+  belongs_to :map, :counter_cache => true
   belongs_to :user
 
-  has_many :artificial_intelligence_games, :dependent=>:destroy
-  has_many :artificial_intelligences, :through=>:artificial_intelligence_games
+  has_many :artificial_intelligence_games, :dependent => :destroy
+  has_many :artificial_intelligences, :through => :artificial_intelligence_games
 
   include Likable
 
-  scope :ordered, order("games.created_at DESC")
-  scope :practices, where(:is_practice => true)
-  scope :officials, where(:is_practice => false)
-  scope :for_user, lambda { |user| where("is_practice = ? OR (is_practice = ? AND user_id = ?)", false, true, user.try(:id)) }
+  scope :ordered,   ->{ order("games.created_at DESC") }
+  scope :practices, ->{ where(:is_practice => true) }
+  scope :officials, ->{ where(:is_practice => false) }
+  scope :for_user,  ->(user){ where("is_practice = ? OR (is_practice = ? AND user_id = ?)", false, true, user.try(:id)) }
 
   after_create :send_notification
 

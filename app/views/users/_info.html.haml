@@ -3,12 +3,12 @@
     %tr
       %th(colspan=2)= t('common.statistics')
   %tbody
-    
+
     - if user_signed_in?
       %tr
         %td.label= User.human_attribute_name :current_ip_address
         %td= request.remote_ip
-    
+
     %tr
       %td.label= User.human_attribute_name :artificial_intelligences_count
       %td= user.artificial_intelligences.count
@@ -29,4 +29,4 @@
       %td= show_score user.score
     %tr
       %td.label= User.human_attribute_name :created_at
-      %td= l user.created_at, :format=>:long
+      %td= l user.created_at, :format => :long

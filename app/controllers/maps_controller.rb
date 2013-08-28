@@ -5,7 +5,7 @@ class MapsController < InheritedResources::Base
   include Pageable
 
   def show
-    @map = Map.find(params[:id], :include=>{:games=>:artificial_intelligence_games})
+    @map = Map.find(params[:id], :include => {:games => :artificial_intelligence_games})
     @games = @map.games.officials.page(params[:page])
 
     respond_to do |format|

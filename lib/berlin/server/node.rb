@@ -39,11 +39,11 @@ module Berlin
       end
 
       def to_hash
-        {:id=>@id, :type=>@type.name}
+        {:id => @id, :type => @type.name}
       end
 
       def state
-        {:node_id=>@id, :player_id=>@owner, :number_of_soldiers=>number_of_soldiers}
+        {:node_id => @id, :player_id => @owner, :number_of_soldiers => number_of_soldiers}
       end
 
       def adjacent? node

@@ -1,6 +1,6 @@
 .content
   .buttons
-    = link_to t('common.back'), @user, :class=>:button
+    = link_to t('common.back'), @user, :class => :button
 
   %h2= @user.username
 
@@ -14,4 +14,4 @@
     .field.nolabel
       = u.submit
     .field.nolabel
-      = link_to t('helpers.submit.destroy'), @user, :method=>:delete, :confirm=>t('confirmation.deletion')
+      = link_to t('helpers.submit.destroy'), @user, :method => :delete, :confirm => t('confirmation.deletion')

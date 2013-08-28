@@ -8,8 +8,8 @@ class CreateArtificialIntelligenceGames < ActiveRecord::Migration
       t.float       :score
       t.timestamps
     end
-    
-    add_index :artificial_intelligence_games, [:artificial_intelligence_id, :game_id], :name=>"ai_and_game_index"
+
+    add_index :artificial_intelligence_games, [:artificial_intelligence_id, :game_id], :name => "ai_and_game_index"
   end
 
   def self.down

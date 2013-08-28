@@ -1,6 +1,6 @@
 .content
-  = render :partial => '/layouts/menu', :locals => {:paths=>['doc', 'tutorial', 'json_request', 'json_response']}
-  
+  = render :partial => '/layouts/menu', :locals => {:paths => ['doc', 'tutorial', 'json_request', 'json_response']}
+
   %h2= t('titles.json_response')
 
   %p
@@ -13,7 +13,7 @@
     valide par Berlin si vous posséder assez de soldat sur le noeud d'origine, si le nombre de soldats en déplacement à
     partir d'un même noeud n'excède pas le nombre de soldats que possédait ledit noeud et si le noeud d'origine et le noeud
     d'arrivé sont relié par un chemin. Simplement!
-  
+
   %pre.code
     :preserve
       [

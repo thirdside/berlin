@@ -1,10 +1,10 @@
 .content
   .buttons
-    = link_to t('games.new'), new_game_path, :class=>:button
-  
+    = link_to t('games.new'), new_game_path, :class => :button
+
   %h2
     = @user.username
     = ":"
     = t('titles.official_games')
 
-  = render :partial=>'/games/list'
+  = render :partial => '/games/list'

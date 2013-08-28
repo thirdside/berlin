@@ -1,16 +1,16 @@
 .content
   %h2= @user.username
 
-  = render :partial => '/users/info', :locals=>{:user=>@user}
+  = render :partial => '/users/info', :locals => {:user => @user}
 
 .content
-  = render :partial => '/awards/list', :locals=>{:awards=>@user.awards.grouped, :show_total=>true}
+  = render :partial => '/awards/list', :locals => {:awards => @user.awards.grouped, :show_total => true}
 
 .content
   - if user_signed_in?
     .buttons
-      = link_to t('artificial_intelligences.new'), new_artificial_intelligence_path, :class=>:button  
-  
+      = link_to t('artificial_intelligences.new'), new_artificial_intelligence_path, :class => :button
+
   %h2= t('titles.artificial_intelligences')
 
   %table.large

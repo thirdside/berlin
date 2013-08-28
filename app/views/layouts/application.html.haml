@@ -4,7 +4,7 @@
   %head
     %title Berlin
 
-    %link{:rel=>"stylesheet", :type=>"text/css", :href=>"http://fonts.googleapis.com/css?family=Michroma|Waiting+for+the+Sunrise|Raleway:100"}
+    %link{:rel => "stylesheet", :type => "text/css", :href => "http://fonts.googleapis.com/css?family=Michroma|Waiting+for+the+Sunrise|Raleway:100"}
     = stylesheet_link_tag :application
     = javascript_include_tag  :application
 
@@ -17,13 +17,12 @@
           Berlin
 
         - if user_signed_in?
-          = render :partial=>'/layouts/info'
+          = render :partial => '/layouts/info'
 
       %ul#menu
-        %li{:class=>controller.controller_name == "welcome" ? "active" : nil}= link_to( I18n.t( "titles.welcome" ), root_path )
-
+        %li{:class => controller.controller_name == "welcome" ? "active" : nil}= link_to( I18n.t( "titles.welcome" ), root_path )
         - menu.each do |model, url|
-          %li{:class=>controller.controller_name == model.tableize ? 'active' : nil}= link_to model.human.pluralize, url
+          %li{:class => controller.controller_name == model.table_name ? 'active' : nil}= link_to model.model_name.human.pluralize, url
 
         %li= link_to 'Wiki', "http://#{ I18n.locale == :en ? "" : "#{I18n.locale}." }wiki.berlin.thirdside.ca", :target => '_blank'
 
@@ -32,13 +31,13 @@
             = link_to t('common.profile'), edit_user_path(current_user)
             = link_to t('devise.keywords.log_out'), destroy_user_session_path
           - else
-            = link_to t('devise.keywords.sign_in'), new_session_path( :user, :return_to=>request.fullpath )
+            = link_to t('devise.keywords.sign_in'), new_session_path( :user, :return_to => request.fullpath )
             = link_to t('devise.keywords.register'), new_registration_path( :user )
 
       #main
 
         - flash.each do |flash, message|
-          .flash{:class=>flash}= message
+          .flash{:class => flash}= message
 
         = yield
 
@@ -51,7 +50,7 @@
             - classes  = []
             - classes << locale
             - classes << 'active' if locale == I18n.locale
-            = link_to '', {:locale=>locale}, :class=>classes
+            = link_to '', {:locale => locale}, :class => classes
 
   :javascript
     var _gaq = _gaq || [];

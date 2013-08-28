@@ -2,14 +2,14 @@ class ArtificialIntelligenceGame < ActiveRecord::Base
 
   after_create :check_for_achievements
 
-  belongs_to :artificial_intelligence, :counter_cache=>true
-  belongs_to :game, :counter_cache=>true
+  belongs_to :artificial_intelligence, :counter_cache => true
+  belongs_to :game, :counter_cache => true
 
-  scope :ordered, order("artificial_intelligence_games.created_at DESC")
-  scope :winners, where(:winner => true)
-  scope :for_official_games, includes(:game).where(:games => {:is_practice => false})
-  scope :for_practice_games, includes(:game).where(:games => {:is_practice => true})
-  scope :recent, lambda{ |n = 30| ordered.limit( n ) }
+  scope :ordered,             ->{ order("artificial_intelligence_games.created_at DESC") }
+  scope :winners,             ->{ where(:winner => true) }
+  scope :for_official_games,  ->{ includes(:game).where(:games => {:is_practice => false}) }
+  scope :for_practice_games,  ->{ includes(:game).where(:games => {:is_practice => true}) }
+  scope :recent,              ->(n = 30){ ordered.limit( n ) }
 
   def date
     self.created_at.to_date

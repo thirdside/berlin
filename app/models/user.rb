@@ -2,12 +2,12 @@ class User < ActiveRecord::Base
 
   include Player
 
-  has_many :artificial_intelligences, :dependent=>:destroy
-  has_many :artificial_intelligence_games, :through=>:artificial_intelligences
-  has_many :awards, :through=>:artificial_intelligences
-  has_many :games, :dependent=>:nullify
-  has_many :likes, :dependent=>:destroy
-  has_many :notifications, :dependent=>:destroy
+  has_many :artificial_intelligences, :dependent => :destroy
+  has_many :artificial_intelligence_games, :through => :artificial_intelligences
+  has_many :awards, :through => :artificial_intelligences
+  has_many :games, :dependent => :nullify
+  has_many :likes, :dependent => :destroy
+  has_many :notifications, :dependent => :destroy
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, :lockable and :timeoutable
@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :login, :username, :email, :password, :password_confirmation, :remember_me, :game_client
 
-  validates :username, :presence=>true, :uniqueness=>true, :length => { :minimum => 4, :maximum => 100 }
+  validates :username, :presence => true, :uniqueness => true, :length => { :minimum => 4, :maximum => 100 }
 
   def game_ids
     self.artificial_intelligence_games.map(&:game_id).uniq

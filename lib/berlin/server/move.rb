@@ -20,6 +20,6 @@ class Berlin::Server::Move
   end
 
   def to_hash
-    {:player_id=>@player_id, :from=>@from, :to=>@to, :number_of_soldiers=>@number_of_soldiers}
+    {:player_id => @player_id, :from => @from, :to => @to, :number_of_soldiers => @number_of_soldiers}
   end
 end

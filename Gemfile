@@ -1,11 +1,12 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~>3.1'
-gem 'mysql2', '0.2.7'
+gem 'rails', '~>4.0'
+gem 'mysql2'
 gem 'haml'
 gem 'inherited_resources'
 gem 'has_scope'
-gem 'devise', "1.2.1"
+gem 'devise', "~>1.5"
+gem 'protected_attributes'
 # gem 'rails_admin'
 gem 'yajl-ruby'
 gem 'haml'

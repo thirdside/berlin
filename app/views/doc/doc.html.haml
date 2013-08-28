@@ -1,9 +1,9 @@
 - @doc.each_with_index do |(key, section), index|
-  .content{:id=>key}
+  .content{:id => key}
     - if index.zero?
-      = render :partial => '/layouts/menu', :locals => {:paths=>['doc', 'tutorial', 'json_request', 'json_response']}
-    
+      = render :partial => '/layouts/menu', :locals => {:paths => ['doc', 'tutorial', 'json_request', 'json_response']}
+
     %h2= section[:title]
 
     - section[:sections].each do |subkey, subsection|
-      = render :partial=>'section', :locals=>{:key=>"#{key}_#{subkey}", :section=>subsection}
+      = render :partial => 'section', :locals => {:key => "#{key}_#{subkey}", :section => subsection}

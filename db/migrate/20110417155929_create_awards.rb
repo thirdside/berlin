@@ -1,7 +1,7 @@
 class CreateAwards < ActiveRecord::Migration
   def self.up
     create_table :awards do |t|
-      t.references :awardable, :polymorphic=>true
+      t.references :awardable, :polymorphic => true
       t.references :achievement
 
       t.timestamps

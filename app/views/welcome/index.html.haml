@@ -16,13 +16,13 @@
     #map
       %img{:src => "/assets/screenshots/game-1.jpg"}
 
-  %div{:style=>"clear: both;"}
+  %div{:style => "clear: both;"}
 
-  %table.breakdown{:cellspacing=>10}
+  %table.breakdown{:cellspacing => 10}
     %tr
       - items = t("intro.breakdown").values
       - total = items.count
       - items.each do |item|
-        %td{:style=>"width: #{100 / total}%;"}
+        %td{:style => "width: #{100 / total}%;"}
           %h4= item[:title]
           %p= item[:text]

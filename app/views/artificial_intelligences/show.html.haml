@@ -1,10 +1,10 @@
-.content  
+.content
   .buttons
     - if @artificial_intelligence.belongs_to? current_user
-      = link_to t('helpers.submit.edit'), edit_artificial_intelligence_path( @artificial_intelligence ), :class=>:button
-      = link_to t('artificial_intelligences.ping'), ping_artificial_intelligence_path( @artificial_intelligence ), :class=>:button
-      
-    = link_to t('games.new'), new_game_path( :artificial_intelligence_id => @artificial_intelligence.id ), :class=>:button
+      = link_to t('helpers.submit.edit'), edit_artificial_intelligence_path( @artificial_intelligence ), :class => :button
+      = link_to t('artificial_intelligences.ping'), ping_artificial_intelligence_path( @artificial_intelligence ), :class => :button
+
+    = link_to t('games.new'), new_game_path( :artificial_intelligence_id => @artificial_intelligence.id ), :class => :button
 
   %h2= @artificial_intelligence.name
 
@@ -16,12 +16,12 @@
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :user
         %td= link_to @artificial_intelligence.user.username, @artificial_intelligence.user
-      
+
       - if @artificial_intelligence.belongs_to?( current_user )
         %tr
           %td.label= ArtificialIntelligence.human_attribute_name :url
           %td= @artificial_intelligence.url
-      
+
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :is_active
         %td= @artificial_intelligence.is_active
@@ -42,15 +42,15 @@
         %td= show_score( @artificial_intelligence.score )
       %tr
         %td.label= ArtificialIntelligence.human_attribute_name :created_at
-        %td= l( @artificial_intelligence.created_at, :format=>:long )
+        %td= l( @artificial_intelligence.created_at, :format => :long )
 
 .content
-  = render :partial => '/awards/list', :locals=>{:awards=>@artificial_intelligence.awards}
+  = render :partial => '/awards/list', :locals => {:awards => @artificial_intelligence.awards}
 
 .content
   %h2= t('common.history')
 
-  #graph{:style=>"height: 300px;"}
+  #graph{:style => "height: 300px;"}
 
   :javascript
     window.onload = function () {
@@ -87,7 +87,7 @@
 
 .content
   %h2= t('titles.official_games')
-  
+
   %table.large
     %thead
       %tr
@@ -111,7 +111,7 @@
 - if @artificial_intelligence.belongs_to? current_user
   .content
     %h2= t('titles.practice_games')
-    
+
     %table.large
       %thead
         %tr

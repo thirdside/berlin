@@ -25,13 +25,13 @@
 
   :javascript
     document.observe("dom:loaded", function() {
-      var map = new TS.AIMap("map", "#{map_path(@map, :format=>:json)}");
-      
+      var map = new TS.AIMap("map", "#{map_path(@map, :format => :json)}");
+
       map.observe("ready", function() {
         var desc = new TS.PlaybackDescription(map.config, map.nodeGraph, null, map.layers['background'], map.graphics);
-        
+
         desc.initializePreview();
-        
+
         map.doTurn(null, desc.preview, true);
       });
     });
@@ -57,4 +57,4 @@
           %td= raw game.winners.map{ |ai| link_to( ai.name, ai ) }.to_sentence
           %td.icon= link_to_show game
 
-  = paginate @games, :params=>{:anchor=>'games'}
+  = paginate @games, :params => {:anchor => 'games'}

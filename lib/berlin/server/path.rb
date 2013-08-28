@@ -16,6 +16,6 @@ class Berlin::Server::Path
   end
 
   def to_hash
-    {:from=>@from, :to=>@to}
+    {:from => @from, :to => @to}
   end
 end

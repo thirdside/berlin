@@ -15,5 +15,5 @@
         %td= t("achievements.names.#{ award.achievement.class.model_name.underscore }.#{ award.achievement.internal_code }")
         - if show_total
           %td= award.total
-        %td= t("achievements.descriptions.#{ award.achievement.class.model_name.underscore }", :condition_1=>award.achievement.condition_1, :condition_2=>award.achievement.condition_2, :condition_3=>award.achievement.condition_3)
+        %td= t("achievements.descriptions.#{ award.achievement.class.model_name.underscore }", :condition_1 => award.achievement.condition_1, :condition_2 => award.achievement.condition_2, :condition_3 => award.achievement.condition_3)
 

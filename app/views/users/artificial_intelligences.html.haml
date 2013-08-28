@@ -1,11 +1,11 @@
 .content
   - if user_signed_in?
     .buttons
-      = link_to t('artificial_intelligences.new'), new_artificial_intelligence_path, :class=>:button
-  
+      = link_to t('artificial_intelligences.new'), new_artificial_intelligence_path, :class => :button
+
   %h2
     = @user.username
     = ":"
     = ArtificialIntelligence.model_name.human.pluralize
 
-  = render :partial=>'/artificial_intelligences/list', :locals=>{:resources=>@artificial_intelligences}
+  = render :partial => '/artificial_intelligences/list', :locals => {:resources => @artificial_intelligences}

@@ -6,4 +6,4 @@
 - if section[:sections]
   .padded
     - section[:sections].each do |subkey, subsection|
-      = render :partial=>'section', :locals=>{:key=>"#{key}_#{subkey}", :section=>subsection}
+      = render :partial => 'section', :locals => {:key => "#{key}_#{subkey}", :section => subsection}

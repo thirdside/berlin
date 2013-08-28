@@ -17,7 +17,7 @@ module Berlin
         # artificial intelligences
         @players = []
 
-        # @turns => {1=>{:moves=>[], :spawns=>[], :init_state=>state, :post_state=>state}}
+        # @turns => {1 => {:moves => [], :spawns => [], :init_state => state, :post_state => state}}
         @turns = Hash.new{ |h,k| h[k] = Hash.new{ |hh,kk| hh[kk] = [] } }
 
         # keep track of asked moves
@@ -110,7 +110,7 @@ module Berlin
               node.add_soldiers( player_id, number_of_soldiers )
 
               # register the spawn
-              @turns[@turn][:spawns] << {:node_id=>node_id, :player_id=>player_id, :number_of_soldiers=>number_of_soldiers}
+              @turns[@turn][:spawns] << {:node_id => node_id, :player_id => player_id, :number_of_soldiers => number_of_soldiers}
             end
           end
         end
@@ -137,10 +137,10 @@ module Berlin
             :headers       => {:Accept => "application/json"},
             :timeout       => 30000,
             :params        => {
-              :action=>'game_start',
-              :infos=>self.infos( player.player_id ).to_json,
-              :map=>map.to_hash.to_json,
-              :state=>map.states.to_json
+              :action => 'game_start',
+              :infos => self.infos( player.player_id ).to_json,
+              :map => map.to_hash.to_json,
+              :state => map.states.to_json
             }
           )
 
@@ -175,10 +175,10 @@ module Berlin
             :headers       => {:Accept => "application/json"},
             :timeout       => 0,
             :params        => {
-              :action=>'game_over',
-              :infos=>self.infos( player.player_id ).to_json,
-              :map=>map.to_hash.to_json,
-              :state=>map.states.to_json
+              :action => 'game_over',
+              :infos => self.infos( player.player_id ).to_json,
+              :map => map.to_hash.to_json,
+              :state => map.states.to_json
             }
           )
 
@@ -204,7 +204,7 @@ module Berlin
 
           # save scores
           @players.each do |player|
-            game.artificial_intelligence_games.build( :artificial_intelligence=>player, :player_id=>player.player_id, :score=>results[player.player_id][:score], :winner=>results[player.player_id][:winner] )
+            game.artificial_intelligence_games.build( :artificial_intelligence => player, :player_id => player.player_id, :score => results[player.player_id][:score], :winner => results[player.player_id][:winner] )
           end
         end
       end
@@ -272,10 +272,10 @@ module Berlin
             :headers       => {:Accept => "application/json"},
             :timeout       => map.time_limit_per_turn,
             :params        => {
-              :action=>'turn',
-              :infos=>self.infos( player.player_id ).to_json,
-              :map=>map.to_hash.to_json,
-              :state=>map.states.to_json
+              :action => 'turn',
+              :infos => self.infos( player.player_id ).to_json,
+              :map => map.to_hash.to_json,
+              :state => map.states.to_json
             }
           )
 
