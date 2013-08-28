@@ -302,7 +302,7 @@ module Berlin
           elsif response.timed_out?
             log "Request timed out"
           else
-            log response.curl_error_message
+            log response.return_message
           end
         end
       end
