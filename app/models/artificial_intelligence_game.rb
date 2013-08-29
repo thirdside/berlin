@@ -1,5 +1,7 @@
 class ArtificialIntelligenceGame < ActiveRecord::Base
 
+  attr_accessible :is_practice, :game, :artificial_intelligence, :player, :score, :winner
+
   after_create :check_for_achievements
 
   belongs_to :artificial_intelligence, :counter_cache => true
@@ -20,8 +22,8 @@ class ArtificialIntelligenceGame < ActiveRecord::Base
   end
 
   protected
-    def check_for_achievements
-      GamesPlayedAchievement.check_conditions_for( self.artificial_intelligence )
-      VictoriesAchievement.check_conditions_for( self.artificial_intelligence )
-    end
+  def check_for_achievements
+    GamesPlayedAchievement.check_conditions_for( self.artificial_intelligence )
+    VictoriesAchievement.check_conditions_for( self.artificial_intelligence )
+  end
 end

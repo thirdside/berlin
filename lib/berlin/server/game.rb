@@ -204,7 +204,12 @@ module Berlin
 
           # save scores
           @players.each do |player|
-            game.artificial_intelligence_games.build( :artificial_intelligence => player, :player_id => player.player_id, :score => results[player.player_id][:score], :winner => results[player.player_id][:winner] )
+            game.artificial_intelligence_games.build(
+              :artificial_intelligence  => player,
+              :player_id                => player.player_id,
+              :score                    => results[player.player_id][:score],
+              :winner                   => results[player.player_id][:winner]
+            )
           end
         end
       end
