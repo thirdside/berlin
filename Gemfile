@@ -19,6 +19,7 @@ gem 'uuidtools', '2.1.3'
 gem "typhoeus"
 
 group :development do
+  gem 'pry'
   gem 'capistrano'
   gem 'capistrano-unicorn'
   gem 'sqlite3'
