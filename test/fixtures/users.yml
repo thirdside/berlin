@@ -1,5 +1,6 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  username: testuser
-  email: test@berlin.com
+kr155:
+  username: kr155
+  email: kr155@berlin.com
+  game_client: canvas

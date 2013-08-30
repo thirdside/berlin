@@ -1,15 +1,8 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  user_id: 1
-  name: Test 1
-  url_on_turn: http://localhost:4567/onturn
-  url_ready: http://localhost:4567/ready
-  version: 1
-
-two:
-  user_id: 1
-  name: Test 2
-  url_on_turn: http://localhost:4568/onturn
-  url_ready: http://localhost:4568/ready
-  version: 1
+haiku:
+  user: kr155
+  name: Haiku
+  language: Ruby
+  is_active: true
+  url: http://localhost:4567/

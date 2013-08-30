@@ -1,40 +1,40 @@
 require 'test_helper'
 
 class GameTest < ActiveSupport::TestCase
-  # called before every single test
-  def setup
-    map = Map.order('RAND()').first
-    ais = ArtificialIntelligence.order('RAND()').limit(2)
-    
-    map.init( ais )
+  # # called before every single test
+  # def setup
+  #   map = Map.first
+  #   ais = ArtificialIntelligence.limit(2)
 
-    @game = Game.new
-    @game.map = map
-  end
+  #   map.init( ais )
 
-  # called after every single test
-  def teardown
-    @map = nil
-    @ais = nil
-  end
+  #   @game = Game.new
+  #   @game.map = map
+  # end
 
-  test "Game should contain a map" do
-    assert @game.map.present?
-  end
+  # # called after every single test
+  # def teardown
+  #   @map = nil
+  #   @ais = nil
+  # end
 
-  test "Soldiers should be added to a node" do
-    node = Node.find(1)
-    army = node.number_of_soldiers
+  # test "Game should contain a map" do
+  #   assert @game.map.present?
+  # end
 
-    node.add_soldiers node.owner, 2
+  # test "Soldiers should be added to a node" do
+  #   node = Node.find(1)
+  #   army = node.number_of_soldiers
 
-    assert army + 2 == node.number_of_soldiers
-  end
+  #   node.add_soldiers node.owner, 2
 
-  test "Snapshot should produce a complete snapshot of the game" do
-    snapshot = @game.snapshot
+  #   assert army + 2 == node.number_of_soldiers
+  # end
 
-    assert @game.uuid = snapshot['info']['game_id']
-    assert
-  end
+  # test "Snapshot should produce a complete snapshot of the game" do
+  #   snapshot = @game.snapshot
+
+  #   assert @game.uuid = snapshot['info']['game_id']
+  #   assert
+  # end
 end

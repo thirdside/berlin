@@ -1,11 +1,12 @@
 module ApplicationHelper
   def menu
-    temp = {}
-    temp[ArtificialIntelligence] = artificial_intelligences_path
-    temp[Game]                   = games_path
-    temp[Map]                    = maps_path
-    temp[User]                   = users_path
-    temp
+    {
+      ArtificialIntelligence  => artificial_intelligences_path,
+      Game                    => games_path,
+      Map                     => maps_path,
+      User                    => users_path,
+      Tournament              => tournaments_path
+    }
   end
 
   def errors_for model
