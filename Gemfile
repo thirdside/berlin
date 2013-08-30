@@ -5,7 +5,7 @@ gem 'mysql2'
 gem 'haml'
 gem 'inherited_resources'
 gem 'has_scope'
-gem 'devise', "~>1.5"
+gem 'devise', "~>3.0"
 gem 'protected_attributes'
 # gem 'rails_admin'
 gem 'yajl-ruby'

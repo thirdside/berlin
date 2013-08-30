@@ -35,7 +35,7 @@ en:
       destroy: Destroy
       edit: Edit
       send: Send
-  
+
   controls:
     play: Play
     pause: Pause
@@ -53,10 +53,10 @@ en:
     tutorial: Tutorial
     json_request: Requests
     json_response: Response
-  
+
   confirmation:
     deletion: Do you really want to delete that resource?
-  
+
   activerecord:
     models:
       user: User
@@ -68,6 +68,8 @@ en:
       victories_achievement: Victories Achievement
       games_played_achievement: Games played Achievement
       award: Award
+      tournament: Tournament
+      round: Round
     attributes:
       user:
         login: Username or email
@@ -107,6 +109,8 @@ en:
         created_at: Created at
       artificial_intelligence_game:
         score: Score
+      tournament:
+        participations_count: Participents
     errors:
       models:
         artificial_intelligence:
@@ -115,17 +119,17 @@ en:
               invalid: must starts with http:// ou https://
     messages:
       update: "Modifications have been saved with succes"
-  
+
   date:
     formats:
       default: "%d-%m-%Y"
       short: "%b %d"
       long: "%B %d, %Y"
-  
+
   time:
     formats:
       long: "%d-%m-%Y %H:%m"
-  
+
   views:
     pagination:
       first: ""
@@ -138,11 +142,11 @@ en:
     new: New artificial intelligence
     available: Available artificial intelligences
     selected: Selected artificial intelligences
-  
+
   maps:
     last_game: "Last game played %{time} ago"
     never_played: "This map has never been played"
-  
+
   games:
     feeling_lucky: Feelin lucky?
     rematch: Rematch
@@ -155,11 +159,11 @@ en:
       zero: "Be the first to like that game!"
       one: "1 player liked that game!"
       other: "%{count} players liked that game!"
-  
+
   intro:
     quote_01: "Beside being awesome, Berlin is a web-based electronic turn-by-turn multiplayer artificial intelligence strategy board game."
     quote_02: "Thank you so much for those exciting and endless hours of delightful pleasure! I'll never forget it!"
-      
+
     breakdown:
       b0:
         title: Web-based
@@ -185,3 +189,7 @@ en:
       b7:
         title: Game
         text: Let's not go there... Please.
+
+  tournaments:
+    new: New Tournament
+    cannot_edit_flash: "Oops! You cannot edit this tournament!"

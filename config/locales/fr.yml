@@ -11,7 +11,7 @@ fr:
     info: Information
     yes: Oui
     no: Non
-  
+
   helpers:
     submit:
       create: Créer
@@ -19,7 +19,7 @@ fr:
       destroy: Détruire
       edit: Éditer
       send: Envoyer
-  
+
   controls:
     play: Jouer
     pause: Pause
@@ -37,10 +37,10 @@ fr:
     tutorial: Tutoriel
     json_request: Requête
     json_response: Réponse
-  
+
   confirmation:
     deletion: Voulez-vous vraiment supprimer cette ressource?
-  
+
   achievements:
     descriptions:
       victories_achievement: "Ce trophé de victoires est octroyé après %{condition_1} victoires"
@@ -48,10 +48,10 @@ fr:
     names:
       victories_achievement:
         first_victory: "1ère victoire!"
-  
+
   notifications:
     game: "<a href='/games/%{id}'>Une nouvelle partie a eu lieu!</a>"
-  
+
   activerecord:
     models:
       user: Utilisateur
@@ -65,6 +65,9 @@ fr:
       award: Médaille
       notification: Message
       like: J'aime
+      tournament: Tournoi
+      round: Ronde
+
     attributes:
       user:
         login: "Nom d'utilisateur ou courriel"
@@ -107,6 +110,8 @@ fr:
         created_at: Créé le
       artificial_intelligence_game:
         score: Pointage
+      tournament:
+        participations_count: Participants
     errors:
       models:
         artificial_intelligence:
@@ -115,14 +120,14 @@ fr:
               invalid: doit être valide et débuter par http:// ou https://
     messages:
       update: "Modifications effectuées avec succès"
-      
-  
+
+
   date:
     formats:
       default: "%d-%m-%Y"
       short: "%b %d"
       long: "%B %d, %Y"
-  
+
   time:
     formats:
       long: "%d-%m-%Y %H:%m"
@@ -163,7 +168,7 @@ fr:
   intro:
     quote_01: "En plus d'être exceptionnel, Berlin est un jeu stratégique de plateau électronique en ligne multijoueurs en tour par tour d'intelligences artificielles."
     quote_02: "Merci Berlin pour toutes ces heures de délicieux plaisir incessant! C'est une expérience que je n'oublierai jamais!"
-    
+
     breakdown:
       b0:
         title: Stratégique
@@ -182,8 +187,10 @@ fr:
         text: Plusieurs joueurs jouent les uns contre les autres. Sinon, ou serait le plaisir?
       b5:
         title: Tour par tour
-        text: Le jeu se déroule selon une séquence de tours, plutôt qu'en temps réel.
+        text: "Le jeu se déroule selon une séquence de tours, plutôt qu'en temps réel."
       b6:
         title: AI
         text: Votre ordinateur fait des décisions pseudo-intelligentes. Souvent très "pseudo"...
-      
+
+  tournaments:
+    new: Nouveau tournoi

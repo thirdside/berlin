@@ -1,0 +1,26 @@
+.content
+  .buttons
+    = link_to t('tournaments.new'), new_tournament_path, :class => :button
+
+  %h2
+    = Tournament.model_name.human.pluralize
+
+  %table.large
+    %thead
+      %tr
+        %th= Tournament.human_attribute_name :id
+        %th= Tournament.human_attribute_name :name
+        %th= Tournament.human_attribute_name :participations_count
+        %th.icon
+
+    %tbody
+      - collection.each do |t|
+        %tr
+          %td= t.id
+          %td= t.name
+          %td= t.participations.count
+          %td.icon= link_to_show t
+
+  - if collection.respond_to? :current_page
+    = paginate collection
+

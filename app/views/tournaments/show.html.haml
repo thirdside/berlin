@@ -1,0 +1,19 @@
+.content
+  %h2= resource.name
+
+.content
+  %h2= ArtificialIntelligence.model_name.human.pluralize
+
+  %table.large
+    %thead
+      %tr
+        %th= ArtificialIntelligence.human_attribute_name :name
+        %th= Participation.human_attribute_name :rating
+        %th.icon
+
+    %tbody
+      - resource.participations.by_rating.includes(:artificial_intelligence).each do |p|
+        %tr
+          %td= link_to p.artificial_intelligence.name, p.artificial_intelligence
+          %td= p.rating
+          %td.icon= link_to_show p.artificial_intelligence

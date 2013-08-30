@@ -11,6 +11,10 @@ class ApplicationController < ActionController::Base
     super
   end
 
+  def ensure_logged_in
+    redirect_to new_session_path(:user), :alert => "Please log in to create a tournament" unless current_user
+  end
+
   protected
     def locale
       if params[:locale]
@@ -24,7 +28,7 @@ class ApplicationController < ActionController::Base
           end
         end
       end
-      
+
       I18n.locale = session[:locale] || I18n.default_locale
     end
 end

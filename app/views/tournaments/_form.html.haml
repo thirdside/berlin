@@ -1,0 +1,15 @@
+= form_for resource do |ai|
+
+  = errors_for resource
+
+  .field
+    = ai.label :name
+    = ai.text_field :name
+
+  = ai.fields_for :artificial_intelligences do |n|
+    = ai.label :artificial_intelligence_ids
+    - options = options_from_collection_for_select(ArtificialIntelligence.all, 'id', 'name')
+    = ai.select :artificial_intelligence_ids, options, {}, { :multiple => true }
+
+  .field.nolabel
+    = ai.submit
