@@ -1,4 +1,5 @@
-class UsersController < InheritedResources::Base
+class UsersController < Applicationcontroller
+  inherit_resources
 
   include Pageable
 

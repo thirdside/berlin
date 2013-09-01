@@ -1,4 +1,5 @@
-class ArtificialIntelligencesController < InheritedResources::Base
+class ArtificialIntelligencesController < Applicationcontroller
+  inherit_resources
 
   belongs_to :user, :optional => true
 

@@ -1,4 +1,5 @@
-class TournamentsController < InheritedResources::Base
+class TournamentsController < ApplicationController
+  inherit_resources
   respond_to :json, :html
 
   before_filter :ensure_logged_in, :only => [:edit, :update, :create, :new]

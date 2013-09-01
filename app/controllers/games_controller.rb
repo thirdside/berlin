@@ -1,4 +1,5 @@
-class GamesController < InheritedResources::Base
+class GamesController < Applicationcontroller
+  inherit_resources
 
   actions :index, :show, :new, :create
 
