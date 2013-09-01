@@ -35,14 +35,14 @@ class Game < ActiveRecord::Base
 
   protected
 
-    def ensure_is_practice_is_set
-      self.is_practice = false if self.is_practice.nil?
-      nil
-    end
+  def ensure_is_practice_is_set
+    self.is_practice = false if self.is_practice.nil?
+    nil
+  end
 
-    def send_notification
-      self.artificial_intelligences.map(&:user_id).uniq.each do |user|
-        Notification.push user, self
-      end
+  def send_notification
+    self.artificial_intelligences.map(&:user_id).uniq.each do |user|
+      Notification.push user, self
     end
+  end
 end
