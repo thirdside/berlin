@@ -167,28 +167,11 @@ module Berlin
       end
 
       def end_of_game
-        req = {}
+        send_game_over
+        complete_game
+      end
 
-        @players.each do |player|
-          req[player.player_id] = Typhoeus::Request.new(player.url,
-            :method        => :post,
-            :headers       => {:Accept => "application/json"},
-            :timeout       => 0,
-            :params        => {
-              :action => 'game_over',
-              :infos => self.infos( player.player_id ).to_json,
-              :map => map.to_hash.to_json,
-              :state => map.states.to_json
-            }
-          )
-
-          puts req[player.player_id].inspect if @debug
-
-          @hydra.queue( req[player.player_id] )
-        end
-
-        @hydra.run
-
+      def complete_game
         # get the results
         results = ranking
 
@@ -212,6 +195,30 @@ module Berlin
             )
           end
         end
+      end
+
+      def send_game_over
+        req = {}
+
+        @players.each do |player|
+          req[player.player_id] = Typhoeus::Request.new(player.url,
+            :method        => :post,
+            :headers       => {:Accept => "application/json"},
+            :timeout       => 0,
+            :params        => {
+              :action => 'game_over',
+              :infos => self.infos( player.player_id ).to_json,
+              :map => map.to_hash.to_json,
+              :state => map.states.to_json
+            }
+          )
+
+          puts req[player.player_id].inspect if @debug
+
+          @hydra.queue( req[player.player_id] )
+        end
+
+        @hydra.run
       end
 
       def infos player_id = nil
