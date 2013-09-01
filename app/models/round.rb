@@ -4,7 +4,7 @@ class Round < ActiveRecord::Base
 
   has_many :games, :dependent => :destroy
 
-  attr_accessible :players_per_game, :map
+  attr_accessible :players_per_game, :map, :map_id
   
   before_create :queue_games
   

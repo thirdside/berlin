@@ -25,6 +25,7 @@ BerlinWeb::Application.routes.draw do
 
   resources :tournaments do
     resources :rounds do
+      # resources :games
     end
   end
 

@@ -1,6 +1,16 @@
 .content
   %h2= resource.name
+  
+  - if resource.user == current_user
+    .buttons
+      = link_to t('rounds.new'), new_tournament_round_path(resource), :class => :button
+      
+  - resource.rounds.each_with_index do |round, index|
+    .content
+      %h2= Round.model_name.human
 
+      = render :partial => '/games/list', :locals => {:games => round.games}
+            
 .content
   %h2= ArtificialIntelligence.model_name.human.pluralize
 

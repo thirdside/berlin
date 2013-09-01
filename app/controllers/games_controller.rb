@@ -1,4 +1,4 @@
-class GamesController < Applicationcontroller
+class GamesController < ApplicationController
   inherit_resources
 
   actions :index, :show, :new, :create

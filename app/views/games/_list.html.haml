@@ -11,7 +11,7 @@
       %th.icon
 
   %tbody
-    - @games.ordered.each do |game|
+    - games.ordered.each do |game|
       %tr
         %td= game.id
         %td= l( game.time_start, :format => :long )
@@ -22,5 +22,5 @@
         %td= game.likes_count
         %td.icon= link_to_show game
 
-- if @games.respond_to? :current_page
-  = paginate @games
+- if games.respond_to? :current_page
+  = paginate games

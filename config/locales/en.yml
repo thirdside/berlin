@@ -190,6 +190,12 @@ en:
         title: Game
         text: Let's not go there... Please.
 
+  maps:
+    supported_players: Supported players
+
+  rounds:
+    new: New Round
+
   tournaments:
     new: New Tournament
     cannot_edit_flash: "Oops! You cannot edit this tournament!"

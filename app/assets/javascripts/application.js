@@ -33,11 +33,17 @@ TS.NewGameHelper = Class.create(TS, {
 		this.number_of_players = number_of_players ? $(number_of_players) : null;
 
 		this.map_select.observe('change', this.onMapChange.bindAsEventListener(this));
-		this.feel_lucky.observe('click', this.onFeelLuckyClick.bindAsEventListener(this));
+    
+    if (feel_lucky)
+    {
+		  this.feel_lucky.observe('click', this.onFeelLuckyClick.bindAsEventListener(this));
+    }
 
-		Sortable.create('available_ais', {tag: 'div', dropOnEmpty: true, constraint: null, containment: ['available_ais', 'selected_ais']});
-		Sortable.create('selected_ais', {tag: 'div', dropOnEmpty: true, constraint: null, containment: ['available_ais', 'selected_ais'], onUpdate: this.onSelectedAIsChange.bindAsEventListener(this)});
-
+    if (available_ais)
+    {
+  		Sortable.create('available_ais', {tag: 'div', dropOnEmpty: true, constraint: null, containment: ['available_ais', 'selected_ais']});
+  		Sortable.create('selected_ais', {tag: 'div', dropOnEmpty: true, constraint: null, containment: ['available_ais', 'selected_ais'], onUpdate: this.onSelectedAIsChange.bindAsEventListener(this)});
+    }
 
 		this.updateMap(this.map_select.value);
 	},
@@ -98,7 +104,8 @@ TS.NewGameHelper = Class.create(TS, {
 	{
 	  if (this.number_of_players != null)
 	    this.number_of_players.update(this.map.config.infos.number_of_players);
-
-		this.create_button[this.map.config.infos.number_of_players.include(this.hidden_ais.childElements().size()) ? "enable" : "disable"]();
+    
+    if (this.create_button)
+      this.create_button[this.map.config.infos.number_of_players.include(this.hidden_ais.childElements().size()) ? "enable" : "disable"]();
 	}
 });

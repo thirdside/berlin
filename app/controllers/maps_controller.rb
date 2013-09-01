@@ -1,4 +1,4 @@
-class MapsController < Applicationcontroller
+class MapsController < ApplicationController
   inherit_resources
 
   actions :index, :show, :new, :create

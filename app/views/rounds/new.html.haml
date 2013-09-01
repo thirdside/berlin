@@ -1,0 +1,26 @@
+.content
+  %h2= t('rounds.new')
+  
+  = form_for [:tournament, resource] do |f|
+
+    .field
+      = f.label :map_id, Map.model_name.human
+      = f.select :map_id, options_from_collection_for_select( Map.all, :id, :name, params[:map_id] )
+
+    .field
+      = f.label :players_per_game
+      = f.text_field :players_per_game
+    .field
+      %label= t('maps.supported_players')
+      %span#number_of_players
+
+    .field.nolabel
+      = f.submit :id => 'round_submit'
+
+.content
+  %h2= Map.model_name.human
+
+  #map
+
+:javascript
+  new TS.NewGameHelper('map', 'round_map_id', null, null, 'hidden_fields', null, null, null, 'number_of_players');
