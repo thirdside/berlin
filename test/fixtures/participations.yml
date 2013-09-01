@@ -8,4 +8,21 @@
 haiku_first:
   tournament: first
   artificial_intelligence: haiku
-  rating: 2200
+
+haiku_started:
+  tournament: started
+  artificial_intelligence: haiku
+
+nitrous_started:
+  tournament: started
+  artificial_intelligence: nitrous
+
+berlino_started:
+  tournament: started
+  artificial_intelligence: berlino
+  
+leaf_started:
+  tournament: started
+  artificial_intelligence: leaf
+  
+  

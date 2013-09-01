@@ -6,3 +6,25 @@ haiku:
   language: Ruby
   is_active: true
   url: http://localhost:4567/
+
+nitrous:
+  user: wako
+  name: Nitrous
+  language: Ruby
+  is_active: true
+  url: http://localhost:4567/
+
+berlino:
+  user: jodi
+  name: Berlino
+  language: Ruby
+  is_active: true
+  url: http://localhost:4567/
+  
+leaf:
+  user: thierry
+  name: Leaf
+  language: Ruby
+  is_active: true
+  url: http://localhost:4567/
+  

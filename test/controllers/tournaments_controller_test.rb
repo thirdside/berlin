@@ -12,4 +12,10 @@ class TournamentsControllerTest < ActionController::TestCase
     json = ActiveSupport::JSON.decode(response.body)
     assert_equal users(:kr155).id, json['user_id']
   end
+  
+  test "cannot modify a tournament once it has started" do
+    tournament = tournaments(:started)
+    put :update, :id => tournament.id, :tournament => { :name => "Toto" }
+    assert_equal "Started", tournament.reload.name
+  end
 end

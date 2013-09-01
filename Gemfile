@@ -19,10 +19,18 @@ gem 'uuidtools', '2.1.3'
 gem "typhoeus"
 
 group :development do
-  gem 'pry'
   gem 'capistrano'
   gem 'capistrano-unicorn'
+end
+
+group :development, :test do
   gem 'sqlite3'
+  gem 'pry'
+  gem 'pry-debugger'
+end
+
+group :test do
+  gem 'mocha', :require => false
 end
 
 gem 'unicorn'

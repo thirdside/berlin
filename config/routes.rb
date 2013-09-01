@@ -23,7 +23,10 @@ BerlinWeb::Application.routes.draw do
     end
   end
 
-  resources :tournaments
+  resources :tournaments do
+    resources :rounds do
+    end
+  end
 
   get 'home', :to => 'welcome#index'
 
