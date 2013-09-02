@@ -3,6 +3,8 @@ module Berlin
     class Game < Game
       attr_accessor :uuid, :turn, :moves, :players, :debug
 
+      K_FACTOR = 32
+
       after_initialize :build
 
       def build
@@ -36,6 +38,8 @@ module Berlin
         # initializing options
         self.map          = Berlin::Server::Map.find( options[:map_id] )
         self.players      = Berlin::Server::ArtificialIntelligence.find( options[:ais_ids] )
+        self.round        = Round.find( options[:round_id] )
+
         self.is_practice  = options[:is_practice]
         self.user_id      = options[:user_id]
         self.debug        = options[:debug]
@@ -51,11 +55,6 @@ module Berlin
 
       def log message
         Delayed::Worker.logger.add(Logger::INFO, message)
-      end
-
-      def add_player player
-        # add the player to the array
-        @players << player
       end
 
       def number_of_players
@@ -175,6 +174,8 @@ module Berlin
         # get the results
         results = ranking
 
+        calculate_new_ratings
+
         # save information
         Game.create! do |game|
           game.map              = self.map
@@ -187,14 +188,39 @@ module Berlin
 
           # save scores
           @players.each do |player|
+            participation = layer.participations.find(:tournament_id => round.try(:tournament_id))
             game.artificial_intelligence_games.build(
               :artificial_intelligence  => player,
               :player_id                => player.player_id,
               :score                    => results[player.player_id][:score],
-              :winner                   => results[player.player_id][:winner]
+              :winner                   => results[player.player_id][:winner],
+              :rating                   => participation.try(:rating)
             )
           end
         end
+      end
+
+      def calculate_new_ratings
+        results = ranking
+        new_ratings = {}
+
+        players.each do |player|
+          player_participation = player.participations.find_by_tournament_id(round.tournament_id)
+          elo_delta = players.reject{|p| p == player}.reduce(0) do |delta, opponent|
+            opponent_participation = opponent.participations.find_by_tournament_id(round.tournament_id)
+            delta + K_FACTOR * (results[player.player_id][:score] - expected_score(player_participation, opponent_participation))
+          end
+          new_ratings[player_participation] = elo_delta
+        end
+
+        new_ratings.each do |player_participation, elo_delta|
+          player_participation.rating += elo_delta
+          player_participation.save
+        end
+      end
+
+      def expected_score(player, opponent)
+        (1/ (1 + 10**((opponent.rating - player.rating) / 400.0))).round(2)
       end
 
       def send_game_over

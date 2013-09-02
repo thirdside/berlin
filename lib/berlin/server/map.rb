@@ -52,7 +52,6 @@ class Berlin::Server::Map < Map
   def init players
     @setup[players.size.to_s].each do |player_id, nodes|
       player_id = player_id.to_i
-
       nodes.each do |node|
         find_node( node['node'] ).owner = player_id
         find_node( node['node'] ).add_soldiers player_id, node['number_of_soldiers']

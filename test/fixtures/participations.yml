@@ -12,17 +12,19 @@ haiku_first:
 haiku_started:
   tournament: started
   artificial_intelligence: haiku
+  rating: 1500
 
 nitrous_started:
   tournament: started
   artificial_intelligence: nitrous
+  rating: 1500
 
 berlino_started:
   tournament: started
   artificial_intelligence: berlino
-  
+  rating: 1500
+
 leaf_started:
   tournament: started
   artificial_intelligence: leaf
-  
-  
+  rating: 1500

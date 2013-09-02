@@ -10,6 +10,8 @@ class ArtificialIntelligence < ActiveRecord::Base
   has_many :timeouts, :class_name => "ArtificialIntelligenceTimeout", :dependent => :destroy
   has_many :artificial_intelligence_games, :dependent => :destroy
   has_many :games, :through => :artificial_intelligence_games
+  has_many :participations, :dependent => :destroy
+  has_many :tournaments, :through => :participations
 
   scope :ordered, ->{ order("artificial_intelligences.name") }
   scope :active,  ->{ where(:is_active => true) }
@@ -17,7 +19,7 @@ class ArtificialIntelligence < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true, :length => { :minimum => 1 }
   validates :url, :presence => true, :format => { :with => /\A(http|https):\/\// }
   validates :language, :presence => true, :inclusion => LANGUAGES
-  
+
   attr_accessible :name, :url, :is_active, :language
 
   def belongs_to? user
