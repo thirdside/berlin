@@ -200,3 +200,5 @@ en:
     new: New Tournament
     cannot_edit_flash: "Oops! You cannot edit this tournament!"
     already_started: You cannot modify this tournament because it is already started
+    rounds_emtpy: No rounds have been played yet
+

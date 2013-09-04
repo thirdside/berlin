@@ -2,22 +2,27 @@
   %h2= resource.name
 
 
-.content
-  %h2= t("tournaments.rankings")
+  - if resource.participations.by_rating.includes(:artificial_intelligence).any?{|p| p.rating}
+    %h2= t("tournaments.rankings")
 
-  #chart_container{:style => "height: 300px;"}
+    #chart_container{:style => "height: 300px;"}
 
-.content
+    :javascript
+      new TS.TournamentRankingChart(#{resource.id})
+
   - if resource.user == current_user
     .buttons
       = link_to t('rounds.new'), new_tournament_round_path(resource), :class => :button
   %h2= Round.model_name.human.pluralize
-  - resource.rounds.each.with_index do |round, index|
-    %h3= "#{Round.model_name.human} ##{index + 1}"
 
-    = render :partial => '/games/list', :locals => {:games => round.games}
+  - if resource.rounds.any?
+    - resource.rounds.each.with_index do |round, index|
+      %h3= "#{Round.model_name.human} ##{index + 1}"
 
-.content
+      = render :partial => '/games/list', :locals => {:games => round.games}
+  -else
+    %p= t("tournaments.rounds_emtpy")
+
   %h2= ArtificialIntelligence.model_name.human.pluralize
 
   %table.large
@@ -31,8 +36,5 @@
       - resource.participations.by_rating.includes(:artificial_intelligence).each do |p|
         %tr
           %td= link_to p.artificial_intelligence.name, p.artificial_intelligence
-          %td= p.rating.round
+          %td= p.rating ? p.rating.round : "--"
           %td.icon= link_to_show p.artificial_intelligence
-
-:javascript
-  new TS.TournamentRankingChart(#{resource.id})
