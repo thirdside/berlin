@@ -21,12 +21,21 @@ gem "typhoeus"
 group :development do
   gem 'capistrano'
   gem 'capistrano-unicorn'
+  gem 'quiet_assets'
 end
 
 group :development, :test do
   gem 'sqlite3'
   gem 'pry'
   gem 'pry-debugger'
+end
+
+group :assets do
+  gem 'sass-rails'
+  gem 'coffee-rails'
+  gem 'uglifier'
+
+  gem 'therubyracer', :platforms => :ruby
 end
 
 group :test do

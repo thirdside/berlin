@@ -24,6 +24,10 @@ BerlinWeb::Application.routes.draw do
   end
 
   resources :tournaments do
+    member do
+      get :artificial_intelligence_games
+    end
+
     resources :rounds do
       # resources :games
     end

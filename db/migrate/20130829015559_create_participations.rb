@@ -3,7 +3,7 @@ class CreateParticipations < ActiveRecord::Migration
     create_table :participations do |t|
       t.references :tournament
       t.references :artificial_intelligence
-      t.float :rating
+      t.float :rating, :default => 1500
 
       t.timestamps
     end

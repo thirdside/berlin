@@ -38,7 +38,7 @@ module Berlin
         # initializing options
         self.map          = Berlin::Server::Map.find( options[:map_id] )
         self.players      = Berlin::Server::ArtificialIntelligence.find( options[:ais_ids] )
-        self.round        = Round.find( options[:round_id] )
+        self.round        = Round.find( options[:round_id] ) if options[:round_id]
 
         self.is_practice  = options[:is_practice]
         self.user_id      = options[:user_id]
@@ -174,7 +174,7 @@ module Berlin
         # get the results
         results = ranking
 
-        calculate_new_ratings
+        calculate_new_ratings if round
 
         # save information
         Game.create! do |game|
@@ -185,10 +185,11 @@ module Berlin
           game.time_end         = Time.now
           game.number_of_turns  = @turn
           game.json             = self.to_json
+          game.round            = self.round
 
           # save scores
           @players.each do |player|
-            participation = layer.participations.find(:tournament_id => round.try(:tournament_id))
+            participation = player.participations.find_by_tournament_id(round.tournament_id) if round
             game.artificial_intelligence_games.build(
               :artificial_intelligence  => player,
               :player_id                => player.player_id,

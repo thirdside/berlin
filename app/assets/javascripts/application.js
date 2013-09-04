@@ -7,6 +7,9 @@
 //= require raphael/g.pie
 //= require graphico
 //= require swfobject
+
+//= require tournament_ranking
+
 //= require simulator/drawable
 //= require simulator/animated
 //= require simulator/node

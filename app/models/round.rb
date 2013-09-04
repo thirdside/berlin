@@ -6,7 +6,7 @@ class Round < ActiveRecord::Base
 
   attr_accessible :players_per_game, :map, :map_id
 
-  before_create :queue_games
+  after_create :queue_games
 
   validates_presence_of :map, :tournament
   validates_numericality_of :players_per_game

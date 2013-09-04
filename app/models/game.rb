@@ -9,6 +9,7 @@ class Game < ActiveRecord::Base
 
   has_many :artificial_intelligence_games, :dependent => :destroy
   has_many :artificial_intelligences, :through => :artificial_intelligence_games
+  has_many :winners, ->{ where(:artificial_intelligence_games => {:winner => true}) }, :through => :artificial_intelligence_games, :source => :artificial_intelligence
 
   scope :ordered,   ->{ order("games.created_at DESC") }
   scope :practices, ->{ where(:is_practice => true) }
@@ -21,10 +22,6 @@ class Game < ActiveRecord::Base
 
   def number_of_players
     artificial_intelligence_games_count
-  end
-
-  def winners
-    self.artificial_intelligence_games.winners.includes(:artificial_intelligence).map(&:artificial_intelligence)
   end
 
   def self.start_new_game options

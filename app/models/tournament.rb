@@ -3,6 +3,8 @@ class Tournament < ActiveRecord::Base
 
   has_many :rounds, :dependent => :destroy
   has_many :games, :through => :rounds
+  has_many :artificial_intelligence_games, :through => :games
+
   has_many :participations, :dependent => :destroy
   has_many :artificial_intelligences, :through => :participations
 

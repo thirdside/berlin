@@ -1,16 +1,22 @@
 .content
   %h2= resource.name
-  
+
+
+.content
+  %h2= t("tournaments.rankings")
+
+  #chart_container{:style => "height: 300px;"}
+
+.content
   - if resource.user == current_user
     .buttons
       = link_to t('rounds.new'), new_tournament_round_path(resource), :class => :button
-      
-  - resource.rounds.each_with_index do |round, index|
-    .content
-      %h2= Round.model_name.human
+  %h2= Round.model_name.human.pluralize
+  - resource.rounds.each.with_index do |round, index|
+    %h3= "#{Round.model_name.human} ##{index + 1}"
 
-      = render :partial => '/games/list', :locals => {:games => round.games}
-            
+    = render :partial => '/games/list', :locals => {:games => round.games}
+
 .content
   %h2= ArtificialIntelligence.model_name.human.pluralize
 
@@ -25,5 +31,8 @@
       - resource.participations.by_rating.includes(:artificial_intelligence).each do |p|
         %tr
           %td= link_to p.artificial_intelligence.name, p.artificial_intelligence
-          %td= p.rating
+          %td= p.rating.round
           %td.icon= link_to_show p.artificial_intelligence
+
+:javascript
+  new TS.TournamentRankingChart(#{resource.id})

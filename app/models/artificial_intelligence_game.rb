@@ -1,6 +1,6 @@
 class ArtificialIntelligenceGame < ActiveRecord::Base
 
-  attr_accessible :is_practice, :game, :artificial_intelligence, :player, :score, :winner
+  attr_accessible :is_practice, :game, :artificial_intelligence, :player, :score, :winner, :rating
 
   after_create :check_for_achievements
 
