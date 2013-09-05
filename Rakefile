@@ -22,7 +22,7 @@ namespace :assets do
       source.push(source.pop.gsub(regex, '.'))
 
       non_digested = File.join(source)
-      FileUtils.cp(file, non_digested)
+      FileUtils.cp(file, non_digested) unless non_digested.end_with?("manifest.json")
     end
   end
 end
