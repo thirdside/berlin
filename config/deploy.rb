@@ -33,7 +33,7 @@ namespace :foreman do
 
   desc "Start the application services"
   task :start, :roles => :app do
-    run "#{try_sudo} start #{application} --concurrency='web=0,worker=6'"
+    run "#{try_sudo} start #{application} --concurrency='web=0,worker=3'"
   end
 
   desc "Stop the application services"
