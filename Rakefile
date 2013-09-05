@@ -27,5 +27,4 @@ namespace :assets do
   end
 end
 
-
 BerlinWeb::Application.load_tasks

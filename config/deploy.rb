@@ -33,7 +33,7 @@ namespace :foreman do
 
   desc "Start the application services"
   task :start, :roles => :app do
-    run "#{try_sudo} start #{application}"
+    run "#{try_sudo} start #{application} --concurrency='web=0,worker=6'"
   end
 
   desc "Stop the application services"
@@ -54,7 +54,7 @@ end
 namespace :deploy do
   namespace :assets do
     task :nodigest do
-      run("cd #{current_release} && bundle exec rake assets:nodigest RAILS_ENV=production RAILS_GROUPS=assets")
+      run("cd #{current_release} && #{try_sudo} bundle exec rake assets:nodigest RAILS_ENV=production RAILS_GROUPS=assets")
     end
   end
 end
