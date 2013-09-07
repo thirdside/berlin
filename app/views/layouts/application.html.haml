@@ -23,7 +23,7 @@
         - menu.each do |model, url|
           %li{:class => controller.controller_name == model.table_name ? 'active' : nil}= link_to model.model_name.human.pluralize, url
 
-        %li= link_to 'Wiki', "http://#{ I18n.locale == :en ? "" : "#{I18n.locale}." }wiki.berlin.thirdside.ca", :target => '_blank'
+        %li= link_to 'Documentation', "https://github.com/thirdside/berlin-ai/wiki/Berlin"
 
         .devise_links
           - if user_signed_in?

@@ -26,6 +26,9 @@ TS.Playback = Class.create(TS, {
 	setPlayerInfo: function(id, color, soldiers, nodes, score)
 	{
 		var row = $(this.playerInfoName.interpolate({id: id}));
+
+		if (!row) { return; }
+
 		row.down('.color').setStyle({"background-color": color});
 		row.down('.soldiers').update(soldiers)
 		row.down('.nodes').update(nodes);
