@@ -5,8 +5,10 @@
 //= require raphael/raphael
 //= require raphael/g.raphael
 //= require raphael/g.pie
+//= require raphael/raphael-animate-along
 //= require graphico
 //= require swfobject
+//= require fullscreen
 
 //= require tournament_ranking
 
@@ -36,7 +38,7 @@ TS.NewGameHelper = Class.create(TS, {
 		this.number_of_players = number_of_players ? $(number_of_players) : null;
 
 		this.map_select.observe('change', this.onMapChange.bindAsEventListener(this));
-    
+
     if (feel_lucky)
     {
 		  this.feel_lucky.observe('click', this.onFeelLuckyClick.bindAsEventListener(this));
@@ -107,7 +109,7 @@ TS.NewGameHelper = Class.create(TS, {
 	{
 	  if (this.number_of_players != null)
 	    this.number_of_players.update(this.map.config.infos.number_of_players);
-    
+
     if (this.create_button)
       this.create_button[this.map.config.infos.number_of_players.include(this.hidden_ais.childElements().size()) ? "enable" : "disable"]();
 	}

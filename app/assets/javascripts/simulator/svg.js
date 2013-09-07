@@ -116,18 +116,6 @@
 
 	_createSoldiersObject: function (attrs)
 	{
-		// var blurryText = this.raphael.text(attrs.x, attrs.y, attrs.count);
-
-		// blurryText.attr({
-		// 	'font': attrs.font,
-		// 	'font-weight': attrs.fontWeight,
-		// 	'font-size': attrs.fontSize + 5,
-		// 	'fill': attrs.blurColor,
-		// 	'opacity': attrs.opacity
-		// });
-
-		// blurryText.blur(2);
-
 		// draw text
 		var text = this.raphael.text(attrs.x, attrs.y, attrs.count);
 
@@ -140,7 +128,6 @@
 		});
 
 		var set = this.raphael.set();
-		//set.push(text, blurryText);
 		set.push(text);
 
 		return set;
@@ -148,19 +135,6 @@
 
 	_createSpawnObject: function (count, attrs)
 	{
-		// draw blurry back
-		// var blurryText = this.raphael.text(attrs.x, attrs.y, count);
-
-		// blurryText.attr({
-		// 	'font': attrs.font,
-		// 	'font-weight': attrs.fontWeight,
-		// 	'font-size': attrs.fontSize + 5,
-		// 	'fill': attrs.blurColor,
-		// 	'opacity': attrs.opacity
-		// });
-
-		// blurryText.blur(2);
-
 		// draw text
 		var text = this.raphael.text(attrs.x, attrs.y, count);
 
@@ -173,7 +147,6 @@
 		});
 
 		var set = this.raphael.set();
-		//set.push(text, blurryText);
 		set.push(text);
 
 		return set;
@@ -319,24 +292,11 @@
 			});
 		}
 
-
-		// draw blurry back
-		// var blurryText = this.raphael.text(attrs.x, attrs.y, object.text);
-		// blurryText.attr({
-		// 	'y': object.textAttrs.y,
-		// 	'font': object.textAttrs.font,
-		// 	'font-weight': object.textAttrs['font-weight'],
-		// 	'font-size': object.textAttrs['font-size'],
-		// 	'fill': object.blurColor
-		// });
-		// blurryText.blur(3);
-
 		// create the combat quote
 		var text = this.raphael.text(attrs.x, attrs.y, object.text);
 		text.attr(object.textAttrs);
 
 		var combat = this.raphael.set();
-		//combat.push(text, blurryText);
 		combat.push(text);
 
 		if (attrs.img != null)
