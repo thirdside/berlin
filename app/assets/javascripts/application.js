@@ -1,7 +1,12 @@
 //= require prototype
-//= require scriptaculous/scriptaculous
+//= require scriptaculous/builder
+//= require scriptaculous/effects
+//= require scriptaculous/dragdrop
+//= require scriptaculous/controls
+//= require scriptaculous/slider
+//= require scriptaculous/sound
+
 //= require thirdside
-//= require_self
 //= require raphael/raphael
 //= require raphael/g.raphael
 //= require raphael/g.pie
@@ -21,6 +26,8 @@
 //= require simulator/playback_description
 //= require simulator/playback
 //= require simulator/simulator
+//= require_self
+
 
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
