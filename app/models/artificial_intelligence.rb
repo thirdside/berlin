@@ -20,7 +20,7 @@ class ArtificialIntelligence < ActiveRecord::Base
   validates :url, :presence => true, :format => { :with => /\A(http|https):\/\// }
   validates :language, :presence => true, :inclusion => LANGUAGES
 
-  attr_accessible :name, :url, :is_active, :language
+  attr_accessible :name, :url, :is_active, :language, :user_id
 
   def belongs_to? user
     self.user_id == user.id rescue false
