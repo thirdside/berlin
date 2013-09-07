@@ -52,14 +52,15 @@
 #progress_bar_container
   #progress_bar
 
-.content
+.content#replay
   .buttons#controls
-    %input#rewind{:type => :submit, :value => "<<"}
-    %input#back{:type => :submit, :value => "<"}
-    %input#play{:type => :submit, :value => t('controls.play')}
-    %input#pause{:type => :submit, :value => t('controls.pause')}
-    %input#next{:type => :submit, :value => ">"}
-    %input#end{:type => :submit, :value => ">>"}
+    %input#rewind{:type=>:submit, :value=>"<<"}
+    %input#back{:type=>:submit, :value=>"<"}
+    %input#play{:type=>:submit, :value=>t('controls.play')}
+    %input#pause{:type=>:submit, :value=>t('controls.pause')}
+    %input#next{:type=>:submit, :value=>">"}
+    %input#end{:type=>:submit, :value=>">>"}
+    %input#fullscreen{:type=>:submit, :value=>"Toggle fullscreen", :onclick=>"launchFullScreen('map')"}
 
   %h2#turns= "0/10"
 
@@ -69,13 +70,14 @@
   .liked
     - if current_user
       - unless @game.liked_by? current_user
-        = form_for Like.new, :html => {:style => "display: inline;"} do |f|
+        - form_for Like.new, :html => {:style => "display: inline;"} do |f|
           = f.hidden_field :likable_id, :value => @game.id
           = f.hidden_field :likable_type, :value => @game.class.name
           = submit_tag "#{Like.model_name.human}!"
       = t('games.liked_that_game', :count => @game.likes.count, :resource => @game.class.name.downcase)
 
 :javascript
+
   var containers = {
     "map": "map",
     "controls": "controls",

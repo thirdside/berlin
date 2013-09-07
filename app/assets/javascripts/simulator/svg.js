@@ -10,8 +10,10 @@
  TS.SVG = Class.create(TS.Drawable, {
 	initialize: function ($super, container, position, size, translate)
 	{
-		$super(container, position, size, translate);
+		$super(container, position, size, translate); // see: http://jsfiddle.net/mklement/7rpmH/
 		this.raphael = Raphael(this.position.x, this.position.y, this.size.width, this.size.height);
+		this.raphael.setViewBox(0, 0, this.size.width, this.size.height, true);
+		this.raphael.canvas.setAttribute('preserveAspectRatio', 'none');
 		container.insert(this.raphael.canvas);
 
 		this.objects = {};
@@ -49,9 +51,6 @@
 	addAnimation: function (id, attrs, length)
 	{
 		if (Object.keys(attrs).length != 0) {
-			if (attrs.start)
-				attrs.start = null;
-
 			if (attrs['animateAlong'])
 				this._animateAlong(this.objects[id], attrs['animateAlong'], length);
 
@@ -117,19 +116,17 @@
 
 	_createSoldiersObject: function (attrs)
 	{
-		// draw blurry back
-		var blurryText = this.raphael.text(attrs.x, attrs.y, attrs.count);
+		// var blurryText = this.raphael.text(attrs.x, attrs.y, attrs.count);
 
-		blurryText.attr({
-			'font': attrs.font,
-			'font-weight': attrs.fontWeight,
-			'font-size': attrs.fontSize + 5,
-			'fill': attrs.blurColor,
-			'opacity': attrs.opacity
-		});
+		// blurryText.attr({
+		// 	'font': attrs.font,
+		// 	'font-weight': attrs.fontWeight,
+		// 	'font-size': attrs.fontSize + 5,
+		// 	'fill': attrs.blurColor,
+		// 	'opacity': attrs.opacity
+		// });
 
-		blurryText.blur(2);
-
+		// blurryText.blur(2);
 
 		// draw text
 		var text = this.raphael.text(attrs.x, attrs.y, attrs.count);
@@ -143,7 +140,8 @@
 		});
 
 		var set = this.raphael.set();
-		set.push(text, blurryText);
+		//set.push(text, blurryText);
+		set.push(text);
 
 		return set;
 	},
@@ -151,18 +149,17 @@
 	_createSpawnObject: function (count, attrs)
 	{
 		// draw blurry back
-		var blurryText = this.raphael.text(attrs.x, attrs.y, count);
+		// var blurryText = this.raphael.text(attrs.x, attrs.y, count);
 
-		blurryText.attr({
-			'font': attrs.font,
-			'font-weight': attrs.fontWeight,
-			'font-size': attrs.fontSize + 5,
-			'fill': attrs.blurColor,
-			'opacity': attrs.opacity
-		});
+		// blurryText.attr({
+		// 	'font': attrs.font,
+		// 	'font-weight': attrs.fontWeight,
+		// 	'font-size': attrs.fontSize + 5,
+		// 	'fill': attrs.blurColor,
+		// 	'opacity': attrs.opacity
+		// });
 
-		blurryText.blur(2);
-
+		// blurryText.blur(2);
 
 		// draw text
 		var text = this.raphael.text(attrs.x, attrs.y, count);
@@ -176,7 +173,8 @@
 		});
 
 		var set = this.raphael.set();
-		set.push(text, blurryText);
+		//set.push(text, blurryText);
+		set.push(text);
 
 		return set;
 	},
@@ -274,13 +272,12 @@
 	_createChartObject: function (object, attrs)
 	{
 		// create the chart
-		debugger
-		var chart = this.raphael.g.piechart(
+		var chart = this.raphael.piechart(
 			object.position.x,
 			object.position.y,
 			object.radius,
 			object.data.clone(),
-			{legend: [], legendpos: 'west', legendcolor: '#fff', colors: object.colors});
+			{legend: [], legendpos: 'west', legendcolor: '#fff', colors: object.colors, matchColors: true});
 
 		chart.attr({'opacity': attrs.opacity});
 
@@ -317,29 +314,30 @@
 				attrs.img.height);
 
 			image.attr({
-				'scale': attrs['scale'],
+				'transform': attrs['transform'],
 				'opacity': attrs['opacity']
 			});
 		}
 
 
 		// draw blurry back
-		var blurryText = this.raphael.text(attrs.x, attrs.y, object.text);
-		blurryText.attr({
-			'y': object.textAttrs.y,
-			'font': object.textAttrs.font,
-			'font-weight': object.textAttrs['font-weight'],
-			'font-size': object.textAttrs['font-size'],
-			'fill': object.blurColor
-		});
-		blurryText.blur(3);
+		// var blurryText = this.raphael.text(attrs.x, attrs.y, object.text);
+		// blurryText.attr({
+		// 	'y': object.textAttrs.y,
+		// 	'font': object.textAttrs.font,
+		// 	'font-weight': object.textAttrs['font-weight'],
+		// 	'font-size': object.textAttrs['font-size'],
+		// 	'fill': object.blurColor
+		// });
+		// blurryText.blur(3);
 
 		// create the combat quote
 		var text = this.raphael.text(attrs.x, attrs.y, object.text);
 		text.attr(object.textAttrs);
 
 		var combat = this.raphael.set();
-		combat.push(text, blurryText);
+		//combat.push(text, blurryText);
+		combat.push(text);
 
 		if (attrs.img != null)
 			combat.push(image);
@@ -359,7 +357,13 @@
 		// remove the full path
 		path.remove();
 
-		object.animateAlong(sub, length, attrs['rotate']);
+		animationAttrs = {};
+		animationAttrs["duration"] = length
+		animationAttrs["path"] = sub
+
+		$A(object).each(function(data) {
+			data.animateAlong(animationAttrs);
+		});
 	},
 
 	_getPositionFromPath: function (data)
