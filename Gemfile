@@ -23,6 +23,7 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-unicorn'
   gem 'quiet_assets'
+  gem 'bullet'
 end
 
 group :development, :test do
