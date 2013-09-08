@@ -1,6 +1,7 @@
 class TournamentsController < ApplicationController
   inherit_resources
-  respond_to :json, :html
+  respond_to :html, :except => [:artificial_intelligence_games]
+  respond_to :json
 
   before_filter :ensure_logged_in, :only => [:edit, :update, :create, :new]
   before_filter :ensure_ownership, :ensure_not_started, :only => [:edit, :update]
@@ -10,7 +11,7 @@ class TournamentsController < ApplicationController
   end
 
   def artificial_intelligence_games
-    ai_games = resource.artificial_intelligence_games.order(:created_at => :asc)
+    ai_games = resource.artificial_intelligence_games.joins(:game).where(:games => {:status => :finished}).order(:created_at => :asc)
     respond_with(ai_games)
   end
 

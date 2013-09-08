@@ -3,3 +3,9 @@ pending:
   user: kr155
   map: two_or_three_players
   round: started
+
+finished:
+  status: finished
+  user: kr155
+  map: two_or_three_players
+  round: started
