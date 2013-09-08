@@ -28,6 +28,11 @@
       %tr
         %td.label= Like.model_name.human.pluralize
         %td= @game.likes_count
+      - if @game.errored?
+        %tr
+          %td.label= Game.human_attribute_name :last_error
+          %td= @game.last_error
+
 
 .content
   %h2= ArtificialIntelligence.model_name.human.pluralize
@@ -49,59 +54,61 @@
           %td.nodes
           %td.score
 
-#progress_bar_container
-  #progress_bar
 
-.content#replay
-  .buttons#controls
-    %input#rewind{:type=>:submit, :value=>"<<"}
-    %input#back{:type=>:submit, :value=>"<"}
-    %input#play{:type=>:submit, :value=>t('controls.play')}
-    %input#pause{:type=>:submit, :value=>t('controls.pause')}
-    %input#next{:type=>:submit, :value=>">"}
-    %input#end{:type=>:submit, :value=>">>"}
-    %input#fullscreen{:type=>:submit, :value=>"Toggle fullscreen", :onclick=>"launchFullScreen('map')"}
+- if @game.finished?
+  #progress_bar_container
+    #progress_bar
 
-  %h2#turns= "0/10"
+  .content#replay
+    .buttons#controls
+      %input#rewind{:type=>:submit, :value=>"<<"}
+      %input#back{:type=>:submit, :value=>"<"}
+      %input#play{:type=>:submit, :value=>t('controls.play')}
+      %input#pause{:type=>:submit, :value=>t('controls.pause')}
+      %input#next{:type=>:submit, :value=>">"}
+      %input#end{:type=>:submit, :value=>">>"}
+      %input#fullscreen{:type=>:submit, :value=>"Toggle fullscreen", :onclick=>"launchFullScreen('map')"}
 
-  #map
-    #flash-content
+    %h2#turns= "0/10"
 
-  .liked
-    - if current_user
-      - unless @game.liked_by? current_user
-        - form_for Like.new, :html => {:style => "display: inline;"} do |f|
-          = f.hidden_field :likable_id, :value => @game.id
-          = f.hidden_field :likable_type, :value => @game.class.name
-          = submit_tag "#{Like.model_name.human}!"
-      = t('games.liked_that_game', :count => @game.likes.count, :resource => @game.class.name.downcase)
+    #map
+      #flash-content
 
-:javascript
+    .liked
+      - if current_user
+        - unless @game.liked_by? current_user
+          - form_for Like.new, :html => {:style => "display: inline;"} do |f|
+            = f.hidden_field :likable_id, :value => @game.id
+            = f.hidden_field :likable_type, :value => @game.class.name
+            = submit_tag "#{Like.model_name.human}!"
+        = t('games.liked_that_game', :count => @game.likes.count, :resource => @game.class.name.downcase)
 
-  var containers = {
-    "map": "map",
-    "controls": "controls",
-    "player_list": "player-list",
-    "progress_bar": "progress_bar",
-    "turns": "turns",
-    "flash": "flash-content"
-  },
-  map_path = "#{map_path(@game.map, :format => :json)}",
-  game_path = "#{game_path(@game, :format => :json)}";
-    document.observe("dom:loaded", function() {
-      if (#{current_user.try(:game_client) == "flash"})
-      {
-        flashPlayback = new TS.FlashPlayback(
-          containers,
-          map_path,
-          game_path
-        )
-      } else {
-        new TS.AIPlayback(
-          containers,
-          map_path,
-          game_path
-        );
-      }
-    });
+  :javascript
+
+    var containers = {
+      "map": "map",
+      "controls": "controls",
+      "player_list": "player-list",
+      "progress_bar": "progress_bar",
+      "turns": "turns",
+      "flash": "flash-content"
+    },
+    map_path = "#{map_path(@game.map, :format => :json)}",
+    game_path = "#{game_path(@game, :format => :json)}";
+      document.observe("dom:loaded", function() {
+        if (#{current_user.try(:game_client) == "flash"})
+        {
+          flashPlayback = new TS.FlashPlayback(
+            containers,
+            map_path,
+            game_path
+          )
+        } else {
+          new TS.AIPlayback(
+            containers,
+            map_path,
+            game_path
+          );
+        }
+      });
 
