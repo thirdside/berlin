@@ -24,9 +24,20 @@ class TournamentsControllerTest < ActionController::TestCase
     get :artificial_intelligence_games, :id => tournament.id, :format => :json
 
     assert_equal [
-      artificial_intelligence_games(:finished_haiku),
-      artificial_intelligence_games(:finished_berlino),
-      artificial_intelligence_games(:finished_nitrous),
+      artificial_intelligence_games(:finished_haiku).id,
+      artificial_intelligence_games(:finished_berlino).id,
+      artificial_intelligence_games(:finished_nitrous).id,
     ].sort, ActiveSupport::JSON.decode(response.body).map{|a| a['id']}.sort
+  end
+
+  test ":artificial_intelligence_games returns the names of the ais" do
+    tournament = tournaments(:started)
+    get :artificial_intelligence_games, :id => tournament.id, :format => :json
+
+    assert_equal [
+      'Haiku',
+      'Berlino',
+      'Nitrous',
+    ].sort, ActiveSupport::JSON.decode(response.body).map{|a| a['name']}.sort
   end
 end
