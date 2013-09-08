@@ -49,6 +49,6 @@ TS.Player = Class.create(TS, {
 	 */
 	_initPlayerColor: function (playerId)
 	{
-		return ['#bd1550', '#e97f02', '#50a2e9', '#f31474', '#21bbad', '#8a9b0f'][playerId] || '#ffffff'
+		return ['#bd1550', '#e97f02', '#50a2e9', '#ffd802', '#21bbad', '#8a9b0f'][playerId] || '#ffffff'
 	}
 });
