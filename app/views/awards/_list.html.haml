@@ -11,6 +11,7 @@
       %th= Award.human_attribute_name :description
   %tbody
     - awards.each do |award|
+      - next unless award.achievement_id
       %tr
         %td= t("achievements.names.#{ award.achievement.class.model_name.human.underscore }.#{ award.achievement.internal_code }")
         - if show_total
