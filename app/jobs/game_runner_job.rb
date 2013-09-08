@@ -22,7 +22,7 @@ class GameRunnerJob < Struct.new(:game_id)
 
     if exception
       game.error
-      game.last_error = exception
+      game.last_error = "#{exception.to_s}\n\n#{exception.backtrace.join("\n")}"
     else
       game.abort
     end
