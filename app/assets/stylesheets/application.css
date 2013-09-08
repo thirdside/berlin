@@ -9,7 +9,7 @@ body {
     padding: 0;
     margin: 0;
     background-color: #343434;
-    background-image: url(/assets/background.jpg);
+    background-image: url('background.jpg');
     background-repeat: repeat-x;
     color: #333333;
 }
@@ -194,7 +194,7 @@ ul.tabs li.selected a, ul.tabs li a:hover {
 }
 
 div.content {
-    background: url(/assets/content.gif) #EFE8D3;
+    background: url('content.gif') #EFE8D3;
     padding: 10px;
     margin: 5px 0 5px 0;
     border-radius: 5px;
@@ -228,7 +228,7 @@ div.content h2 {
     font-size: 23px;
     line-height: 52px;
     font-weight: normal;
-    background: url(/images/ribbon.png) no-repeat;
+    background: url('ribbon.png') no-repeat;
     margin: 5px 0 10px -20px;
     height: 52px;
     width: 965px;
@@ -688,7 +688,7 @@ ul.padded li {
     display: block;
     float: left;
     margin: 0 0 0 5px;
-    background-image: url(/assets/flags.jpg);
+    background-image: url('flags.jpg');
     background-repeat: no-repeat;
     width: 16px;
     height: 11px;
