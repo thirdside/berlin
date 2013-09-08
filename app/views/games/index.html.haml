@@ -6,4 +6,4 @@
 
   %h2= t('titles.all_games')
 
-  = render :partial => '/games/list', :locals => {:games => @games}
+  = render :partial => '/games/list', :locals => {:games => @games.includes(:winners, :map)}

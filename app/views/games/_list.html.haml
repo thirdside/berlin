@@ -4,7 +4,7 @@
       %th= Game.human_attribute_name :id
       %th= Game.human_attribute_name :time_start
       %th= Map.model_name.human
-      %th= Game.human_attribute_name :number_of_players
+      %th= Game.human_attribute_name :players
       %th= Game.human_attribute_name :number_of_turns
       %th= Game.human_attribute_name :winner
       %th= Like.model_name.human.pluralize
@@ -16,8 +16,8 @@
         %td= game.id
         %td= l( game.time_start, :format => :long )
         %td= link_to game.map.name, game.map
-        %td= game.number_of_players
-        %td= game.number_of_turns
+        %td= game.artificial_intelligences.pluck(:name).to_sentence
+        %td= game.finished? ? game.number_of_turns : t("games.#{game.status}")
         %td= raw game.winners.map{ |ai| link_to( ai.name, ai ) }.to_sentence
         %td= game.likes_count
         %td.icon= link_to_show game

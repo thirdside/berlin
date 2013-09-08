@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~>4.0'
+gem 'state_machine'
 gem 'mysql2'
 gem 'haml'
 gem 'inherited_resources'
@@ -22,6 +23,7 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-unicorn'
   gem 'quiet_assets'
+  gem 'bullet'
 end
 
 group :development, :test do

@@ -1,4 +1,4 @@
-class Berlin::Server::Map < Map
+class Berlin::Server::Map < ::Map
   after_initialize :build
 
   attr_reader :nodes, :paths, :maximum_number_of_turns, :number_of_players, :time_limit_per_turn, :directed

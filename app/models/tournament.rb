@@ -9,4 +9,6 @@ class Tournament < ActiveRecord::Base
   has_many :artificial_intelligences, :through => :participations
 
   attr_accessible :name, :artificial_intelligence_ids
+
+  validates_presence_of :name
 end

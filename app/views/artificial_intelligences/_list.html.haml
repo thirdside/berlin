@@ -1,6 +1,6 @@
-- unless resources.present?
+- unless collection.present?
   = t('common.no_result')
-  
+
 - else
   %table.large
     %thead
@@ -13,7 +13,7 @@
         %th.icon
 
     %tbody
-      - resources.each do |resource|
+      - collection.each do |resource|
         %tr
           %td.icon= image_tag( resource.activity_icon )
           %td= link_to resource.name, resource

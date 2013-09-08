@@ -1,6 +1,8 @@
 class Game < ActiveRecord::Base
   include Likable
 
+  class NotEnoughArtificialIntelligences < Exception; end
+
   belongs_to :map, :counter_cache => true
   belongs_to :user
   belongs_to :round
@@ -15,19 +17,52 @@ class Game < ActiveRecord::Base
   scope :practices, ->{ where(:is_practice => true) }
   scope :officials, ->{ where(:is_practice => false) }
   scope :for_user,  ->(user){ where("is_practice = ? OR (is_practice = ? AND user_id = ?)", false, true, user.try(:id)) }
+  scope :pending,   ->{ where(:status => [:pending, :errored]) }
+  scope :finished,  ->{ where(:status => :finished) }
+  scope :aborted,   ->{ where(:status => :aborted) }
 
   after_create :send_notification
 
   before_save :ensure_is_practice_is_set
 
+  state_machine :status, :initial => :pending do
+    event :finish do
+      transition any => :finished
+    end
+
+    event :error do
+      transition :pending => :errored
+    end
+
+    event :abort do
+      transition :error => :abort
+    end
+  end
+
   def number_of_players
     artificial_intelligence_games_count
   end
 
-  def self.start_new_game options
-    game = Berlin::Server::Game.new
-    game.init( options )
-    game.run
+  def self.queue_game(user, params)
+    game = user.games.create(params) do |g|
+      g.map = Map.find(params[:map_id])
+      g.round = Round.where(:id => params[:round_id]).first
+      g.time_start = DateTime.now
+    end
+
+    ais = ArtificialIntelligence.where(:id => params[:artificial_intelligence_ids]).shuffle
+
+    raise NotEnoughArtificialIntelligences "at least two AIs are required to start a game" unless ais.length >= 2
+
+    ais.each.with_index do |ai, index|
+      game.artificial_intelligence_games.create(
+        :artificial_intelligence  => ai,
+        :player_id                => index
+      )
+    end
+
+    Delayed::Job.enqueue GameRunnerJob.new(game.id)
+    game
   end
 
   protected

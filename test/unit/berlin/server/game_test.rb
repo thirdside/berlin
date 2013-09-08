@@ -5,11 +5,11 @@ class Berlin::Server::GameTest < ActiveSupport::TestCase
     Berlin::Server::Game.any_instance.expects(:send_game_over)
     Berlin::Server::Game.any_instance.expects(:complete_game)
 
-    Berlin::Server::Game.new.end_of_game
+    three_player_game.end_of_game
   end
 
   test "#expected_score returns the elo-version expected score" do
-    game = Berlin::Server::Game.new
+    game = three_player_game
 
     ai_1 = stub(:rating => 1900)
     ai_2 = stub(:rating => 1500)
@@ -54,16 +54,6 @@ class Berlin::Server::GameTest < ActiveSupport::TestCase
   protected
 
   def three_player_game
-    game = Berlin::Server::Game.new
-    game.init(
-      :round_id => rounds(:started).id,
-      :ais_ids => [
-        (haiku = artificial_intelligences(:haiku)).id,
-        (nitrous = artificial_intelligences(:nitrous)).id,
-        (berlino = artificial_intelligences(:berlino)).id
-      ],
-      :map_id => maps(:two_or_three_players)
-    )
-    game
+    game = Berlin::Server::Game.find(games(:pending).id)
   end
 end

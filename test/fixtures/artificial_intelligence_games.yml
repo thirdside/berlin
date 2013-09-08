@@ -1,0 +1,29 @@
+pending_haiku:
+  game: pending
+  artificial_intelligence: haiku
+  player_id: 0
+
+pending_nitrous:
+  game: pending
+  artificial_intelligence: nitrous
+  player_id: 1
+
+pending_berlino:
+  game: pending
+  artificial_intelligence: berlino
+  player_id: 2
+
+finished_haiku:
+  game: finished
+  artificial_intelligence: haiku
+  player_id: 0
+
+finished_nitrous:
+  game: finished
+  artificial_intelligence: nitrous
+  player_id: 1
+
+finished_berlino:
+  game: finished
+  artificial_intelligence: berlino
+  player_id: 2

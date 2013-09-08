@@ -9,9 +9,9 @@ class TS.TournamentRankingChart
     @series = {}
     @dataLabels = {}
     request.responseJSON.forEach (ai_game) =>
-      data = (@series[ai_game.artificial_intelligence_id] ||= [])
-      data.push ai_game.rating || 1500
-      @dataLabels[ai_game.artificial_intelligence_id] ||= if ai_game.artificial_intelligence_id is 3 then "haiku" else "nitrous"
+      data = (@series[ai_game.name] ||= [])
+      data.push Math.round(ai_game.rating || 1500)
+      @dataLabels[ai_game.name] ||= ai_game.name
     , {}
 
     @createGraph()
