@@ -16,12 +16,12 @@ TS.AIMap = Class.create(TS, {
 			engine: "SVG"
 		}, options || {});
 
-		this.config_url		= config_url;
-		this.container		= $(container);
-		this.layers			= {};
-		this.graphics		= {};
-		this.color			= new TS.Color();
-		this.size       	= {width: this.container.getWidth(), height: this.container.getHeight()};
+		this.config_url = config_url;
+		this.container  = $(container);
+		this.layers     = {};
+		this.graphics   = {};
+		this.color      = new TS.Color();
+		this.size       = {width: this.container.getWidth(), height: this.container.getHeight()};
 
 		// load config
 		new Ajax.Request( config_url, {method: 'get', onComplete: this.onConfigLoaded.bindAsEventListener(this)});
@@ -40,13 +40,17 @@ TS.AIMap = Class.create(TS, {
 		this.nodeGraph = new TS.NodeGraph(this.config);
 
 		// Create a canvas element for each display layer
-		$A(['background', 'paths', 'nodes', 'moves', 'soldiers', 'combats', 'spawns', 'info']).each(function(layer) {
+		$A(['background', 'paths', 'nodes', 'moves', 'soldiers', 'combats', 'spawns', 'debug']).each(function(layer) {
 			this.layers[layer] = new TS[this.options.engine](
 				this.container,
-				{x:0, y:0},
-				{width: this.size.width,
-				height: this.size.height},
-				this.config.infos.translate);
+				{
+					position: { x: 0, y: 0 },
+					size: this.size,
+			    active: ['debug'].indexOf(layer) <= -1,
+			    mustRefresh: ['nodes', 'moves', 'soldiers', 'combats', 'spawns'].indexOf(layer) > -1,
+				  translate: this.config.infos.translate
+				}
+			);
 		}, this);
 
 
@@ -82,10 +86,15 @@ TS.AIMap = Class.create(TS, {
 		{
 			Object.keys(turnBefore.layers).each(function(layerName) {
 				var layer = this.layers[layerName];
-				var data = turnBefore.layers[layerName];
+
+				if (!layer.getMustRefresh()) { return; }
 
 				// clear the layer
 				layer.clear();
+
+				if (!layer.active) { return; }
+
+				var data = turnBefore.layers[layerName];
 
 				// add the objects
 				data.objects.each(function (object) {
@@ -105,10 +114,15 @@ TS.AIMap = Class.create(TS, {
 		if (turnNow) {
 			Object.keys(turnNow.layers).each(function(layerName){
 				var layer = this.layers[layerName];
-				var data = turnNow.layers[layerName];
+
+				if (!layer.getMustRefresh()) { return; }
 
 				// clear the layer
 				layer.clear();
+
+				if (!layer.active) { return; }
+
+				var data = turnNow.layers[layerName];
 
 				// add the objects
 				data.objects.each(function(object){
@@ -122,5 +136,24 @@ TS.AIMap = Class.create(TS, {
 				}, this);
 			}, this);
 		}
+	},
+
+	drawDebugLayer: function (turn)
+	{
+		var layer = this.layers['debug'];
+
+		if (!layer.getMustRefresh()) { return; }
+
+		// clear the layer
+		layer.clear();
+
+		if (!layer.active) { return; }
+
+		var data = turn.layers['debug'];
+
+		// add the objects
+		data.objects.each(function(object){
+			layer.addObject(object, data['forward_arrival'][object.id].start);
+		}, this);
 	}
 });

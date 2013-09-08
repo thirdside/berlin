@@ -86,6 +86,7 @@ TS.AIPlayback = Class.create(TS.Playback, {
 		TS.Keyboard.registerCallback(" ", [], this.togglePlayPause.bind(this));
 		TS.Keyboard.registerCallback(Event.KEY_LEFT, [], this.onBack.bindAsEventListener(this));
 		TS.Keyboard.registerCallback(Event.KEY_RIGHT, [], this.onNext.bindAsEventListener(this));
+		TS.Keyboard.registerCallback(Event.KEY_TAB, [], this.toggleDebug.bindAsEventListener(this));
 
 		// create the timer for automatic playback
 		this.timer = new TS.Timer();
@@ -202,6 +203,17 @@ TS.AIPlayback = Class.create(TS.Playback, {
 		this.turnNumber = this.getMaxTurn();
 		this.forward = true;
 		this.drawCurrentTurn();
+	},
+
+	/*
+	 * Button callback: Toogle debug
+	 */
+	toggleDebug: function (e)
+	{
+		e.stop();
+		this.map.layers['debug'].setActive(!this.map.layers['debug'].active);
+		this.map.layers['debug'].refreshCount = 0;
+		this.map.drawDebugLayer(this.playbackDescription.turns[0]);
 	},
 
 	/*

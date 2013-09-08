@@ -103,6 +103,18 @@
 		}, this);
 
 		turn.layers['paths'] = layer;
+
+		// setup debug
+		layer = this._createLayer();
+
+		Object.keys(this.map.nodes).each(function(nodeId) {
+			object = this._createDebugNodeObject(nextId, this.map.nodes[nodeId]);
+			layer.objects.push(object);
+			this._syncAnimationLayerObject(layer, object.id, this._createEmptyAnimation());
+			nextId++;
+		}, this);
+
+		turn.layers['debug'] = layer;
 		turn.layers['spawns'] = this._createLayer();
 		turn.layers['combats'] = this._createLayer();
 	},
@@ -282,7 +294,7 @@
 	 */
 	_processNodes: function (layer)
 	{
-        var nextId = 0;
+		var nextId = 0;
 		var nodeObject = null;
 		var nodeAnimations = null;
 
@@ -978,6 +990,27 @@
 			'type': 'node',
 			'node': node.id,
 			'position': this._getNodePosition(node.id)
+		};
+
+		return object;
+	},
+
+	/*
+	 * Create a debug node object
+	 */
+	_createDebugNodeObject: function (id, node)
+	{
+		var object =
+		{
+			'id': id,
+			'type': 'debug_node',
+			'node': node.id,
+			'position': this._getNodePosition(node.id),
+			'opacity': 0.5,
+			'font': 'Symbol',
+			'fontWeight': 'bold',
+			'fontSize': 20,
+			'fill': '#FFF'
 		};
 
 		return object;

@@ -8,20 +8,34 @@
 
 
  TS.SVG = Class.create(TS.Drawable, {
-	initialize: function ($super, container, position, size, translate)
+	initialize: function ($super, container, options)
 	{
-		$super(container, position, size, translate); // see: http://jsfiddle.net/mklement/7rpmH/
+		$super(container, options);
 		this.raphael = Raphael(this.position.x, this.position.y, this.size.width, this.size.height);
 		this.raphael.setViewBox(0, 0, this.size.width, this.size.height, true);
 		this.raphael.canvas.setAttribute('preserveAspectRatio', 'none');
 		container.insert(this.raphael.canvas);
 
 		this.objects = {};
+		this.active = options.active;
+		this.mustRefresh = options.mustRefresh;
+		this.refreshCount = 0;
 	},
 
 	clear: function ()
 	{
 		this.raphael.clear();
+		this.refreshCount++;
+	},
+
+	getMustRefresh: function ()
+	{
+		return this.mustRefresh || this.refreshCount <= 0;
+	},
+
+	setActive: function (value)
+	{
+		this.active = value;
 	},
 
 	addObject: function (object, attrs)
@@ -34,6 +48,8 @@
 			this.objects[object.id] = this._createCityObject(attrs);
 		else if (object.type == 'node')
 			this.objects[object.id] = this._createNodeObject(attrs);
+		else if (object.type == 'debug_node')
+			this.objects[object.id] = this._createDebugNodeObject(object, attrs);
 		else if (object.type == 'background')
 			this.objects[object.id] = this._createBackgroundObject(object.img, object.tile);
 		else if (object.type == 'path')
@@ -303,6 +319,24 @@
 			combat.push(image);
 
 		return combat;
+	},
+
+	_createDebugNodeObject: function (object, attrs)
+	{
+		var text = this.raphael.text(object.position.x, object.position.y + 30, object.node);
+
+		text.attr({
+			'font': object.font,
+			'font-weight': object.fontWeight,
+			'font-size': object.fontSize,
+			'fill': object.fill,
+			'opacity': object.opacity
+		});
+
+		var set = this.raphael.set();
+		set.push(text);
+
+		return set;
 	},
 
 	_animateAlong: function (object, attrs, length)
