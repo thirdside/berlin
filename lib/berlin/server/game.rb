@@ -1,9 +1,12 @@
 module Berlin
   module Server
-    class Game < Game
+    class Game < ::Game
       attr_accessor :uuid, :turn, :moves, :players, :debug
 
       K_FACTOR = 32
+
+      belongs_to :map, :class_name => "Berlin::Server::Map"
+      has_many :artificial_intelligences, :class_name => "Berlin::Server::ArtificialIntelligence", :through => :artificial_intelligence_games
 
       after_initialize :build
 
@@ -17,7 +20,11 @@ module Berlin
         @time_end   = nil
 
         # artificial intelligences
-        @players = []
+        @players = artificial_intelligences.includes(:artificial_intelligence_games)
+        @players.each do |ai|
+          ai_game = ai.artificial_intelligence_games.detect{|g| g.game_id == id }
+          ai.player_id = ai_game.player_id
+        end
 
         # @turns => {1 => {:moves => [], :spawns => [], :init_state => state, :post_state => state}}
         @turns = Hash.new{ |h,k| h[k] = Hash.new{ |hh,kk| hh[kk] = [] } }
@@ -30,26 +37,7 @@ module Berlin
 
         # Game start at turn 0
         @turn = 0
-      end
 
-      def init options
-        log("STARTING NEW GAMEEE!!!")
-        log options
-        # initializing options
-        self.map          = Berlin::Server::Map.find( options[:map_id] )
-        self.players      = Berlin::Server::ArtificialIntelligence.find( options[:ais_ids] )
-        self.round        = Round.find( options[:round_id] ) if options[:round_id]
-
-        self.is_practice  = options[:is_practice]
-        self.user_id      = options[:user_id]
-        self.debug        = options[:debug]
-
-        # set player_id for each player
-        @players.shuffle.each_with_index do |player, index|
-          player.player_id = index
-        end
-
-        # init number of soldiers for each player
         map.init( @players )
       end
 
@@ -160,7 +148,7 @@ module Berlin
             player.timeouts.create
 
             # Raise error
-            raise Berlin::Server::Exceptions::ArtificialIntelligenceNotResponding
+            raise Berlin::Server::Exceptions::ArtificialIntelligenceNotResponding, "#{player.id} not responding"
           end
         end
       end
@@ -176,28 +164,21 @@ module Berlin
 
         calculate_new_ratings if round
 
-        # save information
-        Game.create! do |game|
-          game.map              = self.map
-          game.user_id          = self.user_id
-          game.is_practice      = self.is_practice
-          game.time_start       = @time_start
-          game.time_end         = Time.now
-          game.number_of_turns  = @turn
-          game.json             = self.to_json
-          game.round            = self.round
+        self.time_end = Time.now
+        self.number_of_turns = @turn
+        self.json = to_json
+        finish
+        save
 
-          # save scores
-          @players.each do |player|
-            participation = player.participations.find_by_tournament_id(round.tournament_id) if round
-            game.artificial_intelligence_games.build(
-              :artificial_intelligence  => player,
-              :player_id                => player.player_id,
-              :score                    => results[player.player_id][:score],
-              :winner                   => results[player.player_id][:winner],
-              :rating                   => participation.try(:rating)
-            )
-          end
+        # save scores
+        @players.each do |player|
+          participation = player.participations.find_by_tournament_id(round.tournament_id) if round
+          ai = artificial_intelligence_games.where(:artificial_intelligence_id => player.id).first
+          ai.update_attributes(
+            :score                    => results[player.player_id][:score],
+            :winner                   => results[player.player_id][:winner],
+            :rating                   => participation.try(:rating)
+          )
         end
       end
 

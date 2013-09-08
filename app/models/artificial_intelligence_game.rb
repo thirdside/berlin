@@ -9,7 +9,7 @@ class ArtificialIntelligenceGame < ActiveRecord::Base
 
   scope :ordered,             ->{ order("artificial_intelligence_games.created_at DESC") }
   scope :winners,             ->{ where(:winner => true) }
-  scope :for_official_games,  ->{ includes(:game).where(:games => {:is_practice => false}) }
+  scope :for_official_games,  ->{ includes(:game).where(:games => {:is_practice => false, :status => :finished}) }
   scope :for_practice_games,  ->{ includes(:game).where(:games => {:is_practice => true}) }
   scope :recent,              ->(n = 30){ ordered.limit( n ) }
 

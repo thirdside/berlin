@@ -9,9 +9,9 @@ class GamesController < ApplicationController
 
   def index
     @games = if current_user
-      Game.for_user( current_user )
+      Game.finished.for_user( current_user )
     else
-      Game.officials
+      Game.finished.officials
     end.page( params[:page] )
   end
 
@@ -39,15 +39,7 @@ class GamesController < ApplicationController
   end
 
   def create
-    begin
-      Game.delay.start_new_game( :debug => params[:debug],
-                          :user_id => current_user.id,
-                          :is_practice => params[:game][:is_practice],
-                          :ais_ids => params[:game][:artificial_intelligence_ids],
-                          :map_id => params[:game][:map_id] )
-    rescue Exception => e
-      redirect_to( new_game_path, :alert => e.inspect ) and return
-    end
+    Game.queue_game(current_user, params.require(:game))
 
     redirect_to games_path, :notice => I18n.t('games.success')
   end

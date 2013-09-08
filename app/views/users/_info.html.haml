@@ -26,7 +26,7 @@
       %td= user.victory_percentage
     %tr
       %td.label= ArtificialIntelligence.human_attribute_name :score
-      %td= show_score user.score
+      %td= show_score(user.score || 0)
     %tr
       %td.label= User.human_attribute_name :created_at
       %td= l user.created_at, :format => :long

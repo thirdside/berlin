@@ -15,10 +15,11 @@ class Round < ActiveRecord::Base
 
   def queue_games
     tournament.artificial_intelligences.combination(players_per_game).each do |ais|
-      Game.delay.start_new_game :user_id => tournament.user.id,
-                                :ais_ids => ais.map(&:id),
-                                :map_id => map.id,
-                                :round_id => self.id
+      Game.queue_game(tournament.user,
+        :artificial_intelligence_ids => ais.map(&:id),
+        :map_id => map.id,
+        :round_id => self.id
+      )
     end
   end
 end
