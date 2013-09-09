@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, :lockable and :timeoutable
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :authentication_keys => [:login]
 
   # Virtual attribute for sign in
   attr_accessor :login
@@ -27,9 +27,12 @@ class User < ActiveRecord::Base
   end
 
   protected
-    def self.find_for_database_authentication warden_conditions
-     conditions = warden_conditions.dup
-     login = conditions.delete(:login)
-     where(conditions).where(["username = :value OR email = :value", { :value => login }]).first
-   end
+  def self.find_first_by_auth_conditions(warden_conditions)
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login)
+      where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
+    else
+      where(conditions).first
+    end
+  end
 end
