@@ -47,7 +47,7 @@ class Berlin::Server::GameTest < ActiveSupport::TestCase
       (1500 + (0.8 - 0.5 + 0.8 - 0.5) * 32).round(2),
       (1500 + (0.2 - 0.5 + 0.2 - 0.5) * 32).round(2),
       (1500 + (0.0 - 0.5 + 0.0 - 0.5) * 32).round(2)
-    ]
+    ].map(&:to_i)
     assert_equal scores.sort, rounds(:started).tournament.participations.map(&:rating).sort
   end
 

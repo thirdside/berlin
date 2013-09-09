@@ -8,7 +8,10 @@ class TournamentsControllerTest < ActionController::TestCase
   end
 
   test ":create creates a tournament assigns it to the current user" do
-    post :create, :name => "Test", :artificial_intelligence_ids => artificial_intelligences(:haiku), :format => :json
+    post :create, :tournament => {
+      :name => "Test",
+      :artificial_intelligence_ids => [artificial_intelligences(:haiku).id, artificial_intelligences(:nitrous).id]
+    }, :format => :json
     json = ActiveSupport::JSON.decode(response.body)
     assert_equal users(:kr155).id, json['user_id']
   end
