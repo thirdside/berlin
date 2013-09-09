@@ -24,7 +24,7 @@ class GameRunnerJob < Struct.new(:game_id)
       game.error
       game.last_error = "#{exception.to_s}\n\n#{exception.backtrace.join("\n")}"[0...1024]
     else
-      game.abort
+      game.final_error
     end
 
     game.save

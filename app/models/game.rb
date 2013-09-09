@@ -34,8 +34,8 @@ class Game < ActiveRecord::Base
       transition :pending => :errored
     end
 
-    event :abort do
-      transition :error => :abort
+    event :final_error do
+      transition :error => :aborted
     end
   end
 
