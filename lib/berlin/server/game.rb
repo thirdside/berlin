@@ -168,7 +168,7 @@ module Berlin
         self.number_of_turns = @turn
         self.json = to_json
         finish
-        save
+        save!
 
         # save scores
         @players.each do |player|
