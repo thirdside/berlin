@@ -120,10 +120,11 @@ module Berlin
 
         @players.each do |player|
           req[player.player_id] = Typhoeus::Request.new(player.url,
-            :method        => :post,
-            :headers       => {:Accept => "application/json"},
-            :timeout       => 30000,
-            :params        => {
+            :method         => :post,
+            :followlocation => true,
+            :headers        => {:Accept => "application/json"},
+            :timeout        => 30000,
+            :params         => {
               :action => 'game_start',
               :infos => self.infos( player.player_id ).to_json,
               :map => map.to_hash.to_json,
@@ -210,10 +211,11 @@ module Berlin
 
         @players.each do |player|
           req[player.player_id] = Typhoeus::Request.new(player.url,
-            :method        => :post,
-            :headers       => {:Accept => "application/json"},
-            :timeout       => 0,
-            :params        => {
+            :method         => :post,
+            :followlocation => true,
+            :headers        => {:Accept => "application/json"},
+            :timeout        => 0,
+            :params         => {
               :action => 'game_over',
               :infos => self.infos( player.player_id ).to_json,
               :map => map.to_hash.to_json,
@@ -288,10 +290,11 @@ module Berlin
 
         players.each do |player|
           req[player.player_id] = Typhoeus::Request.new(player.url,
-            :method        => :post,
-            :headers       => {:Accept => "application/json"},
-            :timeout       => map.time_limit_per_turn,
-            :params        => {
+            :method         => :post,
+            :followlocation => true,
+            :headers        => {:Accept => "application/json"},
+            :timeout        => map.time_limit_per_turn,
+            :params         => {
               :action => 'turn',
               :infos => self.infos( player.player_id ).to_json,
               :map => map.to_hash.to_json,
