@@ -2,7 +2,7 @@ class Round < ActiveRecord::Base
   belongs_to :tournament
   belongs_to :map
 
-  has_many :games, :dependent => :destroy
+  has_many :games, :dependent => :nullify
 
   attr_accessible :players_per_game, :map, :map_id
 
