@@ -4,7 +4,7 @@
       %th(colspan=2)= t('common.statistics')
   %tbody
 
-    - if user_signed_in?
+    - if current_user && current_user == user
       %tr
         %td.label= User.human_attribute_name :current_ip_address
         %td= request.remote_ip
