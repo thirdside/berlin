@@ -9,3 +9,4 @@ tmp/**/*
 config/*.save
 server/*.log
 server/*.lock
+.ruby-version
