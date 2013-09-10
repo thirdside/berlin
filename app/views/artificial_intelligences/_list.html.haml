@@ -2,6 +2,8 @@
   = t('common.no_result')
 
 - else
+  - collection.sort_by!(&:won_games).reverse!
+
   %table.large
     %thead
       %tr
