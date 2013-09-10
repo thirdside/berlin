@@ -426,6 +426,13 @@ table.large th.icon a, table td.icon a {
     position: relative;
 }
 
+table.games th.time {width: 110px;}
+table.games th.map {width: 120px;}
+table.games th.players {width: 250px;}
+table.games th.number_of_turns {width: 125px;}
+table.games th.winner {width: 120px;}
+table.games th.likes {width: 80px;}
+
 .centered {
     text-align: center;
 }

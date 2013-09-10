@@ -1,7 +1,34 @@
 .content
+  - if resource.user == current_user
+    .buttons
+      = link_to t('rounds.new'), new_tournament_round_path(resource), :class => :button
+
   %h2= resource.name
 
+  %table.large
+    %thead
+      %tr
+        %th(colspan=2)= t('common.info')
+    %tbody
+      %tr
+        %td.label= Tournament.human_attribute_name :id
+        %td= resource.id
+      %tr
+        %td.label= Tournament.human_attribute_name :created_at
+        %td= l( resource.created_at, :format => :long )
+      %tr
+        %td.label= Tournament.human_attribute_name :user
+        %td= link_to resource.user.username, resource.user
+      %tr
+        %td.label= Participation.model_name.human.pluralize
+        %td= resource.participations.map{ |p| link_to(p.artificial_intelligence.name, p.artificial_intelligence) }.to_sentence.html_safe
+      %tr
+        %td.label= Tournament.human_attribute_name :leader
+        %td
+          - leader = resource.participations.by_rating.first
+          = link_to leader.artificial_intelligence.name, leader.artificial_intelligence
 
+.content
   - if resource.participations.by_rating.includes(:artificial_intelligence).any?{|p| p.rating}
     %h2= t("tournaments.rankings")
 
@@ -10,31 +37,22 @@
     :javascript
       new TS.TournamentRankingChart(#{resource.id})
 
-  - if resource.user == current_user
-    .buttons
-      = link_to t('rounds.new'), new_tournament_round_path(resource), :class => :button
-  %h2= Round.model_name.human.pluralize
+.content
+  %h2 ELO
 
-  - if resource.rounds.any?
-    - resource.rounds.each.with_index do |round, index|
-      %h3= "#{Round.model_name.human} ##{index + 1}"
-
-      = render :partial => '/games/list', :locals => {:games => round.games}
-  -else
-    %p= t("tournaments.rounds_emtpy")
-
-  %h2= ArtificialIntelligence.model_name.human.pluralize
-
-  %table.large
-    %thead
-      %tr
-        %th= ArtificialIntelligence.human_attribute_name :name
-        %th= Participation.human_attribute_name :rating
-        %th.icon
-
+  %table.breakdown
     %tbody
-      - resource.participations.by_rating.includes(:artificial_intelligence).each do |p|
+      - collection = resource.participations.by_rating.includes(:artificial_intelligence)
+      - size = [collection.size, 6].min
+      - collection.in_groups_of(size).each do |group|
         %tr
-          %td= link_to p.artificial_intelligence.name, p.artificial_intelligence
-          %td= p.rating ? p.rating.round : "--"
-          %td.icon= link_to_show p.artificial_intelligence
+          - group.each do |p|
+            %td{:style => "width: #{100 / size}%"}
+              %h4= link_to p.artificial_intelligence.name, p.artificial_intelligence
+              %p= p.rating ? p.rating.round : "--"
+
+- resource.rounds.each.with_index do |round, index|
+  .content
+    %h2= "#{Round.model_name.human} ##{index + 1}"
+
+    = render :partial => '/games/list', :locals => {:games => round.games}

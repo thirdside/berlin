@@ -1,13 +1,13 @@
-%table.large
+%table.large.games
   %thead
     %tr
       %th= Game.human_attribute_name :id
-      %th= Game.human_attribute_name :time_start
-      %th= Map.model_name.human
-      %th= Game.human_attribute_name :players
-      %th= Game.human_attribute_name :number_of_turns
-      %th= Game.human_attribute_name :winner
-      %th= Like.model_name.human.pluralize
+      %th.time= Game.human_attribute_name :time_start
+      %th.map= Map.model_name.human
+      %th.players= Game.human_attribute_name :players
+      %th.number_of_turns= Game.human_attribute_name :number_of_turns
+      %th.winner= Game.human_attribute_name :winner
+      %th.likes= Like.model_name.human.pluralize
       %th.icon
 
   %tbody

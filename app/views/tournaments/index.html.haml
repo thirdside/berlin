@@ -8,7 +8,7 @@
   %table.large
     %thead
       %tr
-        %th= Tournament.human_attribute_name :id
+        %th= '#'
         %th= Tournament.human_attribute_name :name
         %th= Tournament.human_attribute_name :participations_count
         %th.icon
@@ -17,7 +17,7 @@
       - collection.each do |t|
         %tr
           %td= t.id
-          %td= t.name
+          %td= link_to t.name, t
           %td= t.participations.count
           %td.icon= link_to_show t
 
