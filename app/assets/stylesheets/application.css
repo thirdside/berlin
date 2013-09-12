@@ -347,6 +347,10 @@ table.breakdown {
     border-spacing: 10px 0px;
 }
 
+table.breakdown.rating, table.breakdown.rating a {
+    font-size: 2em;
+}
+
 table.breakdown td {
     padding: 8px;
     background: #343434;

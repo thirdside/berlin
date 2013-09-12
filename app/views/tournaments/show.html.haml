@@ -40,11 +40,11 @@
 .content
   %h2 ELO
 
-  %table.breakdown
+  %table.breakdown.rating
     %tbody
       - collection = resource.participations.by_rating.includes(:artificial_intelligence)
       - size = [collection.size, 6].min
-      - collection.in_groups_of(size).each do |group|
+      - collection.each_slice(size).each do |group|
         %tr
           - group.each do |p|
             %td{:style => "width: #{100 / size}%"}
