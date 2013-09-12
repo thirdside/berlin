@@ -14,7 +14,7 @@ class Round < ActiveRecord::Base
   protected
 
   def queue_games
-    tournament.artificial_intelligences.combination(players_per_game).each do |ais|
+    tournament.artificial_intelligences.combination(players_per_game).to_a.shuffle.each do |ais|
       Game.queue_game(tournament.user,
         :artificial_intelligence_ids => ais.map(&:id),
         :map_id => map.id,
