@@ -39,22 +39,4 @@
 .content#games
   %h2= t('titles.games_played')
 
-  %table.large
-    %thead
-      %tr
-        %th= Game.human_attribute_name :id
-        %th= Game.human_attribute_name :time_start
-        %th= Game.human_attribute_name :number_of_players
-        %th= Game.human_attribute_name :winner
-        %th.icon
-
-    %tbody
-      - @games.each do |game|
-        %tr
-          %td= game.id
-          %td= game.time_start
-          %td= game.number_of_players
-          %td= raw game.winners.map{ |ai| link_to( ai.name, ai ) }.to_sentence
-          %td.icon= link_to_show game
-
-  = paginate @games, :params => {:anchor => 'games'}
+  = render :partial => '/games/list', :locals => {:games => @games}

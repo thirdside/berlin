@@ -94,6 +94,7 @@ en:
         artificial_intelligence_games_count: Artificial intelligences
         winner: Winner
         number_of_soldiers: Soldiers
+        number_of_turns: Turns
         points: Points
         is_practice: Practice
       artificial_intelligence:

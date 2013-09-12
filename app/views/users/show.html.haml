@@ -1,4 +1,7 @@
 .content
+  .buttons
+    = link_to Game.model_name.human.pluralize, games_user_path(@user), :class => :button
+
   %h2= @user.username
 
   = render :partial => '/users/info', :locals => {:user => @user}

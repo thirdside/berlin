@@ -6,8 +6,9 @@ class MapsController < ApplicationController
   include Pageable
 
   def show
-    @map = Map.find(params[:id], :include => {:games => :artificial_intelligence_games})
-    @games = @map.games.officials.page(params[:page])
+    @map = Map.where(:id => params[:id]).first
+
+    @games = @map.games.officials.recent.includes(:winners, :map)
 
     respond_to do |format|
       format.html

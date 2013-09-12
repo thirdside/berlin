@@ -20,6 +20,7 @@ class Game < ActiveRecord::Base
   scope :pending,   ->{ where(:status => [:pending, :errored]) }
   scope :finished,  ->{ where(:status => :finished) }
   scope :aborted,   ->{ where(:status => :aborted) }
+  scope :recent,    ->{ ordered.limit(30) }
 
   after_create :send_notification
 
