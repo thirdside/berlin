@@ -18,6 +18,7 @@ gem "delayed_job"
 gem 'delayed_job_active_record'
 gem 'uuidtools', '2.1.3'
 gem "typhoeus"
+gem 'daemons'
 
 group :development do
   gem 'capistrano'
