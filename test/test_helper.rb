@@ -17,3 +17,8 @@ class ActiveSupport::TestCase
     request.env["HTTP_AUTHORIZATION"] = ActionController::HttpAuthentication::Basic.encode_credentials("api@berlin.com", "toto")
   end
 end
+
+
+class ActionController::TestCase
+  include Devise::TestHelpers
+end

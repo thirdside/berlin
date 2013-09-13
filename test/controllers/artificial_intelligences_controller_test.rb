@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ArtificialIntelligencesControllerTest < ActionController::TestCase
-  include Devise::TestHelpers
 
   test ":create allows creating AIs using json" do
     basic_auth

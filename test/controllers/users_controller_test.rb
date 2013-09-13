@@ -1,8 +1,6 @@
 require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
-  include Devise::TestHelpers
-
   test ":create creates a user using json" do
     basic_auth
     post :create, :user => {:username => "Toto", :email => "email@toto.com", :password => "totototo"}, :format => :json
