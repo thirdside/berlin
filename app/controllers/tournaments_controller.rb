@@ -15,8 +15,9 @@ class TournamentsController < ApplicationController
       .select("artificial_intelligence_games.*, artificial_intelligences.name as name")
       .joins(:game, :artificial_intelligence)
       .where(:games => {:status => :finished})
-      .order(:created_at => :asc)
-    respond_with(ai_games)
+      .order(:id => :asc)
+
+    respond_with(:artificial_intelligence_games => ai_games)
   end
 
   def create

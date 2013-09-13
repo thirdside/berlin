@@ -8,7 +8,7 @@ class TS.TournamentRankingChart
   onRankings: (request) ->
     @series = {}
     @dataLabels = {}
-    request.responseJSON.forEach (ai_game) =>
+    request.responseJSON['artificial_intelligence_games'].forEach (ai_game) =>
       data = (@series[ai_game.name] ||= [1500])
       data.push Math.round(ai_game.rating || 1500)
       @dataLabels[ai_game.name] ||= ai_game.name

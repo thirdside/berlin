@@ -25,12 +25,12 @@ class TournamentsControllerTest < ActionController::TestCase
   test ":artificial_intelligence_games returns only those for finished games" do
     tournament = tournaments(:started)
     get :artificial_intelligence_games, :id => tournament.id, :format => :json
-
-    assert_equal [
+    expected = [
       artificial_intelligence_games(:finished_haiku).id,
       artificial_intelligence_games(:finished_berlino).id,
       artificial_intelligence_games(:finished_nitrous).id,
-    ].sort, ActiveSupport::JSON.decode(response.body).map{|a| a['id']}.sort
+    ].sort
+    assert_equal expected, ActiveSupport::JSON.decode(response.body)['artificial_intelligence_games'].map{|a| a['id']}.sort
   end
 
   test ":artificial_intelligence_games returns the names of the ais" do
@@ -41,6 +41,6 @@ class TournamentsControllerTest < ActionController::TestCase
       'Haiku',
       'Berlino',
       'Nitrous',
-    ].sort, ActiveSupport::JSON.decode(response.body).map{|a| a['name']}.sort
+    ].sort, ActiveSupport::JSON.decode(response.body)['artificial_intelligence_games'].map{|a| a['name']}.sort
   end
 end
