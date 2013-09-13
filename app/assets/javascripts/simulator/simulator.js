@@ -32,7 +32,7 @@ TS.AIMap = Class.create(TS, {
 	 */
 	onConfigLoaded: function (request)
 	{
-		this.config       = request.responseText.evalJSON();
+		this.config       = request.responseJSON.map.representation;
 		this.imagesToLoad = this.config.images.size();
 
 		if (!this.config) {alert("Map Error"); return};

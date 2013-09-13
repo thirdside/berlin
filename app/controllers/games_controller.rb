@@ -1,5 +1,9 @@
 class GamesController < ApplicationController
   inherit_resources
+  respond_to :html
+  respond_to :json, :only => [:create, :show, :index]
+
+  skip_before_filter :ensure_api_authenticated, :only => [:show]
 
   actions :index, :show, :new, :create
 
@@ -17,11 +21,7 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
-
-    respond_to do |format|
-      format.html
-      format.json { render :json => @game.json }
-    end
+    respond_with(@game)
   end
 
   def random
