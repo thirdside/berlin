@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :locale
   before_filter :configure_permitted_parameters, if: :devise_controller?
+  before_filter :ensure_api_authenticated
 
   def after_sign_in_path_for resource_or_scope
     if resource_or_scope.is_a?( User ) && resource_or_scope.locale && resource_or_scope.locale !=  I18n.locale
@@ -31,6 +32,11 @@ class ApplicationController < ActionController::Base
     end
 
     I18n.locale = session[:locale] || I18n.default_locale
+  end
+
+  def ensure_api_authenticated
+    return true unless request.format == Mime::JSON
+    render :nothing => true, :status => :unauthorized unless current_user
   end
 
   def configure_permitted_parameters
