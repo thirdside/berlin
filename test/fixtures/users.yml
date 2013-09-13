@@ -4,20 +4,24 @@ kr155:
   username: kr155
   email: kr155@berlin.com
   game_client: canvas
-  
+
 wako:
   username: wako
   email: wako@berlin.com
   game_client: canvas
-  
+
 jodi:
   username: jodi
   email: jodi@berlin.com
   game_client: canvas
-  
+
 thierry:
   username: thierry
   email: thierry@berlin.com
   game_client: canvas
-  
-  
+
+api:
+  username: api
+  email: api@berlin.com
+  # Password: toto
+  encrypted_password: $2a$10$8CWH4sewuEllZLIfsKD9uODlVd7NgpQZusCz5tSPyIXgNbaTo71TW

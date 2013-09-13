@@ -1,6 +1,7 @@
 class ArtificialIntelligencesController < ApplicationController
   inherit_resources
-
+  respond_to :html
+  respond_to :json, :only => [:create, :update, :show, :index]
   belongs_to :user, :optional => true
 
   before_filter :authenticate_user!, :only => [:new, :create]
