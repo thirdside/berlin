@@ -11,6 +11,10 @@ BerlinWeb::Application.routes.draw do
   end
 
   resources :games do
+    member do
+      get :rematch
+    end
+
     collection do
       get :random
     end

@@ -3,6 +3,8 @@ class Game < ActiveRecord::Base
 
   class NotEnoughArtificialIntelligences < Exception; end
 
+  attr_accessible :map_id, :artificial_intelligence_ids, :is_practice
+
   belongs_to :map, :counter_cache => true
   belongs_to :user
   belongs_to :round

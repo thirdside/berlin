@@ -3,7 +3,7 @@ class GamesController < ApplicationController
 
   actions :index, :show, :new, :create
 
-  before_filter :authenticate_user!, :only => [:new, :create]
+  before_filter :authenticate_user!, :only => [:new, :create, :rematch]
 
   has_scope :order, :default => "games.id DESC"
 
@@ -36,6 +36,14 @@ class GamesController < ApplicationController
     end
 
     new!
+  end
+
+  def rematch
+    @game = Game.where(:id => params[:id]).first
+
+    Game.queue_game(current_user, {:map_id => @game.map_id, :artificial_intelligence_ids => @game.artificial_intelligence_ids, :is_practice => @game.is_practice})
+
+    redirect_to games_path, :notice => I18n.t('games.success')
   end
 
   def create

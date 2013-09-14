@@ -216,7 +216,7 @@ div.content .buttons {
   height: 25px;
 }
 
-div.content .buttons a {
+div.content .buttons a, div.content .buttons form {
   float: right;
   margin-left: 8px;
 }
