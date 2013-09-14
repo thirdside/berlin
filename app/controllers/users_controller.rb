@@ -8,15 +8,15 @@ class UsersController < ApplicationController
   before_filter :current_user_only, :only => [:edit, :destroy, :update]
 
   def artificial_intelligences
-    @user = User.find(params[:id])
+    @user = User.where(:id => params[:id]).first
     
-    @artificial_intelligences = @user.artificial_intelligences
+    @artificial_intelligences = @user.artificial_intelligences.ordered
   end
   
   def games
-    @user = User.find(params[:id])
+    @user = User.where(:id => params[:id]).first
     
-    @games = @user.games
+    @games = @user.games.ordered
   end
 
   private

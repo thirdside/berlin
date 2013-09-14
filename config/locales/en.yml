@@ -54,6 +54,9 @@ en:
     json_request: Requests
     json_response: Response
 
+  notifications:
+    game: "<a href='/games/%{id}'>A new game has been played!</a>"
+
   confirmation:
     deletion: Do you really want to delete that resource?
 

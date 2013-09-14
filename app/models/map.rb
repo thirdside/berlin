@@ -1,4 +1,7 @@
 class Map < ActiveRecord::Base
+  
+  attr_accessible :name, :version, :json
+
   has_many :games, ->{ order("games.time_start DESC") }, :dependent => :destroy
   has_many :artificial_intelligence_games, :through => :games
 

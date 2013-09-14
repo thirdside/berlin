@@ -5,6 +5,8 @@ class Notification < ActiveRecord::Base
   scope :unread,  ->{ where("read_at IS NULL") }
   scope :ordered, ->{ order("created_at DESC") }
 
+  attr_accessible :user_id, :notifiable, :read_at
+
   def self.push id, n
     self.create :user_id => id, :notifiable => n
   end

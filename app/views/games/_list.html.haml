@@ -1,7 +1,7 @@
 %table.large.games
   %thead
     %tr
-      %th= Game.human_attribute_name :id
+      %th.id= Game.human_attribute_name :id
       %th.time= Game.human_attribute_name :time_start
       %th.map= Map.model_name.human
       %th.players= Game.human_attribute_name :players
@@ -12,7 +12,7 @@
 
   %tbody
     - games.includes(:artificial_intelligences).ordered.each do |game|
-      %tr
+      %tr{:class => game.artificial_intelligences.map{ |ai| ai.user_id }.include?(current_user.try(:id)) ? "important" : nil }
         %td= game.id
         %td= l( game.time_start, :format => :long )
         %td= link_to game.map.name, game.map
