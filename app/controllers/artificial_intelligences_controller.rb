@@ -5,6 +5,7 @@ class ArtificialIntelligencesController < ApplicationController
   belongs_to :user, :optional => true
 
   before_filter :authenticate_user!, :only => [:new, :create]
+  before_filter :ensure_can_edit, :only => [:edit, :update, :destroy]
 
   include Pageable
 
@@ -15,39 +16,18 @@ class ArtificialIntelligencesController < ApplicationController
   end
 
   def create
-    params[:artificial_intelligence][:user_id] = current_user.id
+    if (user_id = params[:artificial_intelligence][:user_id])
+      owner = User.find_by_id!(user_id)
+      unless owner == current_user || owner.organisation.try(:user) == current_user
+        return cannot_edit_resource
+      end
+    else
+      owner = current_user
+    end
+
+    params[:artificial_intelligence][:user_id] = owner.id
 
     create!
-  end
-
-  def destroy
-    @artificial_intelligence = ArtificialIntelligence.find(params[:id])
-
-    if @artificial_intelligence.belongs_to? current_user
-      destroy!
-    else
-      redirect_to :action => :index
-    end
-  end
-
-  def edit
-    @artificial_intelligence = ArtificialIntelligence.find(params[:id])
-
-    if @artificial_intelligence.belongs_to? current_user
-      edit!
-    else
-      redirect_to :action => :index
-    end
-  end
-
-  def update
-    @artificial_intelligence = ArtificialIntelligence.find(params[:id])
-
-    if @artificial_intelligence.belongs_to? current_user
-      update!
-    else
-      render :edit
-    end
   end
 
   def ping
@@ -66,5 +46,4 @@ class ArtificialIntelligencesController < ApplicationController
       ).body
     end
   end
-
 end

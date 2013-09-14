@@ -1,10 +1,12 @@
 class TournamentsController < ApplicationController
   inherit_resources
+  belongs_to :organisation, :optional => true
+
   respond_to :html, :except => [:artificial_intelligence_games]
   respond_to :json
 
   before_filter :ensure_logged_in, :only => [:edit, :update, :create, :new]
-  before_filter :ensure_ownership, :ensure_not_started, :only => [:edit, :update]
+  before_filter :ensure_can_edit, :ensure_not_started, :only => [:edit, :update]
 
   def show
     @tournament = Tournament.includes(:rounds => {:games => [:winners, :map]}).find(params[:id])
@@ -26,11 +28,6 @@ class TournamentsController < ApplicationController
   end
 
   protected
-  def ensure_ownership
-    unless current_user == resource.user
-      redirect_to resource, :alert => t("tournaments.cannot_edit_flash")
-    end
-  end
 
   def ensure_not_started
     if resource.rounds.any?

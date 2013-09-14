@@ -9,6 +9,8 @@ wako:
   username: wako
   email: wako@berlin.com
   game_client: canvas
+  # Password: toto
+  encrypted_password: $2a$10$8CWH4sewuEllZLIfsKD9uODlVd7NgpQZusCz5tSPyIXgNbaTo71TW
 
 jodi:
   username: jodi
@@ -20,8 +22,7 @@ thierry:
   email: thierry@berlin.com
   game_client: canvas
 
-api:
-  username: api
-  email: api@berlin.com
-  # Password: toto
-  encrypted_password: $2a$10$8CWH4sewuEllZLIfsKD9uODlVd7NgpQZusCz5tSPyIXgNbaTo71TW
+organisation_user:
+  username: org_user
+  email: organisation@berlin.com
+  organisation: thirdside

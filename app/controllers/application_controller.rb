@@ -43,4 +43,17 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:username, :email, :password, :password_confirmation) }
     devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:login, :password, :remember_me) }
   end
+
+  def ensure_can_edit
+    unless current_user == resource || resource.organisation.try(:user) == current_user
+      cannot_edit_resource
+    end
+  end
+
+  def cannot_edit_resource
+    respond_to do |format|
+      format.json { render :text => "You don't have access to #{action_name} this #{resource.class.model_name.human}", :status => :unauthorized }
+      format.html { redirect_to(resource_path) }
+    end
+  end
 end

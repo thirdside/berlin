@@ -3,6 +3,21 @@ BerlinWeb::Application.routes.draw do
 
   resources :maps, :likes, :notifications
 
+  resources :organisations do
+    resources :users
+    resources :tournaments
+  end
+
+  resources :tournaments do
+    member do
+      get :artificial_intelligence_games
+    end
+
+    resources :rounds do
+      # resources :games
+    end
+  end
+
   resources :users do
     member do
       get :artificial_intelligences
@@ -20,16 +35,6 @@ BerlinWeb::Application.routes.draw do
     member do
       get :ping
       post :ping
-    end
-  end
-
-  resources :tournaments do
-    member do
-      get :artificial_intelligence_games
-    end
-
-    resources :rounds do
-      # resources :games
     end
   end
 
