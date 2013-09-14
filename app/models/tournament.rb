@@ -1,5 +1,6 @@
 class Tournament < ActiveRecord::Base
   belongs_to :user
+  belongs_to :organisation
 
   has_many :rounds, :dependent => :destroy
   has_many :games, :through => :rounds
