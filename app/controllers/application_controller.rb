@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :locale
   before_filter :configure_permitted_parameters, if: :devise_controller?
+  before_filter :ensure_api_authenticated
 
   def after_sign_in_path_for resource_or_scope
     if resource_or_scope.is_a?( User ) && resource_or_scope.locale && resource_or_scope.locale !=  I18n.locale
@@ -33,8 +34,26 @@ class ApplicationController < ActionController::Base
     I18n.locale = session[:locale] || I18n.default_locale
   end
 
+  def ensure_api_authenticated
+    return true unless request.format == Mime::JSON
+    render :nothing => true, :status => :unauthorized unless current_user
+  end
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:username, :email, :password, :password_confirmation) }
     devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:login, :password, :remember_me) }
+  end
+
+  def ensure_can_edit
+    unless current_user == resource || resource.organisation.try(:user) == current_user
+      cannot_edit_resource
+    end
+  end
+
+  def cannot_edit_resource
+    respond_to do |format|
+      format.json { render :text => "You don't have access to #{action_name} this #{resource.class.model_name.human}", :status => :unauthorized }
+      format.html { redirect_to(resource_path) }
+    end
   end
 end

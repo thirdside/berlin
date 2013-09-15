@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class GamesControllerTest < ActionController::TestCase
-  include Devise::TestHelpers
 
   setup do
     sign_in :user, users(:kr155)

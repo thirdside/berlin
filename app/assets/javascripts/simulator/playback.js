@@ -103,7 +103,7 @@ TS.AIPlayback = Class.create(TS.Playback, {
 	onGameDescriptionLoaded: function (request)
 	{
 		// parse the answer
-		this.gameDescription = request.responseText.evalJSON();
+		this.gameDescription = request.responseJSON.game.replay;
 
 		this.ready.self = true;
 

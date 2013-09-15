@@ -1,5 +1,6 @@
 class Tournament < ActiveRecord::Base
   belongs_to :user
+  belongs_to :organisation
 
   has_many :rounds, :dependent => :destroy
   has_many :games, :through => :rounds
@@ -8,7 +9,7 @@ class Tournament < ActiveRecord::Base
   has_many :participations, :dependent => :destroy
   has_many :artificial_intelligences, :through => :participations
 
-  attr_accessible :name, :artificial_intelligence_ids
+  attr_accessible :name, :artificial_intelligence_ids, :organisation_id
 
   validates_presence_of :name
 end

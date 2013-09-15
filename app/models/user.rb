@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 
   include Player
+  belongs_to :organisation
 
   has_many :artificial_intelligences, :dependent => :destroy
   has_many :artificial_intelligence_games, :through => :artificial_intelligences
