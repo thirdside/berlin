@@ -23,6 +23,16 @@ class ArtificialIntelligencesControllerTest < ActionController::TestCase
     assert_equal user.id, ai['user_id']
   end
 
+  test ":update can update an organisation member's AI through JSON" do
+    basic_auth
+    user = users(:organisation_user)
+    params = ai_params.merge(:user_id => user.id, :name => "New AI name")
+    patch :update, :id => artificial_intelligences(:organisation_ai), :artificial_intelligence => params, :format => :json
+
+    ai = artificial_intelligences(:organisation_ai).reload
+    assert_equal 'New AI name', ai.name
+  end
+
   protected
   def ai_params
     {:name => 'Pro AI', :language => "Ruby", :url => "http://github.com", :is_active => true}

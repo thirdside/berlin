@@ -20,11 +20,17 @@ berlino:
   language: Ruby
   is_active: true
   url: http://localhost:4567/
-  
+
 leaf:
   user: thierry
   name: Leaf
   language: Ruby
   is_active: true
   url: http://localhost:4567/
-  
+
+organisation_ai:
+  user: organisation_user
+  name: "Org AI"
+  language: Ruby
+  is_active: true
+  url: http://localhost:4566/

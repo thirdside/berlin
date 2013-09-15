@@ -25,6 +25,14 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal thirdside.id, user['organisation_id']
   end
 
+  test ":update with an organisation using json" do
+    basic_auth
+    user = users(:organisation_user)
+    patch :update, :id => user.id, :user => {:username => "Petate"}, :format => :json
+    assert_response :no_content
+    assert "Petate", user.reload.username
+  end
+
   protected
   def user_params
     {:username => "Toto", :email => "email@toto.com", :password => "totototo"}
