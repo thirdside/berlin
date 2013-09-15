@@ -13,4 +13,11 @@ class GameTest < ActiveSupport::TestCase
       assert_equal 2, game.artificial_intelligences.count
     end
   end
+
+  test "#queue_game throws ArtificialIntelligenceCountMismatch if map doesn't support number of AIs" do
+    ids = [:haiku, :nitrous, :berlino, :leaf].map{ |s| artificial_intelligences(s).id }
+    assert_raises Game::ArtificialIntelligenceCountMismatch do
+      Game.queue_game(nil, :artificial_intelligence_ids => ids, :map_id => maps(:two_or_three_players).id)
+    end
+  end
 end
