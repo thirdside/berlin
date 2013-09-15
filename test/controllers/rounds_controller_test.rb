@@ -15,4 +15,18 @@ class RoundsControllerTest < ActionController::TestCase
 
     assert_response :unprocessable_entity
   end
+
+  test ":create using the API" do
+    basic_auth
+    rounds_params = {
+      :map => maps(:two_or_three_players),
+      :players_per_game => 2
+    }
+
+    assert_no_difference 'Round.count' do
+      post :create, :tournament_id => tournaments(:started).id, :round => rounds_params, :format => :json
+    end
+
+    assert_response :created
+  end
 end
