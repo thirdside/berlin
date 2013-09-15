@@ -9,7 +9,7 @@ class Tournament < ActiveRecord::Base
   has_many :participations, :dependent => :destroy
   has_many :artificial_intelligences, :through => :participations
 
-  attr_accessible :name, :artificial_intelligence_ids
+  attr_accessible :name, :artificial_intelligence_ids, :organisation_id
 
   validates_presence_of :name
 end
