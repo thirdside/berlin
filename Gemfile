@@ -8,7 +8,7 @@ gem 'inherited_resources'
 gem 'has_scope'
 gem 'devise', "~>3.1"
 gem 'protected_attributes'
-# gem 'rails_admin'
+gem 'rails_admin'
 gem 'yajl-ruby'
 gem 'haml'
 gem 'has_scope'
