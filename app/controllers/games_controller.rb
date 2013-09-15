@@ -11,6 +11,13 @@ class GamesController < ApplicationController
 
   has_scope :order, :default => "games.id DESC"
 
+  rescue_from Game::ArtificialIntelligenceCountMismatch do |e|
+    respond_to do |format|
+      format.json { render :text => e.message, :status => :unprocessable_entity }
+      format.html { redirect_to :action => :new, :notice => e.message }
+    end
+  end
+
   def index
     @games = if current_user
       Game.finished.for_user( current_user )
