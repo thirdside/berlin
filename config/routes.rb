@@ -3,7 +3,7 @@ BerlinWeb::Application.routes.draw do
 
   resources :maps, :likes, :notifications
 
-  resources :organisations do
+  resources :organisations, :only => [] do
     resources :users
     resources :tournaments
   end
