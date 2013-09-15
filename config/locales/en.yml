@@ -132,7 +132,7 @@ en:
 
   time:
     formats:
-      long: "%d-%m-%Y %H:%m"
+      long: "%d-%m-%Y %H:%M"
 
   views:
     pagination:

@@ -1,7 +1,7 @@
 class Game < ActiveRecord::Base
   include Likable
 
-  class NotEnoughArtificialIntelligences < Exception; end
+  class ArtificialIntelligenceCountMismatch < Exception; end
 
   attr_accessible :map_id, :artificial_intelligence_ids, :is_practice
 
@@ -47,17 +47,24 @@ class Game < ActiveRecord::Base
   end
 
   def self.queue_game(user, params)
+    map = Map.find(params[:map_id])
     ai_ids = params.delete(:artificial_intelligence_ids)
-
-    game = user.games.create(params) do |g|
-      g.map = Map.find(params[:map_id])
-      g.round = Round.where(:id => params[:round_id]).first
-      g.time_start = DateTime.now
-    end
 
     ais = ArtificialIntelligence.where(:id => ai_ids).shuffle
 
-    raise NotEnoughArtificialIntelligences "at least two AIs are required to start a game" unless ais.length >= 2
+    json = JSON(map.json)
+    supported_players = json['setup']
+
+    unless supported_players.keys.include?(ais.length.to_s)
+      raise ArtificialIntelligenceCountMismatch,
+        "This map supports #{supported_players.keys.join(', ')} players, #{ais.count} given"
+    end
+
+    game = user.games.create(params) do |g|
+      g.map = map
+      g.round = Round.where(:id => params[:round_id]).first
+      g.time_start = DateTime.now
+    end
 
     ais.each.with_index do |ai, index|
       game.artificial_intelligence_games.create(
