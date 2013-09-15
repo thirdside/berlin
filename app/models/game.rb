@@ -46,19 +46,23 @@ class Game < ActiveRecord::Base
     artificial_intelligence_games_count
   end
 
+  def self.assert_ai_count(map, number_of_players)
+    json = JSON(map.json)
+    supported_players = json['setup']
+
+    unless supported_players.keys.include?(number_of_players.to_s)
+      raise ArtificialIntelligenceCountMismatch,
+        "This map supports #{supported_players.keys.join(', ')} players, #{number_of_players} given"
+    end
+  end
+
   def self.queue_game(user, params)
     map = Map.find(params[:map_id])
     ai_ids = params.delete(:artificial_intelligence_ids)
 
     ais = ArtificialIntelligence.where(:id => ai_ids).shuffle
 
-    json = JSON(map.json)
-    supported_players = json['setup']
-
-    unless supported_players.keys.include?(ais.length.to_s)
-      raise ArtificialIntelligenceCountMismatch,
-        "This map supports #{supported_players.keys.join(', ')} players, #{ais.count} given"
-    end
+    assert_ai_count(map, ais.count)
 
     game = user.games.create(params) do |g|
       g.map = map

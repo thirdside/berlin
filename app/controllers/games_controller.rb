@@ -1,5 +1,7 @@
 class GamesController < ApplicationController
   inherit_resources
+  extend RescueFromMismatch
+
   respond_to :html
   respond_to :json, :only => [:create, :show, :index]
 
@@ -10,13 +12,6 @@ class GamesController < ApplicationController
   before_filter :authenticate_user!, :only => [:new, :create, :rematch]
 
   has_scope :order, :default => "games.id DESC"
-
-  rescue_from Game::ArtificialIntelligenceCountMismatch do |e|
-    respond_to do |format|
-      format.json { render :text => e.message, :status => :unprocessable_entity }
-      format.html { redirect_to :action => :new, :notice => e.message }
-    end
-  end
 
   def index
     @games = if current_user
