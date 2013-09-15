@@ -47,13 +47,15 @@ class Game < ActiveRecord::Base
   end
 
   def self.queue_game(user, params)
+    ai_ids = params.delete(:artificial_intelligence_ids)
+
     game = user.games.create(params) do |g|
       g.map = Map.find(params[:map_id])
       g.round = Round.where(:id => params[:round_id]).first
       g.time_start = DateTime.now
     end
 
-    ais = ArtificialIntelligence.where(:id => params[:artificial_intelligence_ids]).shuffle
+    ais = ArtificialIntelligence.where(:id => ai_ids).shuffle
 
     raise NotEnoughArtificialIntelligences "at least two AIs are required to start a game" unless ais.length >= 2
 
