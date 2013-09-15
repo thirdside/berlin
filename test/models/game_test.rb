@@ -9,7 +9,8 @@ class GameTest < ActiveSupport::TestCase
 
     Delayed::Job.expects(:enqueue)
     assert_difference 'Game.count' do
-      Game.queue_game(users(:kr155), params)
+      game = Game.queue_game(users(:kr155), params)
+      assert_equal 2, game.artificial_intelligences.count
     end
   end
 end

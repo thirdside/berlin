@@ -48,7 +48,9 @@ class Game < ActiveRecord::Base
 
   def self.queue_game(user, params)
     map = Map.find(params[:map_id])
-    ais = ArtificialIntelligence.where(:id => params[:artificial_intelligence_ids]).shuffle
+    ai_ids = params.delete(:artificial_intelligence_ids)
+
+    ais = ArtificialIntelligence.where(:id => ai_ids).shuffle
 
     json = JSON(map.json)
     supported_players = json['setup']
