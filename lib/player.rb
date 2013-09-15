@@ -1,6 +1,6 @@
 module Player
   def score
-    self.artificial_intelligence_games.for_official_games.pluck(:score).to_stat.average
+    self.artificial_intelligence_games.for_official_games.pluck(:score).compact.to_stat.average
   end
 
   def games_played
