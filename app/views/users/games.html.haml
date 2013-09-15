@@ -1,5 +1,6 @@
 .content
   .buttons
+    = link_to t('common.back'), user_path(@user), :class => :button
     = link_to t('games.new'), new_game_path, :class => :button
 
   %h2
@@ -7,4 +8,5 @@
     = ":"
     = t('titles.official_games')
 
-  = render :partial => '/games/list'
+  = render :partial => '/games/list', :locals => {:games => @games.includes(:winners, :map)}
+

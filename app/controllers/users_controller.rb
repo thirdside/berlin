@@ -15,12 +15,12 @@ class UsersController < ApplicationController
   def artificial_intelligences
     @user = User.find(params[:id])
 
-    @artificial_intelligences = @user.artificial_intelligences
+    @artificial_intelligences = @user.artificial_intelligences.ordered
   end
 
   def games
     @user = User.find(params[:id])
-
-    @games = @user.games
+    
+    @games = @user.games.ordered
   end
 end

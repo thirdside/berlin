@@ -11,7 +11,8 @@ class MapsController < ApplicationController
 
   def show
     @map = Map.includes(:games => :artificial_intelligence_games).find(params[:id])
-    @games = @map.games.officials.page(params[:page])
+
+    @games = @map.games.officials.recent.includes(:winners, :map)
 
     respond_with(@map)
   end

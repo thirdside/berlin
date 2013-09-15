@@ -6,3 +6,5 @@
   %h2= t('titles.all_artificial_intelligences')
 
   = render :partial => '/artificial_intelligences/list', :locals => {:collection => @artificial_intelligences.includes(:user)}
+
+  = paginate @artificial_intelligences

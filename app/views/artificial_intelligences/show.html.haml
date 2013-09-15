@@ -88,46 +88,10 @@
 .content
   %h2= t('titles.official_games')
 
-  %table.large
-    %thead
-      %tr
-        %th= Game.human_attribute_name :id
-        %th= Game.human_attribute_name :time_start
-        %th= Map.model_name.human
-        %th= Game.human_attribute_name :number_of_players
-        %th= ArtificialIntelligenceGame.human_attribute_name :score
-        %th.icon
-
-    %tbody
-      - @artificial_intelligence.artificial_intelligence_games.for_official_games.recent.each do |artificial_intelligence_game|
-        %tr
-          %td= artificial_intelligence_game.game.id
-          %td= artificial_intelligence_game.game.time_start
-          %td= link_to artificial_intelligence_game.game.map.name, artificial_intelligence_game.game.map
-          %td= artificial_intelligence_game.game.number_of_players
-          %td= show_score artificial_intelligence_game.score
-          %td.icon= link_to_show artificial_intelligence_game.game
+  = render :partial => '/games/list', :locals => {:games => @official_games}
 
 - if @artificial_intelligence.belongs_to? current_user
   .content
     %h2= t('titles.practice_games')
 
-    %table.large
-      %thead
-        %tr
-          %th= Game.human_attribute_name :id
-          %th= Game.human_attribute_name :time_start
-          %th= Map.model_name.human
-          %th= Game.human_attribute_name :number_of_players
-          %th= ArtificialIntelligenceGame.human_attribute_name :score
-          %th.icon
-
-      %tbody
-        - @artificial_intelligence.artificial_intelligence_games.for_practice_games.recent.each do |artificial_intelligence_game|
-          %tr
-            %td= artificial_intelligence_game.game.id
-            %td= artificial_intelligence_game.game.time_start
-            %td= link_to artificial_intelligence_game.game.map.name, artificial_intelligence_game.game.map
-            %td= artificial_intelligence_game.game.number_of_players
-            %td= show_score artificial_intelligence_game.score
-            %td.icon= link_to_show artificial_intelligence_game.game
+    = render :partial => '/games/list', :locals => {:games => @practice_games}

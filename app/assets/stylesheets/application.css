@@ -216,7 +216,7 @@ div.content .buttons {
   height: 25px;
 }
 
-div.content .buttons a {
+div.content .buttons a, div.content .buttons form {
   float: right;
   margin-left: 8px;
 }
@@ -344,7 +344,7 @@ table {
 
 table.breakdown {
     margin-top: 20px;
-    border-spacing: 10px 0px;
+    border-spacing: 10px 10px;
 }
 
 table.breakdown.rating, table.breakdown.rating a {
@@ -396,6 +396,10 @@ table.large thead th {
     border-bottom: 1px dashed #D5CAA8;
 }
 
+table.large tbody tr.important td {
+    font-weight: bold;
+}
+
 table.large tbody tr:hover td {
     text-shadow: none;
     background-color: #333333;
@@ -430,7 +434,7 @@ table.large th.icon a, table td.icon a {
     position: relative;
 }
 
-table.games th.time {width: 110px;}
+table.games th.time {width: 120px;}
 table.games th.map {width: 120px;}
 table.games th.players {width: 250px;}
 table.games th.number_of_turns {width: 125px;}

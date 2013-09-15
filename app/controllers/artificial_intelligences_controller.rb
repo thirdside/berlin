@@ -13,6 +13,9 @@ class ArtificialIntelligencesController < ApplicationController
 
   def show
     @artificial_intelligence = ArtificialIntelligence.find(params[:id])
+
+    @official_games = @artificial_intelligence.games.officials.recent.includes(:map, :winners)
+    @practice_games = @artificial_intelligence.games.practices.recent.includes(:map, :winners)
   end
 
   def create

@@ -9,7 +9,7 @@ class TournamentsController < ApplicationController
   before_filter :ensure_can_edit, :ensure_not_started, :only => [:edit, :update]
 
   def show
-    @tournament = Tournament.includes(:rounds => {:games => [:winners, :map]}).find(params[:id])
+    @tournament = Tournament.includes(:rounds => {:games => [:winners, :map]}, :participations => [:artificial_intelligence]).find(params[:id])
   end
 
   def artificial_intelligence_games

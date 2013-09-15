@@ -9,7 +9,7 @@
         %th
     %tbody
       - @notifications.ordered.each do |notification|
-        %tr{:class => notification.read_at.nil? ? 'new' : nil}
+        %tr{:class => notification.read_at.nil? ? 'important' : nil}
           %td
             = raw t("notifications.#{notification.notifiable_type.downcase}", :id => notification.notifiable_id)
           %td.date

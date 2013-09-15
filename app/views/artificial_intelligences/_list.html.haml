@@ -16,7 +16,7 @@
 
     %tbody
       - collection.each do |resource|
-        %tr
+        %tr{:class => resource.user == current_user ? 'important' : nil}
           %td.icon= image_tag( resource.activity_icon )
           %td= link_to resource.name, resource
           %td= link_to resource.user.username, resource.user

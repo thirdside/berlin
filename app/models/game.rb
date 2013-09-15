@@ -3,6 +3,8 @@ class Game < ActiveRecord::Base
 
   class NotEnoughArtificialIntelligences < Exception; end
 
+  attr_accessible :map_id, :artificial_intelligence_ids, :is_practice
+
   belongs_to :map, :counter_cache => true
   belongs_to :user
   belongs_to :round
@@ -20,6 +22,7 @@ class Game < ActiveRecord::Base
   scope :pending,   ->{ where(:status => [:pending, :errored]) }
   scope :finished,  ->{ where(:status => :finished) }
   scope :aborted,   ->{ where(:status => :aborted) }
+  scope :recent,    ->{ ordered.limit(30) }
 
   after_create :send_notification
 
