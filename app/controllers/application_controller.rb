@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_can_edit
-    unless current_user == resource || resource.organisation.try(:user) == current_user
+    unless current_user == resource || resource.user == current_user || resource.organisation.try(:user) == current_user
       cannot_edit_resource
     end
   end
