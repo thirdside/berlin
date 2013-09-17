@@ -21,6 +21,7 @@ BerlinWeb::Application.routes.draw do
   end
 
   resources :users do
+    resources :artificial_intelligences
     member do
       get :artificial_intelligences
       get :games

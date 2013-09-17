@@ -16,7 +16,7 @@ class ArtificialIntelligencesControllerTest < ActionController::TestCase
     basic_auth
 
     user = users(:organisation_user)
-    post :create, :artificial_intelligence => ai_params.merge(:user_id => user.id), :format => :json
+    post :create, :artificial_intelligence => ai_params, :user_id => user.id, :format => :json
     assert_response :created
 
     ai = ActiveSupport::JSON.decode(response.body)['artificial_intelligence']
@@ -26,8 +26,8 @@ class ArtificialIntelligencesControllerTest < ActionController::TestCase
   test ":update can update an organisation member's AI through JSON" do
     basic_auth
     user = users(:organisation_user)
-    params = ai_params.merge(:user_id => user.id, :name => "New AI name")
-    patch :update, :id => artificial_intelligences(:organisation_ai), :artificial_intelligence => params, :format => :json
+    params = ai_params.merge(:name => "New AI name")
+    patch :update, :id => artificial_intelligences(:organisation_ai), :user_id => user.id, :artificial_intelligence => params, :format => :json
 
     ai = artificial_intelligences(:organisation_ai).reload
     assert_equal 'New AI name', ai.name

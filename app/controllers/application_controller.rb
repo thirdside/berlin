@@ -45,15 +45,20 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_can_edit
-    unless current_user == resource || resource.user == current_user || resource.organisation.try(:user) == current_user
+    can_edit = current_user == resource ||
+      (resource.respond_to?(:user) && resource.user == current_user) ||
+      resource.organisation.try(:user) == current_user
+
+    unless can_edit
       cannot_edit_resource
     end
   end
 
-  def cannot_edit_resource
+  def cannot_edit_resource(r)
+    r ||= resource
     respond_to do |format|
-      format.json { render :text => "You don't have access to #{action_name} this #{resource.class.model_name.human}", :status => :unauthorized }
-      format.html { redirect_to(resource_path) }
+      format.json { render :text => "You don't have access to #{action_name} this #{r.class.model_name.human}", :status => :unauthorized }
+      format.html { redirect_to(r) }
     end
   end
 end

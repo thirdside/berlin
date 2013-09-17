@@ -19,7 +19,7 @@ class ArtificialIntelligencesController < ApplicationController
   end
 
   def create
-    if (user_id = params[:artificial_intelligence][:user_id])
+    if (user_id = params[:user_id])
       owner = User.find_by_id!(user_id)
       unless owner == current_user || owner.organisation.try(:user) == current_user
         return cannot_edit_resource

@@ -48,11 +48,11 @@ class Game < ActiveRecord::Base
 
   def self.assert_ai_count(map, number_of_players)
     json = JSON(map.json)
-    supported_players = json['setup']
+    supported_players = json['infos']['number_of_players']
 
-    unless supported_players.keys.include?(number_of_players.to_s)
+    unless supported_players.include?(number_of_players)
       raise ArtificialIntelligenceCountMismatch,
-        "This map supports #{supported_players.keys.join(', ')} players, #{number_of_players} given"
+        "This map supports #{supported_players.join(', ')} players, #{number_of_players} given"
     end
   end
 
