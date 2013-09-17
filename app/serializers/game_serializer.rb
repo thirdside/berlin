@@ -3,6 +3,7 @@ class GameSerializer < ActiveModel::Serializer
               :updated_at, :round_id, :status, :last_error, :is_practice, :replay
 
   has_one :map
+  has_many :artificial_intelligences
 
   def replay
     ActiveSupport::JSON.decode object.json
