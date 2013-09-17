@@ -15,7 +15,7 @@ BerlinWeb::Application.routes.draw do
       get :artificial_intelligence_games
     end
 
-    resources :rounds do
+    resources :rounds, :only => [:index, :new, :create, :show] do
       # resources :games
     end
   end
