@@ -21,8 +21,6 @@ class TournamentsControllerTest < ActionController::TestCase
   end
 
   test ":artificial_intelligence_games returns only those for finished games" do
-    sign_in :user, users(:kr155)
-
     tournament = tournaments(:started)
     get :artificial_intelligence_games, :id => tournament.id, :format => :json
     expected = [
@@ -34,8 +32,6 @@ class TournamentsControllerTest < ActionController::TestCase
   end
 
   test ":artificial_intelligence_games returns the names of the ais" do
-    sign_in :user, users(:kr155)
-
     tournament = tournaments(:started)
     get :artificial_intelligence_games, :id => tournament.id, :format => :json
 

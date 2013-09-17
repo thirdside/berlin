@@ -6,6 +6,9 @@ class TournamentsController < ApplicationController
   respond_to :json
 
   before_filter :ensure_logged_in, :only => [:edit, :update, :create, :new]
+
+  skip_before_filter :ensure_api_authenticated, :only => [:artificial_intelligence_games]
+
   before_filter :ensure_can_edit, :ensure_not_started, :only => [:edit, :update]
 
   def show
