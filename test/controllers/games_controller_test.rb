@@ -26,6 +26,14 @@ class GamesControllerTest < ActionController::TestCase
     assert_response :unprocessable_entity
   end
 
+  test ":show over json returns the map_id and the map" do
+    get :show, :id => games(:finished).id, :format => :json
+    game = ActiveSupport::JSON.decode(response.body)['game']
+
+    assert_equal ['id', 'number_of_turns', 'time_start', 'time_end', 'created_at', 'map_id', 'map',
+              'updated_at', 'round_id', 'status', 'last_error', 'is_practice', 'replay'].sort, game.keys.sort
+  end
+
   protected
 
   def game_params
