@@ -20,7 +20,6 @@
 //= require simulator/drawable
 //= require simulator/animated
 //= require simulator/node
-//= require simulator/canvas
 //= require simulator/svg
 //= require simulator/player
 //= require simulator/playback_description
