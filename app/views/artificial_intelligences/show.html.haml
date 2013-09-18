@@ -60,7 +60,7 @@
 
         // Data
         {
-          ai1: [#{@artificial_intelligence.artificial_intelligence_games.for_official_games.recent.map{|x|(x.score * 100).to_i}.join(',')}]
+          ai1: [#{@artificial_intelligence.artificial_intelligence_games.for_official_games.recent.map{|x|((x.score || 0) * 100).to_i}.join(',')}]
         },
 
         // Options
