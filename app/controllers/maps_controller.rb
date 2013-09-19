@@ -14,6 +14,9 @@ class MapsController < ApplicationController
 
     @games = @map.games.officials.recent.includes(:winners, :map)
 
-    respond_with(@map)
+    respond_to do |format|
+      format.html { render :show }
+      format.json { render :json => @map, :callback => params[:callback] }
+    end
   end
 end
