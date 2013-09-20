@@ -11,7 +11,9 @@ DIR = File.expand_path( File.dirname( __FILE__ ) )
 Map.create(:name => "DefaultMap1", :version => 1, :json => File.open( DIR + '/../public/maps/1.map' ).readlines.join)
 Map.create(:name => "DefaultMap2", :version => 1, :json => File.open( DIR + '/../public/maps/2.map' ).readlines.join)
 
-User.create(:username => "admin", :locale => "fr", :email => "admin@berlin.net", :password => "123456", :password_confirmation => "123456")
+user = User.create(:username => "admin", :locale => "fr", :email => "admin@berlin.net", :password => "12345678", :password_confirmation => "12345678")
+user.is_admin = true
+user.save
 
 ArtificialIntelligence.create(:user_id => 1, :name => "AI1", :language => 'Java', :url => "http://localhost:4567/")
 ArtificialIntelligence.create(:user_id => 1, :name => "AI2", :language => 'PHP', :url => "http://localhost:4568/")
