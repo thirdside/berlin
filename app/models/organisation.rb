@@ -3,5 +3,7 @@ class Organisation < ActiveRecord::Base
   has_many :users
   has_many :tournaments
 
-  attr_accessible :name
+  attr_accessible :name, :user
+
+  validates_presence_of :name, :user
 end
