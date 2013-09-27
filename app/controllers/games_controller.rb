@@ -24,10 +24,7 @@ class GamesController < ApplicationController
   def show
     @game = Game.where(:id => params[:id]).includes(:winners).first
 
-    respond_to do |format|
-      format.html { render :show }
-      format.json { render :json => @game, :callback => params[:callback] }
-    end
+    respond_with(@game, :callback => params[:callback])
   end
 
   def random
