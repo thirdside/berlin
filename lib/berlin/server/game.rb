@@ -215,7 +215,7 @@ module Berlin
             :followlocation => true,
             :headers        => {:Accept => "application/json"},
             :timeout        => 0,
-            :params         => {
+            :body           => {
               :action => 'game_over',
               :infos => self.infos( player.player_id ).to_json,
               :map => map.to_hash.to_json,
@@ -294,7 +294,7 @@ module Berlin
             :followlocation => true,
             :headers        => {:Accept => "application/json"},
             :timeout        => map.time_limit_per_turn,
-            :params         => {
+            :body           => {
               :action => 'turn',
               :infos => self.infos( player.player_id ).to_json,
               :map => map.to_hash.to_json,
