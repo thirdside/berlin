@@ -135,7 +135,7 @@ module Berlin
           puts req[player.player_id].inspect if @debug
 
           req[player.player_id].on_complete do |response|
-            log("Response from #{player.player_id}")
+            log("Response from #{player.url}")
             rep[player.player_id] = response
           end
 
@@ -147,7 +147,7 @@ module Berlin
         players.each do |player|
           unless rep[player.player_id].success?
             # Save timeout
-            log("Unsuccesful response from #{player.player_id}")
+            log("Unsuccesful response from #{player.url}")
             player.timeouts.create
 
             # Raise error
@@ -307,6 +307,7 @@ module Berlin
           puts req[player.player_id].inspect if @debug
 
           req[player.player_id].on_complete do |response|
+            log("Response from #{player.url}")
             rep[player.player_id] = response
           end
 
