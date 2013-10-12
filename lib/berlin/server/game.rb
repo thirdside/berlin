@@ -117,7 +117,7 @@ module Berlin
         # initializing responses and requests
         rep = {}
         req = {}
-
+        log("Sending start game")
         @players.each do |player|
           req[player.player_id] = Typhoeus::Request.new(player.url,
             :method         => :post,
@@ -135,6 +135,7 @@ module Berlin
           puts req[player.player_id].inspect if @debug
 
           req[player.player_id].on_complete do |response|
+            log("Response from #{player.player_id}")
             rep[player.player_id] = response
           end
 
@@ -146,6 +147,7 @@ module Berlin
         players.each do |player|
           unless rep[player.player_id].success?
             # Save timeout
+            log("Unsuccesful response from #{player.player_id}")
             player.timeouts.create
 
             # Raise error
@@ -214,7 +216,7 @@ module Berlin
             :method         => :post,
             :followlocation => true,
             :headers        => {:Accept => "application/json"},
-            :timeout        => 0,
+            :timeout        => 5000,
             :body           => {
               :action => 'game_over',
               :infos => self.infos( player.player_id ).to_json,
