@@ -1,6 +1,7 @@
 .content
-  .buttons
-    = link_to t('tournaments.new'), new_tournament_path, :class => :button
+  - if current_user.try(:is_admin?)
+    .buttons
+      = link_to t('tournaments.new'), new_tournament_path, :class => :button
 
   %h2
     = Tournament.model_name.human.pluralize
