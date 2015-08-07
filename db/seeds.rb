@@ -18,10 +18,10 @@ user.save
 ArtificialIntelligence.create(:user_id => 1, :name => "AI1", :language => 'Java', :url => "http://localhost:4567/")
 ArtificialIntelligence.create(:user_id => 1, :name => "AI2", :language => 'PHP', :url => "http://localhost:4568/")
 
-GamesPlayedAchievement.create(:condition_1 => 1, :internal_code => 'pre_newb')
-GamesPlayedAchievement.create(:condition_1 => 10, :internal_code => 'newb')
-GamesPlayedAchievement.create(:condition_1 => 25, :internal_code => 'post_newb')
+GamesPlayedAchievement.create({:condition_1 => 1, :internal_code => 'pre_newb'}, :without_protection => true)
+GamesPlayedAchievement.create({:condition_1 => 10, :internal_code => 'newb'}, :without_protection => true)
+GamesPlayedAchievement.create({:condition_1 => 25, :internal_code => 'post_newb'}, :without_protection => true)
 
-VictoriesAchievement.create(:condition_1 => 1, :internal_code => 'first_victory')
-VictoriesAchievement.create(:condition_1 => 10, :internal_code => 'young_wolf')
-VictoriesAchievement.create(:condition_1 => 25, :internal_code => 'not_bad')
+VictoriesAchievement.create({:condition_1 => 1, :internal_code => 'first_victory'}, :without_protection => true)
+VictoriesAchievement.create({:condition_1 => 10, :internal_code => 'young_wolf'}, :without_protection => true)
+VictoriesAchievement.create({:condition_1 => 25, :internal_code => 'not_bad'}, :without_protection => true)

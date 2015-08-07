@@ -23,6 +23,7 @@ gem 'active_model_serializers'
 
 group :development do
   gem 'capistrano'
+  gem 'capistrano_colors'
   gem 'capistrano-unicorn'
   gem 'quiet_assets'
   gem 'bullet'

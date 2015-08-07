@@ -4,15 +4,15 @@ app_path = File.expand_path("..", File.dirname(__FILE__))
 worker_processes 2
 preload_app true
 timeout 30
-listen "#{app_path}/tmp/sockets/unicorn.sock", :backlog => 64
+listen File.expand_path("#{app_path}/../shared/sockets/unicorn.sock"), :backlog => 64
 
 # Spawn unicorn master worker for user apps (group: apps)
-#user 'berlin', 'berlin' 
+#user 'berlin', 'berlin'
 
 # Fill path to your app
 working_directory app_path
 
-# Should be 'production' by default, otherwise use other env 
+# Should be 'production' by default, otherwise use other env
 rails_env = ENV['RAILS_ENV'] || 'production'
 
 # Log everything to one file
