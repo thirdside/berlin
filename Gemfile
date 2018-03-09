@@ -32,7 +32,6 @@ end
 group :development, :test do
   gem 'sqlite3'
   gem 'pry'
-  gem 'pry-debugger'
 end
 
 group :assets do
