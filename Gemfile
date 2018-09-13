@@ -1,28 +1,27 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~>4.0'
-gem 'state_machine'
-gem 'mysql2'
-gem 'haml'
-gem 'inherited_resources'
-gem 'has_scope'
+
+gem 'active_model_serializers'
+gem 'daemons'
+gem 'delayed_job'
+gem 'delayed_job_active_record'
 gem 'devise', "~>3.1"
+gem 'haml'
+gem 'has_scope'
+gem 'inherited_resources'
+gem 'kaminari'
+gem 'mysql2', '< 0.5'
 gem 'protected_attributes'
 gem 'rails_admin'
-gem 'yajl-ruby'
-gem 'haml'
-gem 'has_scope'
+gem 'state_machine'
+gem 'typhoeus'
 gem 'utilities', "0.0.7"
-gem 'kaminari'
-gem "delayed_job"
-gem 'delayed_job_active_record'
 gem 'uuidtools', '2.1.3'
-gem "typhoeus"
-gem 'daemons'
-gem 'active_model_serializers'
+gem 'yajl-ruby'
 
 group :development do
-  gem 'capistrano'
+  gem 'capistrano', '~> 2.15'
   gem 'capistrano_colors'
   gem 'capistrano-unicorn'
   gem 'quiet_assets'
